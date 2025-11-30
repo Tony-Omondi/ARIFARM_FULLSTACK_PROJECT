@@ -1,0 +1,162 @@
+/*******************************************************/
+/******************* 28. Main Footer *******************/
+/*******************************************************/
+.footer-top-newsletter
+    +flexcenter(space-between)
+    border-bottom: 1px solid transparentize(white, 0.9)
+    +res-bl(xl)
+        flex-wrap: wrap
+    .section-title
+        flex: none
+        margin-right: 100px
+        h2
+            margin-bottom: 0
+    form
+        width: 100%
+        display: flex
+        align-items: center
+        +gapTB(margin, 10px)
+        +res-bl(ms)
+            flex-wrap: wrap
+        input
+            color: white
+            border: none
+            border-radius: 0
+            font-size: 16px
+            margin-right: 50px
+            padding: 0 22px 12px
+            background: transparent
+            border-bottom: 1px solid
+            +res-bl(ms)
+                margin-right: 0
+                margin-bottom: 15px
+            &::placeholder
+                font-weight: 400
+                color: white
+        button
+            flex: none
+            
+.footer-widget
+    margin-bottom: 50px
+
+.footer-title
+    margin-bottom: 40px
+
+.menu-widget
+    ul
+        margin-bottom: -10px
+        li
+            margin-bottom: 10px
+            a
+                display: flex
+                position: relative
+                &:before
+                    content: ''
+                    left: 0
+                    top: 12px
+                    opacity: 0
+                    transition: 0.5s
+                    position: absolute
+                    +circle(white, 5px)
+                &:hover
+                    padding-left: 15px
+                    text-decoration: underline
+                    &:before
+                        opacity: 1
+    &.two-column
+        ul
+            display: flex
+            flex-wrap: wrap
+            li
+                width: 50%
+                
+.footer-logo
+    a
+        background: white
+        border-radius: 7px
+        padding: 20px 35px
+        display: inline-block
+    
+.contact-widget
+    max-width: 260px
+    +res-ab(md)
+        margin-left: auto
+    ul
+        li
+            display: flex
+            &:not(:last-child)
+                margin-bottom: 15px
+            i
+                font-size: 18px
+                margin: 6px 15px 0 0
+                
+.news-widget
+    li
+        display: flex
+        align-items: center
+        &:not(:last-child)
+            margin-bottom: 20px
+        .image
+            flex: none
+            max-width: 80px
+            margin-right: 20px
+            img
+                border-radius: 5px
+        .content
+            h6
+                font-size: 18px
+                font-weight: 500
+                margin-bottom: 5px
+            .name
+                opacity: 0.4
+                
+.copyright-area
+    flex-wrap: wrap
+    margin-top: 25px
+    position: relative
+    +flexcenter(space-between)
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    p
+        margin-right: 25px
+    .footer-menu
+        display: flex
+        flex-wrap: wrap
+        max-width: 500px
+        margin-bottom: 15px
+        li
+            font-family: $heading-font
+            margin-bottom: 5px
+            a
+                &:hover
+                    text-decoration: underline
+            &:not(:last-child)
+                margin-right: 35px
+            
+.main-footer
+    z-index: 1
+    position: relative
+    .footer-shapes
+        img
+            z-index: -1
+            max-width: 10%
+            position: absolute
+        .footer-bg
+            top: 0
+            left: 10%
+            max-width: 50%
+        .shape-one
+            top: 25%
+            left: 3%
+            animation: upDownLeft 40s infinite
+        .shape-two
+            bottom: 10%
+            left: 10%
+            animation: down-up-one 10s infinite
+        .shape-three
+            top: 15%
+            right: 8%
+            animation: moveLeftRight 20s infinite
+        .shape-four
+            right: 5%
+            bottom: 15%
+            animation: down-up-two 10s infinite
