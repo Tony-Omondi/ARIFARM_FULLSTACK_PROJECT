@@ -42,6 +42,7 @@ def email_register(request):
     
     return render(request, 'accounts/email_register.html', {'form': form})
 
+# accounts/views.py
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('profile')
@@ -49,14 +50,18 @@ def user_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        print(f"Login attempt - Email: {email}, Password: {password}")  # Debug
         
         user = authenticate(request, username=email, password=password)
+        print(f"Authenticated user: {user}")  # Debug
         
         if user is not None:
+            print(f"User type: {user.user_type}, Verified: {user.is_verified}")  # Debug
             if user.user_type == 'customer' or user.user_type == 'admin':
                 login(request, user)
-                messages.success(request, 'Login successful!')
-                return redirect('profile')
+                print("Login successful!")  # Debug
+                next_url = request.GET.get('next', 'profile')
+                return redirect(next_url)
             else:
                 messages.error(request, 'Invalid user type')
         else:
