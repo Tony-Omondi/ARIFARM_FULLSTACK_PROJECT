@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Confirmation - AriFarm{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-check-circle"></i> Order Confirmed!</h4>
+                </div>
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-shopping-bag fa-5x text-success mb-4"></i>
+                        <h3>Thank You for Your Order!</h3>
+                        <p class="lead">Your order has been received and is being processed.</p>
+                    </div>
+                    
+                    <div class="alert alert-info text-start">
+                        <h6><i class="fas fa-info-circle"></i> What happens next?</h6>
+                        <ul class="mb-0">
+                            <li>You will receive an order confirmation email shortly</li>
+                            <li>Our team will prepare your items for delivery</li>
+                            <li>You'll be notified when your order is out for delivery</li>
+                            <li>Estimated delivery: 2-4 hours for Nairobi, 24-48 hours for other counties</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-5">
+                        <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary me-3">
+                            <i class="fas fa-store"></i> Continue Shopping
+                        </a>
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-history"></i> View Order History
+                        </a>
+                    </div>
+                    
+                    <p class="text-muted small mt-4">
+                        Need help? <a href="mailto:support@arifarm.com">Contact our support team</a> or call 0700 000 000
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

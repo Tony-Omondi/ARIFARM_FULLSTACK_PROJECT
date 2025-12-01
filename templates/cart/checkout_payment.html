@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Payment Method - AriFarm{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Payment Method</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'cart:place_order' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h6 class="mb-3">Select Payment Method</h6>
+                            
+                            {% for method in payment_methods %}
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" 
+                                       name="payment_method" id="method-{{ method.value }}" 
+                                       value="{{ method.value }}" required>
+                                <label class="form-check-label d-flex align-items-center" for="method-{{ method.value }}">
+                                    <i class="fas fa-{{ method.icon }} fa-lg me-3 text-primary"></i>
+                                    <div>
+                                        <strong>{{ method.name }}</strong>
+                                        {% if method.value == 'mpesa' %}
+                                            <p class="text-muted small mb-0">Pay via M-Pesa STK Push. You'll receive a prompt on your phone.</p>
+                                        {% elif method.value == 'paystack' %}
+                                            <p class="text-muted small mb-0">Pay with Visa, MasterCard, or other cards.</p>
+                                        {% elif method.value == 'cod' %}
+                                            <p class="text-muted small mb-0">Pay when your order is delivered.</p>
+                                        {% endif %}
+                                    </div>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- M-Pesa specific fields (shown when selected) -->
+                        <div id="mpesa-fields" class="d-none mb-4">
+                            <div class="mb-3">
+                                <label for="mpesa_phone" class="form-label">M-Pesa Phone Number *</label>
+                                <input type="tel" class="form-control" id="mpesa_phone" 
+                                       placeholder="07XX XXX XXX" pattern="[0-9]{10}">
+                                <small class="text-muted">Enter the phone number registered with M-Pesa</small>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Please review your order before proceeding. Once payment is initiated, changes cannot be made.
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'cart:checkout_delivery' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Delivery
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-lock"></i> Complete Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Order Details</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Delivery To:</h6>
+                    <p class="small mb-3">
+                        {{ cart.delivery_name }}<br>
+                        {{ cart.delivery_phone }}<br>
+                        {{ cart.delivery_address }}<br>
+                        {{ cart.delivery_zone }} {{ cart.delivery_county }}
+                    </p>
+                    
+                    <hr>
+                    
+                    <h6>Order Summary:</h6>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Subtotal</span>
+                        <span>KSh {{ cart.subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Delivery</span>
+                        <span>KSh {{ cart.delivery_fee|floatformat:2 }}</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong class="h5">KSh {{ cart.total|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show M-Pesa fields when selected
+$('input[name="payment_method"]').on('change', function() {
+    const method = $(this).val();
+    if (method === 'mpesa') {
+        $('#mpesa-fields').removeClass('d-none');
+        $('#mpesa_phone').prop('required', true);
+    } else {
+        $('#mpesa-fields').addClass('d-none');
+        $('#mpesa_phone').prop('required', false);
+    }
+});
+</script>
+{% endblock %}

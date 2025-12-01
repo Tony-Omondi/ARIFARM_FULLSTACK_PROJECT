@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Delivery Information - AriFarm{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Delivery Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'cart:update_delivery_info' %}">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="delivery_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="delivery_name" name="delivery_name" 
+                                       value="{{ initial_data.delivery_name|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="delivery_phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="delivery_phone" name="delivery_phone"
+                                       value="{{ initial_data.delivery_phone|default:'' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="delivery_county" class="form-label">County *</label>
+                                <select class="form-select" id="delivery_county" name="delivery_county" required>
+                                    <option value="">Select County</option>
+                                    {% for county in counties %}
+                                        <option value="{{ county }}" 
+                                                {% if initial_data.delivery_county == county %}selected{% endif %}>
+                                            {{ county }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="delivery_zone" class="form-label">Zone / Estate (Optional)</label>
+                                <input type="text" class="form-control" id="delivery_zone" name="delivery_zone"
+                                       value="{{ initial_data.delivery_zone|default:'' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="delivery_address" class="form-label">Delivery Address *</label>
+                            <textarea class="form-control" id="delivery_address" name="delivery_address" 
+                                      rows="3" required>{{ initial_data.delivery_address|default:'' }}</textarea>
+                            <small class="text-muted">Include building name, floor, apartment number, or landmarks</small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'cart:view_cart' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Cart
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Continue to Payment <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>KSh {{ cart.subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery Fee</span>
+                        <span id="delivery-fee-preview">KSh {{ cart.delivery_fee|floatformat:2 }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong class="h5">KSh {{ cart.total|floatformat:2 }}</strong>
+                    </div>
+                    
+                    <div class="alert alert-info small">
+                        <i class="fas fa-info-circle"></i>
+                        Delivery fee may change based on your selected county
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update delivery fee preview based on selected county
+const countyFees = {
+    'Nairobi': 200,
+    'Kiambu': 250,
+    'Mombasa': 500,
+    'Kisumu': 450,
+    'Nakuru': 300,
+    'Eldoret': 400,
+    'Thika': 250,
+    'Machakos': 300,
+    'Kakamega': 400,
+    'Kisii': 450,
+    'Meru': 400,
+    'Nyeri': 350
+};
+
+$('#delivery_county').on('change', function() {
+    const county = $(this).val();
+    const fee = countyFees[county] || 300;
+    $('#delivery-fee-preview').text('KSh ' + fee.toFixed(2));
+});
+</script>
+{% endblock %}
