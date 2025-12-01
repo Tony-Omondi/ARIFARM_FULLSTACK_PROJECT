@@ -1,124 +1,273 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static %}  <!-- FIXED: Loads static files -->
 
-{% block title %}Checkout - Delivery Information - AriFarm{% endblock %}
+{% block title %}Checkout - Delivery - Munfirm{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Delivery Information</h5>
+<!-- Page Banner Start -->
+<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url({% static 'assets/images/background/page-banner.jpg' %});">
+    <div class="container">
+        <div class="row">
+            <div class="page-banner-text text-center col-12">
+                <h1>Checkout</h1>
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'cart:view_cart' %}">Cart</a></li>
+                    <li>Checkout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Banner End -->
+
+<!-- Checkout Section Start -->
+<section class="checkout-section pt-100 rpt-70 pb-130 rpb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="checkout-steps mb-40 wow fadeInUp delay-0-2s">
+                    <div class="steps">
+                        <div class="step active">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h6>Delivery Information</h6>
+                                <p class="mb-0 small">Enter your delivery details</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h6>Payment Method</h6>
+                                <p class="mb-0 small">Choose payment option</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h6>Confirmation</h6>
+                                <p class="mb-0 small">Review & place order</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{% url 'cart:update_delivery_info' %}">
+                
+                <div class="checkout-form wow fadeInUp delay-0-4s">
+                    <div class="section-title mb-30">
+                        <h3>Delivery Information</h3>
+                        <p class="sub-title">Where should we deliver your order?</p>
+                    </div>
+                    
+                    <form method="post" action="{% url 'cart:update_delivery_info' %}" id="deliveryForm">
                         {% csrf_token %}
                         
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="delivery_name" class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" id="delivery_name" name="delivery_name" 
-                                       value="{{ initial_data.delivery_name|default:'' }}" required>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="delivery_name">Full Name *</label>
+                                    <input type="text" id="delivery_name" name="delivery_name" 
+                                           class="form-control" value="{{ initial_data.delivery_name }}" 
+                                           placeholder="John Doe" required>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="delivery_phone" class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" id="delivery_phone" name="delivery_phone"
-                                       value="{{ initial_data.delivery_phone|default:'' }}" required>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="delivery_phone">Phone Number *</label>
+                                    <input type="tel" id="delivery_phone" name="delivery_phone" 
+                                           class="form-control" value="{{ initial_data.delivery_phone }}" 
+                                           placeholder="0712 345 678" required>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="delivery_county" class="form-label">County *</label>
-                                <select class="form-select" id="delivery_county" name="delivery_county" required>
-                                    <option value="">Select County</option>
-                                    {% for county in counties %}
-                                        <option value="{{ county }}" 
-                                                {% if initial_data.delivery_county == county %}selected{% endif %}>
-                                            {{ county }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="delivery_county">County *</label>
+                                    <select id="delivery_county" name="delivery_county" class="form-control" required>
+                                        <option value="">Select County</option>
+                                        {% for county in counties %}
+                                        <option value="{{ county }}" {% if initial_data.delivery_county == county %}selected{% endif %}>{{ county }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="delivery_zone" class="form-label">Zone / Estate (Optional)</label>
-                                <input type="text" class="form-control" id="delivery_zone" name="delivery_zone"
-                                       value="{{ initial_data.delivery_zone|default:'' }}">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="delivery_zone">Zone / Estate *</label>
+                                    <input type="text" id="delivery_zone" name="delivery_zone" 
+                                           class="form-control" value="{{ initial_data.delivery_zone }}" 
+                                           placeholder="e.g. Westlands, Karen, etc." required>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="mb-4">
-                            <label for="delivery_address" class="form-label">Delivery Address *</label>
-                            <textarea class="form-control" id="delivery_address" name="delivery_address" 
-                                      rows="3" required>{{ initial_data.delivery_address|default:'' }}</textarea>
-                            <small class="text-muted">Include building name, floor, apartment number, or landmarks</small>
+                        <div class="form-group mb-4">
+                            <label for="delivery_address">Full Address *</label>
+                            <textarea id="delivery_address" name="delivery_address" class="form-control" 
+                                      rows="3" placeholder="House number, building, street, landmarks" 
+                                      required>{{ initial_data.delivery_address }}</textarea>
                         </div>
                         
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'cart:view_cart' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Cart
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                Continue to Payment <i class="fas fa-arrow-right"></i>
-                            </button>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="save_address">
+                                <label class="custom-control-label" for="save_address">
+                                    Save this address for future orders
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'cart:view_cart' %}" class="theme-btn style-three">
+                                    <i class="fas fa-arrow-left mr-2"></i> Back to Cart
+                                </a>
+                                <button type="submit" class="theme-btn">
+                                    Continue to Payment <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-lg-4">
-            <div class="card sticky-top" style="top: 20px;">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Order Summary</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal</span>
-                        <span>KSh {{ cart.subtotal|floatformat:2 }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Delivery Fee</span>
-                        <span id="delivery-fee-preview">KSh {{ cart.delivery_fee|floatformat:2 }}</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-3">
-                        <strong>Total</strong>
-                        <strong class="h5">KSh {{ cart.total|floatformat:2 }}</strong>
+            
+            <div class="col-lg-4">
+                <div class="order-summary mb-40 wow fadeInUp delay-0-6s">
+                    <div class="section-title mb-30">
+                        <h3>Order Summary</h3>
                     </div>
                     
-                    <div class="alert alert-info small">
-                        <i class="fas fa-info-circle"></i>
-                        Delivery fee may change based on your selected county
+                    <div class="order-items mb-3">
+                        {% for item in cart_items %}
+                        <div class="order-item d-flex justify-content-between mb-2">
+                            <div>
+                                <span class="item-name">{{ item.name }}</span>
+                                <small class="text-muted d-block">Qty: {{ item.quantity }}</small>
+                            </div>
+                            <span class="item-price">KSh {{ item.total_price|floatformat:0 }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No items in cart</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="order-totals">
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>KSh {{ cart.subtotal|floatformat:0 }}</span>
+                        </div>
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Delivery:</span>
+                            <span>KSh {{ cart.delivery_fee|floatformat:0 }}</span>
+                        </div>
+                        {% if cart.discount > 0 %}
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Discount:</span>
+                            <span class="text-success">-KSh {{ cart.discount|floatformat:0 }}</span>
+                        </div>
+                        {% endif %}
+                        <hr>
+                        <div class="total-item d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-primary">KSh {{ cart.total|floatformat:0 }}</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="checkout-features wow fadeInUp delay-0-8s">
+                    <div class="feature-item mb-3">
+                        <h6><i class="fas fa-shield-alt mr-2" style="color: #76a713;"></i> Secure Checkout</h6>
+                        <p class="small mb-0">Your information is protected with 256-bit SSL encryption</p>
+                    </div>
+                    <div class="feature-item mb-3">
+                        <h6><i class="fas fa-lock mr-2" style="color: #76a713;"></i> Privacy Guaranteed</h6>
+                        <p class="small mb-0">We don't share your personal information</p>
+                    </div>
+                    <div class="feature-item">
+                        <h6><i class="fas fa-headset mr-2" style="color: #76a713;"></i> Need Help?</h6>
+                        <p class="small mb-0">Call us: <strong>+254 712 345 678</strong></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+<!-- Checkout Section End -->
 
-<script>
-// Update delivery fee preview based on selected county
-const countyFees = {
-    'Nairobi': 200,
-    'Kiambu': 250,
-    'Mombasa': 500,
-    'Kisumu': 450,
-    'Nakuru': 300,
-    'Eldoret': 400,
-    'Thika': 250,
-    'Machakos': 300,
-    'Kakamega': 400,
-    'Kisii': 450,
-    'Meru': 400,
-    'Nyeri': 350
-};
+<style>
+.checkout-steps .steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 50px;
+}
 
-$('#delivery_county').on('change', function() {
-    const county = $(this).val();
-    const fee = countyFees[county] || 300;
-    $('#delivery-fee-preview').text('KSh ' + fee.toFixed(2));
-});
-</script>
+.checkout-steps .steps::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.checkout-steps .step {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex: 1;
+}
+
+.checkout-steps .step.active .step-number {
+    background: #76a713;
+    color: white;
+}
+
+.checkout-steps .step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 auto 15px;
+    transition: all 0.3s ease;
+}
+
+.checkout-steps .step-content h6 {
+    margin-bottom: 5px;
+    color: #1a2428;
+}
+
+.order-summary {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.order-item {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.checkout-features {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.feature-item h6 {
+    color: #1a2428;
+    font-weight: 600;
+}
+</style>
 {% endblock %}

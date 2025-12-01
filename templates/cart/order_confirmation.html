@@ -1,48 +1,406 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Order Confirmation - AriFarm{% endblock %}
+{% block title %}Order Confirmation - Munfirm{% endblock %}
 
 {% block content %}
-<div class="container py-5 text-center">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card border-success">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0"><i class="fas fa-check-circle"></i> Order Confirmed!</h4>
-                </div>
-                <div class="card-body py-5">
-                    <div class="mb-4">
-                        <i class="fas fa-shopping-bag fa-5x text-success mb-4"></i>
-                        <h3>Thank You for Your Order!</h3>
-                        <p class="lead">Your order has been received and is being processed.</p>
-                    </div>
-                    
-                    <div class="alert alert-info text-start">
-                        <h6><i class="fas fa-info-circle"></i> What happens next?</h6>
-                        <ul class="mb-0">
-                            <li>You will receive an order confirmation email shortly</li>
-                            <li>Our team will prepare your items for delivery</li>
-                            <li>You'll be notified when your order is out for delivery</li>
-                            <li>Estimated delivery: 2-4 hours for Nairobi, 24-48 hours for other counties</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="mt-5">
-                        <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary me-3">
-                            <i class="fas fa-store"></i> Continue Shopping
-                        </a>
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-history"></i> View Order History
-                        </a>
-                    </div>
-                    
-                    <p class="text-muted small mt-4">
-                        Need help? <a href="mailto:support@arifarm.com">Contact our support team</a> or call 0700 000 000
-                    </p>
-                </div>
+<!-- Page Banner Start -->
+<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="page-banner-text text-center col-12">
+                <h1>Order Confirmed!</h1>
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Order Confirmation</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
+<!-- Page Banner End -->
+
+<!-- Order Confirmation Section Start -->
+<section class="confirmation-section pt-100 rpt-70 pb-130 rpb-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="confirmation-wrapper wow fadeInUp delay-0-2s">
+                    <!-- Success Header -->
+                    <div class="confirmation-header text-center mb-50">
+                        <div class="success-icon mb-30">
+                            <div style="width: 100px; height: 100px; background: #28a745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check" style="font-size: 50px; color: white;"></i>
+                            </div>
+                        </div>
+                        <h2 class="mb-3">Thank You for Your Order!</h2>
+                        <p class="mb-0" style="font-size: 18px;">
+                            Your order has been received and is being processed.
+                        </p>
+                        <div class="order-number mt-3">
+                            <span class="badge" style="background: #f8f9fa; color: #1a2428; font-size: 16px; padding: 10px 20px; border-radius: 20px;">
+                                Order #{{ order.order_number|default:"ORD-123456" }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div class="order-summary-card mb-40">
+                        <div class="card-header" style="background: #76a713; color: white; border-radius: 10px 10px 0 0; padding: 20px;">
+                            <h4 class="mb-0"><i class="fas fa-receipt mr-2"></i> Order Summary</h4>
+                        </div>
+                        <div class="card-body" style="border: 1px solid #e9ecef; border-radius: 0 0 10px 10px; padding: 30px;">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h6 class="mb-3" style="color: #1a2428;"><i class="fas fa-user mr-2"></i> Customer Information</h6>
+                                    <p class="mb-2">
+                                        <strong>Name:</strong> {{ order.delivery_name|default:"John Doe" }}
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Phone:</strong> {{ order.delivery_phone|default:"0712 345 678" }}
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Email:</strong> {{ order.user.email|default:"customer@example.com" }}
+                                    </p>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <h6 class="mb-3" style="color: #1a2428;"><i class="fas fa-map-marker-alt mr-2"></i> Delivery Address</h6>
+                                    <p class="mb-2">
+                                        {{ order.delivery_address|default:"123 Main Street" }}<br>
+                                        {{ order.delivery_zone|default:"Westlands" }}, {{ order.delivery_county|default:"Nairobi" }}
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Delivery Fee:</strong> KSh {{ order.delivery_fee|default:"200" }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <!-- Order Items -->
+                            <h6 class="mb-3" style="color: #1a2428;"><i class="fas fa-shopping-basket mr-2"></i> Order Items</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="/static/assets/images/products/product1.png" alt="Product" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; margin-right: 15px;">
+                                                    <div>
+                                                        <strong>Organic Broccoli</strong><br>
+                                                        <small class="text-muted">Fresh vegetables</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>KSh 250</td>
+                                            <td>2</td>
+                                            <td>KSh 500</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="/static/assets/images/products/product2.png" alt="Product" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; margin-right: 15px;">
+                                                    <div>
+                                                        <strong>Fresh Carrots</strong><br>
+                                                        <small class="text-muted">Organic farm produce</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>KSh 180</td>
+                                            <td>1</td>
+                                            <td>KSh 180</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <!-- Order Totals -->
+                            <div class="row justify-content-end">
+                                <div class="col-md-6">
+                                    <div class="order-totals">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Subtotal:</span>
+                                            <span>KSh {{ order.subtotal|default:"680" }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Delivery Fee:</span>
+                                            <span>KSh {{ order.delivery_fee|default:"200" }}</span>
+                                        </div>
+                                        {% if order.discount > 0 %}
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Discount:</span>
+                                            <span class="text-success">-KSh {{ order.discount }}</span>
+                                        </div>
+                                        {% endif %}
+                                        <hr>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <strong>Total Amount:</strong>
+                                            <strong class="text-primary" style="font-size: 20px;">
+                                                KSh {{ order.total|default:"880" }}
+                                            </strong>
+                                        </div>
+                                        
+                                        <div class="payment-method mt-4">
+                                            <p class="mb-2">
+                                                <strong>Payment Method:</strong> 
+                                                <span class="badge" style="background: #007bff; color: white; padding: 5px 15px; border-radius: 20px;">
+                                                    {{ order.payment_method|default:"M-Pesa"|upper }}
+                                                </span>
+                                            </p>
+                                            <p class="mb-0">
+                                                <strong>Payment Status:</strong> 
+                                                <span class="badge" style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px;">
+                                                    Paid
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Next Steps -->
+                    <div class="next-steps mb-40">
+                        <div class="section-title mb-30 text-center">
+                            <h3>What Happens Next?</h3>
+                            <p class="sub-title">Here's what you can expect</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3 mb-4">
+                                <div class="step-card text-center">
+                                    <div class="step-icon mb-3">
+                                        <div style="width: 70px; height: 70px; background: rgba(118, 167, 19, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-check" style="font-size: 30px; color: #76a713;"></i>
+                                        </div>
+                                    </div>
+                                    <h6>Order Confirmed</h6>
+                                    <p class="small mb-0">We've received your order and payment</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="step-card text-center">
+                                    <div class="step-icon mb-3">
+                                        <div style="width: 70px; height: 70px; background: rgba(118, 167, 19, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-box" style="font-size: 30px; color: #76a713;"></i>
+                                        </div>
+                                    </div>
+                                    <h6>Processing</h6>
+                                    <p class="small mb-0">We're preparing your items for delivery</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="step-card text-center">
+                                    <div class="step-icon mb-3">
+                                        <div style="width: 70px; height: 70px; background: rgba(118, 167, 19, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-shipping-fast" style="font-size: 30px; color: #76a713;"></i>
+                                        </div>
+                                    </div>
+                                    <h6>On The Way</h6>
+                                    <p class="small mb-0">Your order is out for delivery</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="step-card text-center">
+                                    <div class="step-icon mb-3">
+                                        <div style="width: 70px; height: 70px; background: rgba(118, 167, 19, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-home" style="font-size: 30px; color: #76a713;"></i>
+                                        </div>
+                                    </div>
+                                    <h6>Delivered</h6>
+                                    <p class="small mb-0">Your order arrives at your doorstep</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estimated Delivery -->
+                    <div class="delivery-estimate mb-40" style="background: #f8f9fa; border-radius: 15px; padding: 30px;">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="mb-2"><i class="fas fa-clock mr-2" style="color: #ff7800;"></i> Estimated Delivery Time</h5>
+                                <p class="mb-0">
+                                    Your order will be delivered within 
+                                    <strong>2-4 hours</strong> for Nairobi County and 
+                                    <strong>24-48 hours</strong> for other counties.
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-right">
+                                <div class="delivery-time">
+                                    <h3 class="mb-0" style="color: #76a713;">{{ delivery_time|default:"Today" }}</h3>
+                                    <p class="mb-0">Expected Delivery</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Support Info -->
+                    <div class="support-info mb-40" style="background: #e9f7fe; border-radius: 15px; padding: 30px;">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="mb-2"><i class="fas fa-question-circle mr-2" style="color: #17a2b8;"></i> Need Help?</h5>
+                                <p class="mb-0">
+                                    If you have any questions about your order, please contact our customer support team.
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-right">
+                                <a href="tel:+254712345678" class="theme-btn mr-2">
+                                    <i class="fas fa-phone mr-2"></i> Call Us
+                                </a>
+                                <a href="mailto:support@munfirm.com" class="theme-btn style-two">
+                                    <i class="fas fa-envelope mr-2"></i> Email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons text-center">
+                        <a href="{% url 'home' %}" class="theme-btn mr-3 mb-3">
+                            <i class="fas fa-home mr-2"></i> Back to Home
+                        </a>
+                        <a href="{% url 'shop' %}" class="theme-btn style-two mb-3">
+                            <i class="fas fa-shopping-basket mr-2"></i> Continue Shopping
+                        </a>
+                        <a href="#" class="theme-btn style-three mb-3">
+                            <i class="fas fa-file-download mr-2"></i> Download Invoice
+                        </a>
+                        <a href="#" class="theme-btn" style="background: #6c757d; margin-left: 10px;">
+                            <i class="fas fa-eye mr-2"></i> Track Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Confirmation Section End -->
+
+<style>
+.confirmation-wrapper {
+    background: white;
+    border-radius: 15px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.order-summary-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.step-card {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+}
+
+.delivery-estimate {
+    border-left: 5px solid #ff7800;
+}
+
+.support-info {
+    border-left: 5px solid #17a2b8;
+}
+
+.action-buttons .theme-btn {
+    min-width: 200px;
+    margin: 5px;
+}
+
+@media (max-width: 768px) {
+    .confirmation-wrapper {
+        padding: 30px 20px;
+    }
+    
+    .action-buttons .theme-btn {
+        min-width: 100%;
+        margin: 10px 0;
+    }
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #1a2428;
+    border-bottom: 2px solid #76a713;
+}
+
+.table td {
+    vertical-align: middle;
+}
+</style>
+
+<script>
+// Print order functionality
+function printOrder() {
+    window.print();
+}
+
+// Share order functionality
+function shareOrder() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'My Munfirm Order',
+            text: 'I just placed an order on Munfirm!',
+            url: window.location.href,
+        })
+        .catch(console.error);
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        const shareUrl = window.location.href;
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            alert('Order link copied to clipboard!');
+        });
+    }
+}
+
+// Add share button event listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Add share button if needed
+    const shareBtn = document.getElementById('share-order');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', shareOrder);
+    }
+    
+    // Add print button if needed
+    const printBtn = document.getElementById('print-order');
+    if (printBtn) {
+        printBtn.addEventListener('click', printOrder);
+    }
+    
+    // Order tracking simulation
+    function updateOrderStatus() {
+        const statusElement = document.querySelector('.payment-method .badge:last-child');
+        if (statusElement && statusElement.textContent.includes('Paid')) {
+            // Simulate order processing updates
+            setTimeout(() => {
+                // You can update order status here
+                console.log('Order status updated');
+            }, 5000);
+        }
+    }
+    
+    updateOrderStatus();
+});
+</script>
 {% endblock %}

@@ -39,7 +39,7 @@
 
             <div class="header-inner d-flex align-items-center">
                 <div class="logo-outer">
-                    <div class="logo"><a href="index.html"><img src="/static/assets/images/logos/logo.png" alt="Logo" title="Logo"></a></div>
+                    <div class="logo"><a href="{% url 'home' %}"><img src="/static/assets/images/logos/logo.png" alt="Logo" title="Logo"></a></div>
                 </div>
 
                 <div class="nav-outer clearfix">
@@ -47,7 +47,7 @@
                     <nav class="main-menu navbar-expand-lg">
                         <div class="navbar-header">
                            <div class="mobile-logo my-15">
-                               <a href="index.html">
+                               <a href="{% url 'home' %}">
                                     <img src="/static/assets/images/logos/logo.png" alt="Logo" title="Logo">
                                </a>
                            </div>
@@ -62,52 +62,16 @@
 
                         <div class="navbar-collapse collapse clearfix">
                             <ul class="navigation clearfix">
-                                <li class="dropdown"><a href="#">Home</a>
+                                <li><a href="{% url 'home' %}">Home</a></li>
+                                <li><a href="{% url 'about' %}">About Us</a></li>
+                                <li class="dropdown"><a href="#">Shop</a>
                                     <ul>
-                                        <li><a href="index.html">Home One</a></li>
-                                        <li><a href="index2.html">Home Two</a></li>
+                                        <li><a href="{% url 'shop' %}">All Products</a></li>
+                                        <li><a href="{% url 'cart:view_cart' %}">Cart</a></li>
+                                        <li><a href="{% url 'cart:checkout_delivery' %}">Checkout</a></li>
                                     </ul>
                                 </li>
-                                <li class="dropdown"><a href="#">pages</a>
-                                    <ul>
-                                        <li><a href="about.html">About us</a></li>
-                                        <li class="dropdown"><a href="#">services</a>
-                                            <ul>
-                                                <li><a href="services.html">all services</a></li>
-                                                <li><a href="service-details.html">service details</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="faqs.html">faqs</a></li>
-                                        <li><a href="farmers.html">Farmers</a></li>
-                                        <li><a href="404.html">404 error</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown"><a href="#">portfolio</a>
-                                    <ul>
-                                        <li><a href="portfolio-grid.html">Portfolio grid</a></li>
-                                        <li><a href="portfolio-fluid.html">Portfolio Fluid</a></li>
-                                        <li><a href="portfolio-details.html">Portfolio details</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown"><a href="#">blog</a>
-                                    <ul>
-                                        <li><a href="blog-grid.html">blog Grid</a></li>
-                                        <li><a href="blog-standard.html">blog Standard</a></li>
-                                        <li><a href="blog-details.html">blog details</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown"><a href="#">shop</a>
-                                    <ul>
-                                        <li><a href="shop-grid.html">shop Grid</a></li>
-                                        <li><a href="shop-left-sidebar.html">shop left sidebar</a></li>
-                                        <li><a href="shop-right-sidebar.html">shop right sidebar</a></li>
-                                        <li><a href="product-details.html">Product details</a></li>
-                                        <li><a href="cart.html">cart page</a></li>
-                                        <li><a href="checkout.html">checkout</a></li>
-                                        <li><a href="wishlist.html">wishlist</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="{% url 'contact' %}">Contact</a></li>
                             </ul>
                         </div>
 
@@ -116,33 +80,40 @@
                 </div>
                 
                 <!-- Menu Button -->
-                <div class="menu-icons">
-                    <!-- Nav Search -->
-                    <div class="nav-search py-15">
-                        <button class="far fa-search"></button>
-                        <form action="#" class="hide">
-                            <input type="text" placeholder="Search" class="searchbox" required="">
-                            <button type="submit" class="searchbutton far fa-search"></button>
-                        </form>
-                    </div>
+                <div class="menu-icons d-flex align-items-center">
+                    <!-- Cart Icon - Links to CART APP -->
+                    <a href="{% url 'cart:view_cart' %}" class="cart mr-3 position-relative" title="Shopping Cart">
+                        <i class="far fa-shopping-basket" style="font-size: 20px; color: #1a2428;"></i>
+                        <span class="cart-count" style="position: absolute; top: -8px; right: -8px; background: #ff7800; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+                            0
+                        </span>
+                    </a>
                     
-                   <button class="cart">
-                       <i class="far fa-shopping-basket"></i>
-                       <span>5</span>
-                   </button>
-                   
-                   <button class="user">
-                       <i class="far fa-user-circle"></i>
-                   </button>
-                   
-                   <a href="contact.html" class="theme-btn">Consultations <i class="fas fa-angle-double-right"></i></a>
-                   
-                    <!-- menu sidbar -->
-                    <div class="menu-sidebar">
-                        <button>
-                            <i class="far fa-ellipsis-h"></i>
-                            <i class="far fa-ellipsis-h"></i>
-                            <i class="far fa-ellipsis-h"></i>
+                    {% if user.is_authenticated %}
+                        <!-- Show when user is LOGGED IN -->
+                        <a href="{% url 'profile' %}" class="user d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: white; border-radius: 50%; margin-right: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <i class="far fa-user-circle" style="font-size: 20px; color: #76a713;"></i>
+                        </a>
+                        
+                        <form method="post" action="{% url 'logout' %}" class="mb-0" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="theme-btn" style="background: #76a713; border: none; cursor: pointer; padding: 10px 20px; font-size: 14px;">
+                                Logout <i class="fas fa-sign-out-alt" style="margin-left: 5px;"></i>
+                            </button>
+                        </form>
+                    {% else %}
+                        <!-- Show when user is LOGGED OUT -->
+                        <a href="{% url 'login' %}" class="theme-btn" style="margin-right: 10px;">Login <i class="fas fa-angle-double-right"></i></a>
+                        
+                        <a href="{% url 'email_register' %}" class="theme-btn style-two" style="padding: 10px 20px; font-size: 14px;">
+                            Register <i class="fas fa-user-plus" style="margin-left: 5px;"></i>
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Menu sidebar -->
+                    <div class="menu-sidebar ml-3">
+                        <button style="background: none; border: none; cursor: pointer;">
+                            <i class="far fa-ellipsis-h" style="color: #1a2428;"></i>
                         </button>
                     </div>
                 </div>

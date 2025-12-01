@@ -1,120 +1,335 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Checkout - Payment Method - AriFarm{% endblock %}
+{% block title %}Checkout - Payment - Munfirm{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Payment Method</h5>
+<!-- Page Banner Start -->
+<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="page-banner-text text-center col-12">
+                <h1>Checkout</h1>
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'cart:view_cart' %}">Cart</a></li>
+                    <li>Checkout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Banner End -->
+
+<!-- Checkout Section Start -->
+<section class="checkout-section pt-100 rpt-70 pb-130 rpb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="checkout-steps mb-40 wow fadeInUp delay-0-2s">
+                    <div class="steps">
+                        <div class="step completed">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h6>Delivery Information</h6>
+                                <p class="mb-0 small">Completed</p>
+                            </div>
+                        </div>
+                        <div class="step active">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h6>Payment Method</h6>
+                                <p class="mb-0 small">Choose payment option</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h6>Confirmation</h6>
+                                <p class="mb-0 small">Review & place order</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{% url 'cart:place_order' %}">
+                
+                <div class="checkout-form wow fadeInUp delay-0-4s">
+                    <div class="section-title mb-30">
+                        <h3>Payment Method</h3>
+                        <p class="sub-title">How would you like to pay?</p>
+                    </div>
+                    
+                    <form method="post" id="paymentForm">
                         {% csrf_token %}
                         
-                        <div class="mb-4">
-                            <h6 class="mb-3">Select Payment Method</h6>
-                            
-                            {% for method in payment_methods %}
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" 
-                                       name="payment_method" id="method-{{ method.value }}" 
-                                       value="{{ method.value }}" required>
-                                <label class="form-check-label d-flex align-items-center" for="method-{{ method.value }}">
-                                    <i class="fas fa-{{ method.icon }} fa-lg me-3 text-primary"></i>
-                                    <div>
-                                        <strong>{{ method.name }}</strong>
-                                        {% if method.value == 'mpesa' %}
-                                            <p class="text-muted small mb-0">Pay via M-Pesa STK Push. You'll receive a prompt on your phone.</p>
-                                        {% elif method.value == 'paystack' %}
-                                            <p class="text-muted small mb-0">Pay with Visa, MasterCard, or other cards.</p>
-                                        {% elif method.value == 'cod' %}
-                                            <p class="text-muted small mb-0">Pay when your order is delivered.</p>
-                                        {% endif %}
+                        <div class="payment-methods">
+                            <!-- M-Pesa Option -->
+                            <div class="payment-option mb-3">
+                                <input type="radio" id="mpesa" name="payment_method" value="mpesa" checked class="d-none">
+                                <label for="mpesa" class="payment-label">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-mobile-alt" style="color: #00a859; font-size: 24px;"></i>
+                                    </div>
+                                    <div class="payment-content">
+                                        <h6>M-Pesa</h6>
+                                        <p class="mb-0 small">Pay via M-Pesa (Lipa na M-Pesa)</p>
+                                    </div>
+                                    <div class="payment-check">
+                                        <i class="fas fa-check-circle"></i>
                                     </div>
                                 </label>
+                                
+                                <div class="payment-details mt-3" id="mpesa-details">
+                                    <div class="alert alert-info">
+                                        <p class="mb-2"><strong>How to pay via M-Pesa:</strong></p>
+                                        <ol class="mb-0 pl-3">
+                                            <li>Click "Place Order" to proceed</li>
+                                            <li>You'll receive an M-Pesa prompt on your phone</li>
+                                            <li>Enter your M-Pesa PIN to complete payment</li>
+                                        </ol>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="mpesa_phone">M-Pesa Phone Number</label>
+                                        <input type="tel" id="mpesa_phone" class="form-control" 
+                                               value="{{ cart.delivery_phone|default:'' }}" 
+                                               placeholder="0712 345 678" required>
+                                    </div>
+                                </div>
                             </div>
-                            {% endfor %}
-                        </div>
-                        
-                        <!-- M-Pesa specific fields (shown when selected) -->
-                        <div id="mpesa-fields" class="d-none mb-4">
-                            <div class="mb-3">
-                                <label for="mpesa_phone" class="form-label">M-Pesa Phone Number *</label>
-                                <input type="tel" class="form-control" id="mpesa_phone" 
-                                       placeholder="07XX XXX XXX" pattern="[0-9]{10}">
-                                <small class="text-muted">Enter the phone number registered with M-Pesa</small>
+                            
+                            <!-- Paystack Option -->
+                            <div class="payment-option mb-3">
+                                <input type="radio" id="paystack" name="payment_method" value="paystack" class="d-none">
+                                <label for="paystack" class="payment-label">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-credit-card" style="color: #00a859; font-size: 24px;"></i>
+                                    </div>
+                                    <div class="payment-content">
+                                        <h6>Card Payment</h6>
+                                        <p class="mb-0 small">Visa, Mastercard, or Mobile Money</p>
+                                    </div>
+                                    <div class="payment-check">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                </label>
+                                
+                                <div class="payment-details mt-3" id="paystack-details" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <p class="mb-0">You'll be redirected to Paystack's secure payment page to complete your transaction.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cash on Delivery -->
+                            <div class="payment-option mb-4">
+                                <input type="radio" id="cod" name="payment_method" value="cod" class="d-none">
+                                <label for="cod" class="payment-label">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-money-bill-wave" style="color: #00a859; font-size: 24px;"></i>
+                                    </div>
+                                    <div class="payment-content">
+                                        <h6>Cash on Delivery</h6>
+                                        <p class="mb-0 small">Pay when you receive your order</p>
+                                    </div>
+                                    <div class="payment-check">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                </label>
+                                
+                                <div class="payment-details mt-3" id="cod-details" style="display: none;">
+                                    <div class="alert alert-warning">
+                                        <p class="mb-2"><strong>Note:</strong> Cash on delivery available for orders below KSh 10,000 only.</p>
+                                        <p class="mb-0">You'll need exact change as our delivery personnel may not carry change.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Please review your order before proceeding. Once payment is initiated, changes cannot be made.
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="terms" required>
+                                <label class="custom-control-label" for="terms">
+                                    I agree to the <a href="#">Terms & Conditions</a> and confirm that the delivery information provided is accurate.
+                                </label>
+                            </div>
                         </div>
                         
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'cart:checkout_delivery' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Delivery
-                            </a>
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-lock"></i> Complete Order
-                            </button>
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'cart:checkout_delivery' %}" class="theme-btn style-three">
+                                    <i class="fas fa-arrow-left mr-2"></i> Back
+                                </a>
+                                <button type="submit" class="theme-btn" id="place-order-btn">
+                                    Place Order <i class="fas fa-check ml-2"></i>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-lg-4">
-            <div class="card sticky-top" style="top: 20px;">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Order Details</h5>
-                </div>
-                <div class="card-body">
-                    <h6>Delivery To:</h6>
-                    <p class="small mb-3">
-                        {{ cart.delivery_name }}<br>
-                        {{ cart.delivery_phone }}<br>
-                        {{ cart.delivery_address }}<br>
-                        {{ cart.delivery_zone }} {{ cart.delivery_county }}
-                    </p>
-                    
-                    <hr>
-                    
-                    <h6>Order Summary:</h6>
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Subtotal</span>
-                        <span>KSh {{ cart.subtotal|floatformat:2 }}</span>
+            
+            <div class="col-lg-4">
+                <div class="order-summary mb-40 wow fadeInUp delay-0-6s">
+                    <div class="section-title mb-30">
+                        <h3>Order Summary</h3>
                     </div>
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Delivery</span>
-                        <span>KSh {{ cart.delivery_fee|floatformat:2 }}</span>
+                    
+                    <div class="delivery-info mb-4">
+                        <h6><i class="fas fa-map-marker-alt mr-2" style="color: #76a713;"></i> Delivery Address</h6>
+                        <p class="small mb-2">
+                            {{ cart.delivery_name }}<br>
+                            {{ cart.delivery_address }}<br>
+                            {{ cart.delivery_zone }}, {{ cart.delivery_county }}<br>
+                            Phone: {{ cart.delivery_phone }}
+                        </p>
+                        <a href="{% url 'cart:checkout_delivery' %}" class="small">Change address</a>
                     </div>
-                    <hr class="my-2">
-                    <div class="d-flex justify-content-between mb-3">
-                        <strong>Total</strong>
-                        <strong class="h5">KSh {{ cart.total|floatformat:2 }}</strong>
+                    
+                    <div class="order-items mb-3">
+                        {% for item in cart_items %}
+                        <div class="order-item d-flex justify-content-between mb-2">
+                            <div>
+                                <span class="item-name">{{ item.name }}</span>
+                                <small class="text-muted d-block">Qty: {{ item.quantity }}</small>
+                            </div>
+                            <span class="item-price">KSh {{ item.total_price }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="order-totals">
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>KSh {{ cart.subtotal }}</span>
+                        </div>
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Delivery:</span>
+                            <span>KSh {{ cart.delivery_fee }}</span>
+                        </div>
+                        {% if cart.discount > 0 %}
+                        <div class="total-item d-flex justify-content-between mb-2">
+                            <span>Discount:</span>
+                            <span class="text-success">-KSh {{ cart.discount }}</span>
+                        </div>
+                        {% endif %}
+                        <hr>
+                        <div class="total-item d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-primary">KSh {{ cart.total }}</strong>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+<!-- Checkout Section End -->
 
 <script>
-// Show M-Pesa fields when selected
-$('input[name="payment_method"]').on('change', function() {
-    const method = $(this).val();
-    if (method === 'mpesa') {
-        $('#mpesa-fields').removeClass('d-none');
-        $('#mpesa_phone').prop('required', true);
-    } else {
-        $('#mpesa-fields').addClass('d-none');
-        $('#mpesa_phone').prop('required', false);
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide payment details
+    const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
+    paymentOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // Hide all details
+            document.querySelectorAll('.payment-details').forEach(detail => {
+                detail.style.display = 'none';
+            });
+            
+            // Show selected details
+            const detailsId = this.id + '-details';
+            const details = document.getElementById(detailsId);
+            if (details) {
+                details.style.display = 'block';
+            }
+            
+            // Update active state on labels
+            document.querySelectorAll('.payment-label').forEach(label => {
+                label.classList.remove('active');
+            });
+            this.closest('.payment-option').querySelector('.payment-label').classList.add('active');
+        });
+    });
+    
+    // Trigger change on first load
+    document.querySelector('input[name="payment_method"]:checked').dispatchEvent(new Event('change'));
+    
+    // Place order button handler
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+        placeOrderBtn.disabled = true;
+        
+        // Submit form
+        setTimeout(() => {
+            this.submit();
+        }, 1000);
+    });
 });
 </script>
+
+<style>
+.payment-option .payment-label {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option .payment-label:hover,
+.payment-option input:checked + .payment-label {
+    border-color: #76a713;
+    background: rgba(118, 167, 19, 0.05);
+}
+
+.payment-option .payment-label.active {
+    border-color: #76a713;
+    background: rgba(118, 167, 19, 0.05);
+}
+
+.payment-icon {
+    margin-right: 15px;
+}
+
+.payment-content {
+    flex: 1;
+}
+
+.payment-check {
+    color: #76a713;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.payment-option input:checked + .payment-label .payment-check {
+    opacity: 1;
+}
+
+.payment-details {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.delivery-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.checkout-steps .step.completed .step-number {
+    background: #76a713;
+    color: white;
+}
+</style>
 {% endblock %}

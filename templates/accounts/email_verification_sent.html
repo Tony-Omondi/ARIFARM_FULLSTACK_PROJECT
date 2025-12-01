@@ -1,16 +1,75 @@
 {% extends 'base.html' %}
 
-{% block title %}Verification Sent{% endblock %}
+{% block title %}Verification Sent - Munfirm{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h2>Check Your Email</h2>
-            <p>We've sent a verification link to your email address.</p>
-            <p>Please click the link in the email to verify your account.</p>
-            <a href="/" class="btn btn-primary">Go Home</a>
+<!-- Page Banner Start -->
+<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="page-banner-text text-center col-12">
+                <h1>Check Your Email</h1>
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Email Verification</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
+<!-- Page Banner End -->
+
+<!-- Contact Section Start -->
+<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="verification-box wow fadeInUp delay-0-2s">
+                    <div class="icon mb-30">
+                        <i class="far fa-envelope-open-text" style="font-size: 80px; color: #76a713;"></i>
+                    </div>
+                    
+                    <div class="section-title mb-30">
+                        <h2>Verify Your Email</h2>
+                    </div>
+                    
+                    <p class="mb-30" style="font-size: 18px; line-height: 1.6;">
+                        We've sent a verification link to <strong>{{ request.session.registered_email|default:"your email address" }}</strong>.
+                    </p>
+                    
+                    <div class="alert alert-info mb-30" style="background: rgba(118, 167, 19, 0.1); border: 1px solid rgba(118, 167, 19, 0.2); border-radius: 7px; padding: 20px;">
+                        <h5 class="mb-2"><i class="fas fa-info-circle mr-2"></i>What to do next:</h5>
+                        <ul class="text-left pl-4" style="display: inline-block;">
+                            <li class="mb-2">Check your email inbox</li>
+                            <li class="mb-2">Click the verification link in the email</li>
+                            <li>Complete your account setup</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tips-box mb-40" style="background: #f8f9fa; border-radius: 10px; padding: 25px;">
+                        <h5 class="mb-3">Didn't receive the email?</h5>
+                        <ul class="text-left pl-4" style="display: inline-block;">
+                            <li class="mb-2">Check your spam or junk folder</li>
+                            <li class="mb-2">Make sure you entered the correct email</li>
+                            <li>Wait a few minutes and try again</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'home' %}" class="theme-btn mr-3 mb-3">
+                            <i class="fas fa-home mr-2"></i> Go Home
+                        </a>
+                        <a href="{% url 'login' %}" class="theme-btn style-two mb-3">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Login
+                        </a>
+                        <a href="{% url 'email_register' %}" class="theme-btn style-three mb-3">
+                            <i class="fas fa-user-plus mr-2"></i> Try Again
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
 {% endblock %}

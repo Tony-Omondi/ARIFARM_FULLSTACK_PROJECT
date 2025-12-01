@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Invalid Verification - Munfirm{% endblock %}
+
+{% block content %}
+<!-- Page Banner Start -->
+<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="page-banner-text text-center col-12">
+                <h1>Verification Failed</h1>
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li>Verification Error</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Banner End -->
+
+<!-- Error Section Start -->
+<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="error-box wow fadeInUp delay-0-2s">
+                    <div class="error-icon mb-30">
+                        <div style="width: 100px; height: 100px; background: #dc3545; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 50px; color: white;"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title mb-30">
+                        <h2>Invalid Verification Link</h2>
+                        <p class="sub-title" style="color: #dc3545;">Something went wrong</p>
+                    </div>
+                    
+                    <div class="error-message mb-30">
+                        <p style="font-size: 18px; line-height: 1.6;">
+                            The verification link you used is invalid or has expired.
+                            This could be because:
+                        </p>
+                        <ul class="text-left pl-4" style="display: inline-block; text-align: left;">
+                            <li class="mb-2">The link has already been used</li>
+                            <li class="mb-2">The link has expired (valid for 24 hours)</li>
+                            <li class="mb-2">The link was modified or incomplete</li>
+                            <li>Your account is already verified</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solutions-box mb-40" style="background: rgba(220, 53, 69, 0.1); border-radius: 10px; padding: 25px;">
+                        <h5 class="mb-3">What can you do?</h5>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 mb-3">
+                                <div class="solution-card" style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                                    <i class="fas fa-redo-alt mb-3" style="font-size: 30px; color: #ff7800;"></i>
+                                    <h6>Request New Link</h6>
+                                    <p class="small">Login to request a new verification email</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="solution-card" style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                                    <i class="fas fa-envelope mb-3" style="font-size: 30px; color: #ff7800;"></i>
+                                    <h6>Contact Support</h6>
+                                    <p class="small">Get help from our support team</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'login' %}" class="theme-btn mr-3 mb-3">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Login to Account
+                        </a>
+                        <a href="{% url 'email_register' %}" class="theme-btn style-two mb-3">
+                            <i class="fas fa-user-plus mr-2"></i> Register Again
+                        </a>
+                        <a href="{% url 'home' %}" class="theme-btn style-three mb-3">
+                            <i class="fas fa-home mr-2"></i> Return Home
+                        </a>
+                        <a href="mailto:support@munfirm.com" class="theme-btn" style="background: #6c757d; margin-left: 10px;">
+                            <i class="fas fa-headset mr-2"></i> Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Error Section End -->
+{% endblock %}
