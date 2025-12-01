@@ -23,7 +23,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # Delivery info (pre-filled from user profile or entered at checkout)
+    # Delivery info
     delivery_name = models.CharField(max_length=255, null=True, blank=True)
     delivery_phone = models.CharField(max_length=20, null=True, blank=True)
     delivery_county = models.CharField(max_length=100, null=True, blank=True)
@@ -61,12 +61,8 @@ class Cart(models.Model):
         items = self.items.all()
         subtotal = sum(item.total_price for item in items)
         
-        # Apply any discounts here (you can add discount logic later)
         discount = self.discount
-        
-        # Calculate delivery fee based on county
         delivery_fee = self.calculate_delivery_fee()
-        
         total = subtotal + delivery_fee - discount
         
         self.subtotal = subtotal
@@ -78,13 +74,15 @@ class Cart(models.Model):
     
     def calculate_delivery_fee(self):
         """Calculate delivery fee based on county"""
-        # Default delivery fee - you can expand this with a County model
         county_fees = {
             'Nairobi': 200,
             'Kiambu': 250,
             'Mombasa': 500,
             'Kisumu': 450,
-            # Add more counties
+            'Nakuru': 400,
+            'Eldoret': 450,
+            'Thika': 250,
+            'Machakos': 300,
         }
         
         if self.delivery_county and self.delivery_county in county_fees:
@@ -106,6 +104,9 @@ class CartItem(models.Model):
         ('merchandise', 'Merchandise'),
     )
     
+    # ADD UUID PRIMARY KEY
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     item_type = models.CharField(max_length=20, choices=ITEM_TYPES)
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, null=True, blank=True)
@@ -113,14 +114,11 @@ class CartItem(models.Model):
     merchandise = models.ForeignKey('products.Merchandise', on_delete=models.CASCADE, null=True, blank=True)
     
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at time of adding
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     added_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ['-added_at']
-        unique_together = [('cart', 'item_type', 'product'), 
-                          ('cart', 'item_type', 'basket'),
-                          ('cart', 'item_type', 'merchandise')]
     
     def __str__(self):
         if self.item_type == 'product' and self.product:

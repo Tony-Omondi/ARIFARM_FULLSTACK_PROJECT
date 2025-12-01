@@ -1,5 +1,3 @@
-# cart/views.py - FULLY UPDATED & FIXED VERSION
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
@@ -186,7 +184,6 @@ def checkout_delivery(request):
         messages.warning(request, 'Your cart is empty')
         return redirect('products:product_list')
 
-    # 1. Start with data already saved in cart (most important)
     initial_data = {
         'delivery_name': cart.delivery_name or '',
         'delivery_phone': cart.delivery_phone or '',
@@ -195,30 +192,27 @@ def checkout_delivery(request):
         'delivery_address': cart.delivery_address or '',
     }
 
-    # 2. If user is logged in → fill missing fields from their account
     if request.user.is_authenticated:
         user = request.user
 
-        # Full name from first_name + last_name
         if not initial_data['delivery_name']:
             full_name = ' '.join(filter(None, [user.first_name, user.last_name])).strip()
             if full_name:
                 initial_data['delivery_name'] = full_name
             elif user.email:
-                # Fallback: use part before @ in email
                 initial_data['delivery_name'] = user.email.split('@')[0].replace('.', ' ').title()
 
         if not initial_data['delivery_phone']:
-            initial_data['delivery_phone'] = user.phone_number or ''
+            initial_data['delivery_phone'] = getattr(user, 'phone_number', '') or ''
 
         if not initial_data['delivery_county']:
-            initial_data['delivery_county'] = user.county or ''
+            initial_data['delivery_county'] = getattr(user, 'county', '') or ''
 
         if not initial_data['delivery_zone']:
-            initial_data['delivery_zone'] = user.zone or ''
+            initial_data['delivery_zone'] = getattr(user, 'zone', '') or ''
 
         if not initial_data['delivery_address']:
-            initial_data['delivery_address'] = user.address or ''
+            initial_data['delivery_address'] = getattr(user, 'address', '') or ''
 
     context = {
         'cart': cart,
