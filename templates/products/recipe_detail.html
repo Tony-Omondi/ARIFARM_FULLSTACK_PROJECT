@@ -1,0 +1,56 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<div>
+    <img src="{{ recipe.image.url }}" width="300">
+</div>
+
+<div>
+    <h1>{{ recipe.title }}</h1>
+    <p>ID: {{ recipe.recipe_id }}</p>
+    <p>Prep Time: {{ recipe.prep_time }} minutes</p>
+    <p>Cook Time: {{ recipe.cook_time }} minutes</p>
+    <p>Servings: {{ recipe.servings }}</p>
+    <p>Difficulty: {{ recipe.difficulty }}</p>
+    {% if recipe.is_featured %}<p>FEATURED RECIPE</p>{% endif %}
+    
+    <h3>Description</h3>
+    <p>{{ recipe.description }}</p>
+    
+    <h3>Ingredients</h3>
+    {% for ingredient in ingredients %}
+    <div>
+        <input type="checkbox">
+        <label>
+            {{ ingredient.quantity }} 
+            {% if ingredient.product %}
+            <a href="{% url 'products:product_detail' ingredient.product.slug %}">{{ ingredient.product.name }}</a>
+            (${{ ingredient.product.price }})
+            {% else %}
+            {{ ingredient.name }}
+            {% endif %}
+            {% if ingredient.notes %}({{ ingredient.notes }}){% endif %}
+        </label>
+    </div>
+    {% endfor %}
+    
+    {% if ingredient_products %}
+    <form method="post" action="{% url 'cart:add_recipe_ingredients' recipe.id %}">
+        {% csrf_token %}
+        <button type="submit">Buy All Ingredients (${{ ingredients_total_cost }})</button>
+    </form>
+    {% endif %}
+    
+    <h3>Instructions</h3>
+    <pre>{{ recipe.instructions }}</pre>
+</div>
+
+{% if related_recipes %}
+<h3>More Recipes</h3>
+{% for related in related_recipes %}
+<div>
+    <h4><a href="{% url 'products:recipe_detail' related.slug %}">{{ related.title }}</a></h4>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

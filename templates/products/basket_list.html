@@ -1,0 +1,33 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Combo Offers</h1>
+<p>{{ baskets.count }} combos available</p>
+
+{% for basket in baskets %}
+<div>
+    <img src="{{ basket.image.url }}" width="150">
+    <h2><a href="{% url 'products:basket_detail' basket.slug %}">{{ basket.name }}</a></h2>
+    <p>Price: ${{ basket.price }}</p>
+    <p>Original: ${{ basket.total_original_price }}</p>
+    <p>Save: ${{ basket.savings_per_basket }} ({{ basket.discount_percentage }}%)</p>
+    <p>Stock: {{ basket.stock }}</p>
+</div>
+{% empty %}
+<p>No combo offers</p>
+{% endfor %}
+
+{% if is_paginated %}
+<div>
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

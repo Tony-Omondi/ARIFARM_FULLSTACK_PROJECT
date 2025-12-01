@@ -1,0 +1,36 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Recipes</h1>
+
+<form method="get">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search recipes">
+    <button type="submit">Search</button>
+</form>
+
+{% for recipe in recipes %}
+<div>
+    <img src="{{ recipe.image.url }}" width="150">
+    <h2><a href="{% url 'products:recipe_detail' recipe.slug %}">{{ recipe.title }}</a></h2>
+    <p>Prep: {{ recipe.prep_time }}min | Cook: {{ recipe.cook_time }}min</p>
+    <p>Servings: {{ recipe.servings }} | Difficulty: {{ recipe.difficulty }}</p>
+    <p>{{ recipe.description|truncatewords:20 }}</p>
+</div>
+{% empty %}
+<p>No recipes found</p>
+{% endfor %}
+
+{% if is_paginated %}
+<div>
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

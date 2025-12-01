@@ -1,0 +1,56 @@
+<!-- templates/products/admin_dashboard.html -->
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Admin Dashboard</h1>
+
+<div>
+    <h2>Quick Stats</h2>
+    <div>
+        <div>
+            <h3>Products</h3>
+            <p>Total: {{ stats.total_products }}</p>
+            <p>Active: {{ stats.active_products }}</p>
+            <p>Low Stock (&lt;10): {{ stats.low_stock_products }}</p>
+            <p>Out of Stock: {{ stats.out_of_stock }}</p>
+        </div>
+        
+        <div>
+            <h3>Baskets</h3>
+            <p>Total: {{ stats.total_baskets }}</p>
+            <p>Active: {{ stats.active_baskets }}</p>
+        </div>
+        
+        <div>
+            <h3>Other</h3>
+            <p>Recipes: {{ stats.total_recipes }}</p>
+            <p>Categories: {{ stats.total_categories }}</p>
+            <p>Merchandise: {{ stats.total_merchandise }}</p>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h2>Quick Actions</h2>
+    <div>
+        <a href="{% url 'products:admin_product_create' %}">Add Product</a>
+        <a href="{% url 'products:admin_basket_create' %}">Create Basket</a>
+        <a href="{% url 'products:admin_recipe_create' %}">Add Recipe</a>
+        <a href="{% url 'products:admin_category_create' %}">Add Category</a>
+        <a href="{% url 'products:admin_merchandise_create' %}">Add Merchandise</a>
+        <a href="{% url 'products:admin_bulk_operations' %}">Bulk Operations</a>
+    </div>
+</div>
+
+<div>
+    <h2>Recent Products</h2>
+    {% for product in recent_products %}
+    <div>
+        <h3>{{ product.name }}</h3>
+        <p>Price: ${{ product.price }}</p>
+        <p>Stock: {{ product.stock }}</p>
+        <a href="{% url 'products:admin_product_edit' product.id %}">Edit</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

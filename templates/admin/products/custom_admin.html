@@ -1,0 +1,174 @@
+<!-- templates/admin/products/custom_admin.html -->
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<h1>Add New Product</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Name:</label>
+        <input type="text" name="name" required>
+    </div>
+    <div>
+        <label>Price:</label>
+        <input type="number" name="price" step="0.01" required>
+    </div>
+    <div>
+        <label>Stock:</label>
+        <input type="number" name="stock" required>
+    </div>
+    <div>
+        <label>Description:</label>
+        <textarea name="description" required></textarea>
+    </div>
+    <div>
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+    </div>
+    <div>
+        <label>Category:</label>
+        <select name="category">
+            <option value="">Select Category</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" name="is_new"> New Product
+        </label>
+    </div>
+    <button type="submit">Add Product</button>
+</form>
+
+<h1>Add New Basket</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Basket Name:</label>
+        <input type="text" name="name" required>
+    </div>
+    <div>
+        <label>Price:</label>
+        <input type="number" name="price" step="0.01" required>
+    </div>
+    <div>
+        <label>Description:</label>
+        <textarea name="description" required></textarea>
+    </div>
+    <div>
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+    </div>
+    
+    <h3>Add Products to Basket</h3>
+    <div id="products-container">
+        <div>
+            <select name="products[]">
+                <option value="">Select Product</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} (${{ product.price }})</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="quantities[]" placeholder="Quantity" min="1" value="1">
+            <button type="button" onclick="removeProduct(this)">Remove</button>
+        </div>
+    </div>
+    <button type="button" onclick="addProduct()">Add Another Product</button>
+    
+    <button type="submit">Create Basket</button>
+</form>
+
+<h1>Add New Recipe</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Title:</label>
+        <input type="text" name="title" required>
+    </div>
+    <div>
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+    </div>
+    <div>
+        <label>Description:</label>
+        <textarea name="description"></textarea>
+    </div>
+    <div>
+        <label>Instructions:</label>
+        <textarea name="instructions" required></textarea>
+    </div>
+    <div>
+        <label>Prep Time (minutes):</label>
+        <input type="number" name="prep_time" value="15">
+    </div>
+    <div>
+        <label>Cook Time (minutes):</label>
+        <input type="number" name="cook_time" value="30">
+    </div>
+    
+    <h3>Add Ingredients</h3>
+    <div id="ingredients-container">
+        <div>
+            <select name="ingredient_products[]">
+                <option value="">Select Product (optional)</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="ingredient_names[]" placeholder="Ingredient name">
+            <input type="text" name="ingredient_quantities[]" placeholder="Quantity (e.g., 2 cups)">
+            <input type="text" name="ingredient_notes[]" placeholder="Notes (optional)">
+            <button type="button" onclick="removeIngredient(this)">Remove</button>
+        </div>
+    </div>
+    <button type="button" onclick="addIngredient()">Add Another Ingredient</button>
+    
+    <button type="submit">Create Recipe</button>
+</form>
+
+<script>
+function addProduct() {
+    const container = document.getElementById('products-container');
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <select name="products[]">
+            <option value="">Select Product</option>
+            {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }} (${{ product.price }})</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="quantities[]" placeholder="Quantity" min="1" value="1">
+        <button type="button" onclick="removeProduct(this)">Remove</button>
+    `;
+    container.appendChild(div);
+}
+
+function removeProduct(button) {
+    button.parentElement.remove();
+}
+
+function addIngredient() {
+    const container = document.getElementById('ingredients-container');
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <select name="ingredient_products[]">
+            <option value="">Select Product (optional)</option>
+            {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="ingredient_names[]" placeholder="Ingredient name">
+        <input type="text" name="ingredient_quantities[]" placeholder="Quantity (e.g., 2 cups)">
+        <input type="text" name="ingredient_notes[]" placeholder="Notes (optional)">
+        <button type="button" onclick="removeIngredient(this)">Remove</button>
+    `;
+    container.appendChild(div);
+}
+
+function removeIngredient(button) {
+    button.parentElement.remove();
+}
+</script>
+{% endblock %}

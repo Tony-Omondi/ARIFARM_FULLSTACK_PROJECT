@@ -1,0 +1,33 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Merchandise</h1>
+<p>{{ merchandise_items.count }} items</p>
+
+{% for item in merchandise_items %}
+<div>
+    <img src="{{ item.image.url }}" width="100">
+    <h3>{{ item.name }}</h3>
+    <p>Price: ${{ item.price }}</p>
+    <p>Stock: {{ item.stock }}</p>
+    <p>{{ item.description|truncatewords:10 }}</p>
+    <a href="{% url 'products:merchandise_detail' item.id %}">View Details</a>
+</div>
+{% empty %}
+<p>No merchandise</p>
+{% endfor %}
+
+{% if is_paginated %}
+<div>
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

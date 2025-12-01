@@ -1,0 +1,79 @@
+<!-- templates/products/base.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|default:"Products" }} - AriFarm{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar for categories/filters -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Categories</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if not request.resolver_match.url_name == 'category_products' %}active{% endif %}" 
+                           href="{% url 'products:product_list' %}">
+                            All Products
+                        </a>
+                    </li>
+                    {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:category_products' category.slug %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Shop By</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:basket_list' %}">
+                            <i class="fas fa-shopping-basket"></i> Combo Offers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:recipe_list' %}">
+                            <i class="fas fa-utensils"></i> Recipes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:merchandise_list' %}">
+                            <i class="fas fa-tshirt"></i> Merchandise
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+            {% if user.is_staff %}
+        <div style="background: #ffcc00; padding: 10px;">
+            <strong>Admin Menu:</strong>
+            <a href="{% url 'products:admin_dashboard' %}">Dashboard</a> |
+            <a href="{% url 'products:admin_product_create' %}">Add Product</a> |
+            <a href="{% url 'products:admin_basket_create' %}">Create Basket</a> |
+            <a href="{% url 'products:admin_recipe_create' %}">Add Recipe</a> |
+            <a href="/admin/">Django Admin</a>
+        </div>
+        {% endif %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            {% block products_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'products/js/products.js' %}"></script>
+{% endblock %}

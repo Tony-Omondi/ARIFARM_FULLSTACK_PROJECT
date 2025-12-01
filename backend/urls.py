@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('auth/', include('social_django.urls', namespace='social')),
     path('', include('core.urls')),  # Your core app
+    path('products/', include('products.urls')),  # Your core app
 ]
 
 if settings.DEBUG:

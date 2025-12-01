@@ -1,0 +1,37 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<div>
+    <img src="{{ merchandise.image.url }}" width="300">
+</div>
+
+<div>
+    <h1>{{ merchandise.name }}</h1>
+    <p>ID: {{ merchandise.product_id }}</p>
+    <p>Price: ${{ merchandise.price }}</p>
+    <p>Stock: {{ merchandise.stock }}</p>
+    
+    <h3>Description</h3>
+    <p>{{ merchandise.description }}</p>
+    
+    {% if merchandise.stock > 0 %}
+    <form method="post" action="{% url 'cart:add_merchandise' merchandise.id %}">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="1" min="1" max="{{ merchandise.stock }}">
+        <button type="submit">Add to Cart</button>
+    </form>
+    {% else %}
+    <p>Out of Stock</p>
+    {% endif %}
+</div>
+
+{% if related_merchandise %}
+<h3>More Merchandise</h3>
+{% for item in related_merchandise %}
+<div>
+    <h4><a href="{% url 'products:merchandise_detail' item.id %}">{{ item.name }}</a></h4>
+    <p>Price: ${{ item.price }}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

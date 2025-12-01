@@ -1,0 +1,69 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Welcome to Our Store</h1>
+
+<h2>Featured Products</h2>
+{% if featured_products %}
+<div>
+    {% for product in featured_products %}
+    <div>
+        <img src="{{ product.image.url }}" width="100">
+        <h3>{{ product.name }}</h3>
+        <p>Price: ${{ product.price }}</p>
+        <p>{{ product.description|truncatewords:10 }}</p>
+        <a href="{% url 'products:product_detail' product.slug %}">View</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No featured products</p>
+{% endif %}
+
+<h2>Combo Offers</h2>
+{% if product_baskets %}
+<div>
+    {% for basket in product_baskets %}
+    <div>
+        <img src="{{ basket.image.url }}" width="100">
+        <h3>{{ basket.name }}</h3>
+        <p>Price: ${{ basket.price }}</p>
+        <a href="{% url 'products:basket_detail' basket.slug %}">View Combo</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No combo offers</p>
+{% endif %}
+
+<h2>Recipes</h2>
+{% if featured_recipes %}
+<div>
+    {% for recipe in featured_recipes %}
+    <div>
+        <img src="{{ recipe.image.url }}" width="100">
+        <h3>{{ recipe.title }}</h3>
+        <p>{{ recipe.description|truncatewords:10 }}</p>
+        <a href="{% url 'products:recipe_detail' recipe.slug %}">View Recipe</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No recipes</p>
+{% endif %}
+
+<h2>Categories</h2>
+{% if categories %}
+<div>
+    {% for category in categories %}
+    <div>
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.products.count }} products</p>
+        <a href="{% url 'products:category_products' category.slug %}">Browse</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No categories</p>
+{% endif %}
+{% endblock %}

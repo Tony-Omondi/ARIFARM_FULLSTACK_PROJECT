@@ -1,0 +1,49 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<div>
+    <img src="{{ basket.image.url }}" width="300">
+</div>
+
+<div>
+    <h1>{{ basket.name }}</h1>
+    <p>ID: {{ basket.basket_id }}</p>
+    <p>Price: ${{ basket.price }}</p>
+    <p>Original Price: ${{ original_price }}</p>
+    <p>You Save: ${{ savings }} ({{ discount_percentage }}%)</p>
+    <p>Stock: {{ basket.stock }}</p>
+    
+    <h3>Description</h3>
+    <p>{{ basket.description }}</p>
+    
+    <h3>Contains:</h3>
+    {% for item in basket_items %}
+    <div>
+        <h4><a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a></h4>
+        <p>Quantity: {{ item.quantity }}</p>
+        <p>Price each: ${{ item.product.price }}</p>
+        <p>Subtotal: ${{ item.item_total_price }}</p>
+    </div>
+    {% endfor %}
+    
+    {% if basket.stock > 0 %}
+    <form method="post" action="{% url 'cart:add_basket' basket.id %}">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="1" min="1" max="{{ basket.stock }}">
+        <button type="submit">Add Combo to Cart</button>
+    </form>
+    {% else %}
+    <p>Out of Stock</p>
+    {% endif %}
+</div>
+
+{% if related_baskets %}
+<h3>More Combos</h3>
+{% for related in related_baskets %}
+<div>
+    <h4><a href="{% url 'products:basket_detail' related.slug %}">{{ related.name }}</a></h4>
+    <p>Price: ${{ related.price }}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

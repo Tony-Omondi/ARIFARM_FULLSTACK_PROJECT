@@ -1,0 +1,50 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<div>
+    <img src="{{ product.image.url }}" width="300">
+</div>
+
+<div>
+    <h1>{{ product.name }}</h1>
+    <p>ID: {{ product.product_id }}</p>
+    <p>Price: ${{ product.price }}</p>
+    <p>Stock: {{ product.stock }}</p>
+    <p>Category: {{ product.category.name|default:"None" }}</p>
+    {% if product.is_new %}<p>NEW ARRIVAL</p>{% endif %}
+    
+    <h3>Description</h3>
+    <p>{{ product.description }}</p>
+    
+    {% if product.stock > 0 %}
+    <form method="post" action="{% url 'cart:add' product.id %}">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+        <button type="submit">Add to Cart</button>
+    </form>
+    {% else %}
+    <p>Out of Stock</p>
+    {% endif %}
+</div>
+
+{% if baskets_with_product %}
+<h3>Available in Combos:</h3>
+{% for basket in baskets_with_product %}
+<div>
+    <h4><a href="{% url 'products:basket_detail' basket.slug %}">{{ basket.name }}</a></h4>
+    <p>Price: ${{ basket.price }}</p>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if related_products %}
+<h3>Related Products</h3>
+{% for related in related_products %}
+<div>
+    <img src="{{ related.image.url }}" width="50">
+    <h4><a href="{% url 'products:product_detail' related.slug %}">{{ related.name }}</a></h4>
+    <p>Price: ${{ related.price }}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

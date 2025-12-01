@@ -1,0 +1,15 @@
+{% extends 'products/base.html' %}
+
+{% block products_content %}
+<h1>Categories</h1>
+
+{% for cat_data in categories_with_count %}
+<div>
+    <h3><a href="{% url 'products:category_products' cat_data.category.slug %}">{{ cat_data.category.name }}</a></h3>
+    <p>{{ cat_data.category.description|truncatewords:20 }}</p>
+    <p>{{ cat_data.product_count }} products</p>
+</div>
+{% empty %}
+<p>No categories</p>
+{% endfor %}
+{% endblock %}
