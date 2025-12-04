@@ -1,132 +1,123 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Login - Munfirm{% endblock %}
+{% block title %}Login - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<!-- Page Banner Start -->
-<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.png);">
+
+<section class="page-wrapper de-padding">
     <div class="container">
-        <div class="row">
-            <div class="page-banner-text text-center col-12">
-                <h1>Login</h1>
-                <ul class="breadcrumb">
+
+        <!-- Breadcrumb -->
+        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+            <div class="container">
+                <h2 class="breadcrumb-title">Welcome Back</h2>
+                <ul class="breadcrumb-menu clearfix">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Login</li>
+                    <li class="active">Login</li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
-<!-- Page Banner End -->
 
-<!-- Contact Section Start -->
-<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="contact-form wow fadeInUp delay-0-2s">
-                    <div class="section-title mb-40">
-                        <span class="sub-title mb-15">Welcome Back</span>
-                        <h2>Login to Your Account</h2>
-                    </div>
-                    
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-danger mb-20" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 7px; border: 1px solid #f5c6cb;">
+        <!-- Login Area -->
+        <div class="reg-area bg de-padding">
+            <div class="container">
+                <div class="reg-wpr grid-center">
+                    <div class="login-form text-center" style="max-width: 480px; margin: 0 auto;">
+
+                        <!-- Logo -->
+                        <i class="header-icon mb-30">
+                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg Organic Shop" style="height: 60px;">
+                        </i>
+
+                        <h3 style="color: #37582D; font-weight: 600;">Login to Your Account</h3>
+                        <p class="text-muted mb-40">Enter your credentials to access your account</p>
+
+                        <!-- Messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert mb-20" style="border-radius: 12px; padding: 15px; {% if message.tags == 'success' %}background: #d4edda; color: #155724;{% else %}background: #f8d7da; color: #721c24;{% endif %}">
                                 {{ message }}
                             </div>
-                        {% endfor %}
-                    {% endif %}
+                            {% endfor %}
+                        {% endif %}
 
-                    <!-- Email Login Form -->
-                    <form method="post" id="contactForm">
-                        {% csrf_token %}
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <button type="submit" class="theme-btn">Login <i class="fas fa-angle-double-right"></i></button>
-                        </div>
-                    </form>
+                        <!-- Login Form -->
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-20">
+                                <input type="text" name="email" class="form-control" placeholder="Email Address" required 
+                                       style="height: 56px; border-radius: 12px; font-size: 16px; padding: 0 20px;">
+                            </div>
+                            <div class="mb-20">
+                                <input type="password" name="password" class="form-control" placeholder="Password" required 
+                                       style="height: 56px; border-radius: 12px; font-size: 16px; padding: 0 20px;">
+                            </div>
 
-                    <!-- Alternative Login Options -->
-                    <div class="mt-30">
-                        <div class="text-center mb-20">
-                            <span class="d-inline-block bg-white px-3" style="color: #666; position: relative; z-index: 1;">Or login with</span>
-                            <hr style="margin-top: -15px;">
-                        </div>
-                        
-                        <!-- Google Login -->
-                        <div class="text-center">
-                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="theme-btn style-three" style="background: #db4437; color: white; border: none; padding: 12px 30px;">
-                                <i class="fab fa-google mr-2"></i> Login with Google
+                            <div class="d-flex justify-content-between align-items-center mb-30">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
+                                    <label class="form-check-label" for="remember_me" style="font-size: 14px; color: #555;">
+                                        Remember Me
+                                    </label>
+                                </div>
+                                <a href="{% url 'password_reset' %}" class="text-decoration-underline" style="color: #37582D; font-size: 14px;">
+                                    Forgot Password?
+                                </a>
+                            </div>
+
+                            <button type="submit" class="btn-6 w-100 mb-20" style="height: 56px; font-size: 17px; font-weight: 600;">
+                                Login to Account
+                            </button>
+
+                            <p class="text-center text-muted mb-30">
+                                Don't have an account? 
+                                <a href="{% url 'email_register' %}" style="color: #37582D; font-weight: 600;">Sign Up Now</a>
+                            </p>
+
+                            <!-- Divider -->
+                            <div class="text-center position-relative mb-30">
+                                <hr>
+                                <span style="background: white; padding: 0 15px; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: #999; font-size: 14px;">
+                                    Or continue with
+                                </span>
+                            </div>
+
+                            <!-- Google Login Button (Beautiful) -->
+                            <a href="{% url 'social:begin' 'google-oauth2' %}" 
+                               class="btn w-100 d-flex align-items-center justify-content-center" 
+                               style="height: 56px; background: white; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; color: #333; font-weight: 500; transition: all 0.3s;">
+                                <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20" class="me-3">
+                                Continue with Google
                             </a>
-                        </div>
-                    </div>
-
-                    <!-- Additional Links -->
-                    <div class="mt-40 text-center">
-                        <p class="mb-10">
-                            Don't have an account? 
-                            <a href="{% url 'email_register' %}" class="read-more">Register here <i class="fas fa-angle-double-right"></i></a>
-                        </p>
-                        
-                        <p class="mb-10">
-                            <a href="#forgot-password" class="read-more">Forgot Password? <i class="fas fa-angle-double-right"></i></a>
-                        </p>
-                        
-                        <p class="mb-10">
-                            <a href="{% url 'admin_login' %}" class="read-more">Admin Login <i class="fas fa-angle-double-right"></i></a>
-                        </p>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Contact Section End -->
 
-<!-- Forgot Password Modal (Hidden until triggered) -->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header">
-                <h5 class="modal-title">Reset Password</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Please enter your email address to receive a password reset link.</p>
-                <form id="forgotPasswordForm">
-                    <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Enter your email" required>
-                    </div>
-                    <button type="submit" class="theme-btn">Send Reset Link <i class="fas fa-angle-double-right"></i></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+<!-- Remember Me Script -->
 <script>
-// Trigger forgot password modal
 document.addEventListener('DOMContentLoaded', function() {
-    const forgotPasswordLink = document.querySelector('a[href="#forgot-password"]');
-    if (forgotPasswordLink) {
-        forgotPasswordLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            $('#forgotPasswordModal').modal('show');
-        });
+    const rememberMe = document.getElementById('remember_me');
+    const emailField = document.querySelector('input[name="email"]');
+    const savedEmail = localStorage.getItem('saved_email');
+
+    if (savedEmail) {
+        emailField.value = savedEmail;
+        rememberMe.checked = true;
     }
+
+    document.querySelector('form').addEventListener('submit', function() {
+        if (rememberMe.checked && emailField.value) {
+            localStorage.setItem('saved_email', emailField.value);
+        } else {
+            localStorage.removeItem('saved_email');
+        }
+    });
 });
 </script>
+
 {% endblock %}

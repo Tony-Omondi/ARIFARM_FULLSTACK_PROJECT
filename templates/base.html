@@ -1,76 +1,73 @@
-<!DOCTYPE html>
-<html lang="zxx" dir="ltr">
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="description" content="" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Oreg - Organic Shop HTML Template</title>
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/logo/favicon.png' %}">
 
-    <!-- Title -->
-    <title>Munfirm - Agriculture & Organic Food HTML Template || {% block title %}Home{% endblock %}</title>
-    <!-- Favicon Icon -->
-    <link rel="shortcut icon" href="/static/assets/images/favicon.png" type="image/x-icon">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Flaticon -->
-    <link rel="stylesheet" href="/static/assets/css/flaticon.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/static/assets/css/fontawesome-5.14.0.min.css">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/static/assets/css/bootstrap-4.5.3.min.css">
-    <!-- Magnific Popup -->
-    <link rel="stylesheet" href="/static/assets/css/magnific-popup.min.css">
-    <!-- Nice Select -->
-    <link rel="stylesheet" href="/static/assets/css/nice-select.min.css">
-    <!-- Animate -->
-    <link rel="stylesheet" href="/static/assets/css/animate.min.css">
-    <!-- Slick -->
-    <link rel="stylesheet" href="/static/assets/css/slick.min.css">
-    <!-- Main Style -->
-    <link rel="stylesheet" href="/static/assets/css/style.css">
-    
+    <!-- All CSS - 100% correct static paths -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/fontawesome.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/magnific-popup.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/owl.carousel.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/owl.theme.default.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/animate.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/themify-icons.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/icofont.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/site-flaticon.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
 </head>
-<body>
-    <div class="page-wrapper">
 
-        <!-- Preloader -->
-        <div class="preloader"></div>
+<body id="bdy">
 
-        {% include 'includes/header.html' %}
-       
+    <!-- Preloader -->
+    <div class="se-pre-con"></div>
+
+    <!-- Header -->
+    {% include 'includes/header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
         {% block content %}
         {% endblock %}
+    </main>
 
-        {% include 'includes/footer.html' %}
+    <div class="clearfix"></div>
 
-    </div>
-    <!--End pagewrapper-->
-   
-    
-    <!-- Jquery -->
-    <script src="/static/assets/js/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="/static/assets/js/bootstrap.min.js"></script>
-    <!-- Appear Js -->
-    <script src="/static/assets/js/appear.min.js"></script>
-    <!-- Slick -->
-    <script src="/static/assets/js/slick.min.js"></script>
-    <!-- Magnific Popup -->
-    <script src="/static/assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- Nice Select -->
-    <script src="/static/assets/js/jquery.nice-select.min.js"></script>
-    <!-- Image Loader -->
-    <script src="/static/assets/js/imagesloaded.pkgd.min.js"></script>
-    <!-- Circle Progress -->
-    <script src="/static/assets/js/circle-progress.min.js"></script>
-    <!-- Isotope -->
-    <script src="/static/assets/js/isotope.pkgd.min.js"></script>
-    <!--  WOW Animation -->
-    <script src="/static/assets/js/wow.min.js"></script>
-    <!-- Custom script -->
-    <script src="/static/assets/js/script.js"></script>
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <!-- Back to top -->
+    <a href="#bdy" id="scrtop" class="smooth-menu"><i class="ti-arrow-up"></i></a>
+
+    <!-- All JavaScript - 100% correct static paths -->
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap-menu.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.appear.js' %}"></script>
+    <script src="{% static 'assets/js/modernizr.custom.13711.js' %}"></script>
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'assets/js/imagesloaded.pkgd.min.js' %}"></script>
+    <script src="{% static 'assets/js/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'assets/js/wow.min.js' %}"></script>
+    <script src="{% static 'assets/js/wodry.min.js' %}"></script>
+    <script src="{% static 'assets/js/count-to.js' %}"></script>
+    <script src="{% static 'assets/js/progress-bar.min.js' %}"></script>
+    <script src="{% static 'assets/js/color-option.js' %}"></script>
+    <script src="{% static 'assets/js/typed.js' %}"></script>
+    <script src="{% static 'assets/js/YTPlayer.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.mixitup.min.js' %}"></script>
+    <script src="{% static 'assets/js/active-class.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
 
 </body>
 </html>

@@ -1,120 +1,101 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Register - Munfirm{% endblock %}
+{% block title %}Register - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<!-- Page Banner Start -->
-<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+
+<section class="page-wrapper de-padding">
     <div class="container">
-        <div class="row">
-            <div class="page-banner-text text-center col-12">
-                <h1>Register</h1>
-                <ul class="breadcrumb">
+
+        <!-- Breadcrumb -->
+        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+            <div class="container">
+                <h2 class="breadcrumb-title">Create Account</h2>
+                <ul class="breadcrumb-menu clearfix">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Register</li>
+                    <li class="active">Register</li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
-<!-- Page Banner End -->
 
-<!-- Contact Section Start -->
-<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="contact-form wow fadeInUp delay-0-2s">
-                    <div class="section-title mb-40">
-                        <span class="sub-title mb-15">Join Our Community</span>
-                        <h2>Create Your Account</h2>
-                    </div>
-                    
-                    <!-- Email Registration Form -->
-                    <form method="post" id="registerForm">
-                        {% csrf_token %}
-                        
-                        <div class="form-group">
-                            <label for="id_email">Email Address</label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                                <div class="text-danger mt-2">
-                                    {% for error in form.email.errors %}
-                                        <p class="mb-1">{{ error }}</p>
-                                    {% endfor %}
+        <!-- Register Area -->
+        <div class="reg-area bg de-padding">
+            <div class="container">
+                <div class="reg-wpr grid-center">
+                    <div class="login-form text-center" style="max-width: 500px; margin: 0 auto;">
+
+                        <i class="header-icon mb-30">
+                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
+                        </i>
+
+                        <h3 style="color: #37582D; font-weight: 600;">Join Oreg Organic Shop</h3>
+                        <p class="text-muted mb-40">Sign up to get started with fresh organic products</p>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert mb-20" style="border-radius: 12px; padding: 15px; {% if message.tags == 'success' %}background: #d4edda; color: #155724;{% else %}background: #f8d7da; color: #721c24;{% endif %}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post" class="text-start">
+                            {% csrf_token %}
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="text" name="first_name" class="form-control" placeholder="First Name" required style="height: 56px; border-radius: 12px;">
                                 </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_password1">Password</label>
-                            {{ form.password1 }}
-                            {% if form.password1.errors %}
-                                <div class="text-danger mt-2">
-                                    {% for error in form.password1.errors %}
-                                        <p class="mb-1">{{ error }}</p>
-                                    {% endfor %}
+                                <div class="col-md-6">
+                                    <input type="text" name="last_name" class="form-control" placeholder="Last Name" required style="height: 56px; border-radius: 12px;">
                                 </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_password2">Confirm Password</label>
-                            {{ form.password2 }}
-                            {% if form.password2.errors %}
-                                <div class="text-danger mt-2">
-                                    {% for error in form.password2.errors %}
-                                        <p class="mb-1">{{ error }}</p>
-                                    {% endfor %}
+                                <div class="col-12">
+                                    <input type="email" name="email" class="form-control" placeholder="Email Address" required style="height: 56px; border-radius: 12px;">
                                 </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox mb-3">
-                                <input type="checkbox" class="custom-control-input" id="termsCheck" required>
-                                <label class="custom-control-label" for="termsCheck">
-                                    I agree to the <a href="#" class="text-primary">Terms & Conditions</a> and 
-                                    <a href="#" class="text-primary">Privacy Policy</a>
+                                <div class="col-12">
+                                    <input type="password" name="password1" class="form-control" placeholder="Create Password" required style="height: 56px; border-radius: 12px;">
+                                </div>
+                                <div class="col-12">
+                                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required style="height: 56px; border-radius: 12px;">
+                                </div>
+                            </div>
+
+                            <div class="form-check mt-20 mb-30">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms" style="font-size: 14px; color: #555;">
+                                    I agree to the <a href="#" style="color: #37582D;">Terms of Service</a> and <a href="#" style="color: #37582D;">Privacy Policy</a>
                                 </label>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <button type="submit" class="theme-btn">
-                                Create Account <i class="fas fa-angle-double-right"></i>
+
+                            <button type="submit" class="btn-6 w-100 mb-20" style="height: 56px; font-size: 17px; font-weight: 600;">
+                                Create Account
                             </button>
-                        </div>
-                    </form>
 
-                    <!-- Alternative Registration Options -->
-                    <div class="mt-30">
-                        <div class="text-center mb-20">
-                            <span class="d-inline-block bg-white px-3" style="color: #666;">Or sign up with</span>
-                            <hr style="margin-top: -15px;">
-                        </div>
-                        
-                        <!-- Google Sign Up -->
-                        <div class="text-center">
+                            <p class="text-center text-muted">
+                                Already have an account? 
+                                <a href="{% url 'login' %}" style="color: #37582D; font-weight: 600;">Login Here</a>
+                            </p>
+
+                            <div class="text-center position-relative my-30">
+                                <hr>
+                                <span style="background: white; padding: 0 15px; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: #999;">
+                                    Or sign up with
+                                </span>
+                            </div>
+
                             <a href="{% url 'social:begin' 'google-oauth2' %}" 
-                               class="theme-btn style-three" 
-                               style="background: #db4437; color: white; border: none; padding: 12px 30px;">
-                                <i class="fab fa-google mr-2"></i> Sign up with Google
+                               class="btn w-100 d-flex align-items-center justify-content-center" 
+                               style="height: 56px; background: white; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; color: #333;">
+                                <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20" class="me-3">
+                                Continue with Google
                             </a>
-                        </div>
-                    </div>
-
-                    <!-- Login Link -->
-                    <div class="mt-40 text-center">
-                        <p>
-                            Already have an account? 
-                            <a href="{% url 'login' %}" class="read-more">Login here <i class="fas fa-angle-double-right"></i></a>
-                        </p>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Contact Section End -->
+
 {% endblock %}

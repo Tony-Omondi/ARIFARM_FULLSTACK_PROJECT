@@ -1,92 +1,70 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Invalid Verification - Munfirm{% endblock %}
+{% block title %}Verification Failed - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<!-- Page Banner Start -->
-<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+<section class="page-wrapper de-padding">
     <div class="container">
-        <div class="row">
-            <div class="page-banner-text text-center col-12">
-                <h1>Verification Failed</h1>
-                <ul class="breadcrumb">
+        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+            <div class="container">
+                <h2 class="breadcrumb-title">Verification Failed</h2>
+                <ul class="breadcrumb-menu clearfix">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Verification Error</li>
+                    <li class="active">Verification Error</li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
-<!-- Page Banner End -->
 
-<!-- Error Section Start -->
-<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="error-box wow fadeInUp delay-0-2s">
-                    <div class="error-icon mb-30">
-                        <div style="width: 100px; height: 100px; background: #dc3545; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 50px; color: white;"></i>
+        <div class="reg-area bg de-padding">
+            <div class="container">
+                <div class="reg-wpr grid-center">
+                    <div class="login-form text-center" style="max-width: 520px; margin: 0 auto;">
+
+                        <i class="header-icon mb-30">
+                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
+                        </i>
+
+                        <div class="mb-40">
+                            <div style="width: 110px; height: 110px; background: #e74c3c; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin: 0 auto; border: 6px solid #ffeaea;">
+                                <i class="icofont-close-circled" style="font-size: 56px; color: white;"></i>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="section-title mb-30">
-                        <h2>Invalid Verification Link</h2>
-                        <p class="sub-title" style="color: #dc3545;">Something went wrong</p>
-                    </div>
-                    
-                    <div class="error-message mb-30">
-                        <p style="font-size: 18px; line-height: 1.6;">
-                            The verification link you used is invalid or has expired.
-                            This could be because:
+
+                        <h3 style="color: #e74c3c; font-weight: 600;">Verification Link Invalid</h3>
+                        <p class="text-muted mb-40" style="font-size: 18px;">
+                            The verification link is either expired, already used, or invalid.
                         </p>
-                        <ul class="text-left pl-4" style="display: inline-block; text-align: left;">
-                            <li class="mb-2">The link has already been used</li>
-                            <li class="mb-2">The link has expired (valid for 24 hours)</li>
-                            <li class="mb-2">The link was modified or incomplete</li>
-                            <li>Your account is already verified</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="solutions-box mb-40" style="background: rgba(220, 53, 69, 0.1); border-radius: 10px; padding: 25px;">
-                        <h5 class="mb-3">What can you do?</h5>
-                        <div class="row justify-content-center">
-                            <div class="col-md-6 mb-3">
-                                <div class="solution-card" style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                                    <i class="fas fa-redo-alt mb-3" style="font-size: 30px; color: #ff7800;"></i>
-                                    <h6>Request New Link</h6>
-                                    <p class="small">Login to request a new verification email</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="solution-card" style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                                    <i class="fas fa-envelope mb-3" style="font-size: 30px; color: #ff7800;"></i>
-                                    <h6>Contact Support</h6>
-                                    <p class="small">Get help from our support team</p>
-                                </div>
+
+                        <br><strong>Don't worry — we can fix this!</strong>
+                        </p>
+
+                        <div class="p-30 mb-40" style="background: #fff5f5; border-radius: 16px; border: 1px solid #fab1a0;">
+                            <h5 class="mb-20" style="color: #c0392b;">Possible Reasons:</h5>
+                            <ul class="text-start mb-0" style="font-size: 15px; line-height: 2;">
+                                <li><i class="icofont-close-circled text-danger mr-2"></i> The link was already used</li>
+                                <li><i class="icofont-close-circled text-danger mr-2"></i> The link expired after 24 hours</li>
+                                <li><i class="icofont-close-circled text-danger mr-2"></i> Your account is already verified</li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="{% url 'login' %}" class="btn-6 mr-15 mb-10">
+                                <i class="icofont-login mr-2"></i> Login to Account
+                            </a>
+                            <a href="{% url 'email_register' %}" class="btn-6 mb-10" style="background: #f8f9fa; color: #e74c3c; border: 1px solid #fab1a0;">
+                                <i class="icofont-user-plus mr-2"></i> Register Again
+                            </a>
+                            <div class="mt-20">
+                                <a href="{% url 'home' %}" class="btn-6" style="background: #f1f8e9; color: #37582D;">
+                                    <i class="icofont-home mr-2"></i> Back to Homepage
+                                </a>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <a href="{% url 'login' %}" class="theme-btn mr-3 mb-3">
-                            <i class="fas fa-sign-in-alt mr-2"></i> Login to Account
-                        </a>
-                        <a href="{% url 'email_register' %}" class="theme-btn style-two mb-3">
-                            <i class="fas fa-user-plus mr-2"></i> Register Again
-                        </a>
-                        <a href="{% url 'home' %}" class="theme-btn style-three mb-3">
-                            <i class="fas fa-home mr-2"></i> Return Home
-                        </a>
-                        <a href="mailto:support@munfirm.com" class="theme-btn" style="background: #6c757d; margin-left: 10px;">
-                            <i class="fas fa-headset mr-2"></i> Contact Support
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Error Section End -->
 {% endblock %}

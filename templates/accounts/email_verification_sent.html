@@ -1,69 +1,55 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Verification Sent - Munfirm{% endblock %}
+{% block title %}Check Your Email - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<!-- Page Banner Start -->
-<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+<section class="page-wrapper de-padding">
     <div class="container">
-        <div class="row">
-            <div class="page-banner-text text-center col-12">
-                <h1>Check Your Email</h1>
-                <ul class="breadcrumb">
+        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+            <div class="container">
+                <h2 class="breadcrumb-title">Check Your Email</h2>
+                <ul class="breadcrumb-menu clearfix">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>Email Verification</li>
+                    <li class="active">Verification</li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
-<!-- Page Banner End -->
 
-<!-- Contact Section Start -->
-<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="verification-box wow fadeInUp delay-0-2s">
-                    <div class="icon mb-30">
-                        <i class="far fa-envelope-open-text" style="font-size: 80px; color: #76a713;"></i>
-                    </div>
-                    
-                    <div class="section-title mb-30">
-                        <h2>Verify Your Email</h2>
-                    </div>
-                    
-                    <p class="mb-30" style="font-size: 18px; line-height: 1.6;">
-                        We've sent a verification link to <strong>{{ request.session.registered_email|default:"your email address" }}</strong>.
-                    </p>
-                    
-                    <div class="alert alert-info mb-30" style="background: rgba(118, 167, 19, 0.1); border: 1px solid rgba(118, 167, 19, 0.2); border-radius: 7px; padding: 20px;">
-                        <h5 class="mb-2"><i class="fas fa-info-circle mr-2"></i>What to do next:</h5>
-                        <ul class="text-left pl-4" style="display: inline-block;">
-                            <li class="mb-2">Check your email inbox</li>
-                            <li class="mb-2">Click the verification link in the email</li>
-                            <li>Complete your account setup</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="tips-box mb-40" style="background: #f8f9fa; border-radius: 10px; padding: 25px;">
-                        <h5 class="mb-3">Didn't receive the email?</h5>
-                        <ul class="text-left pl-4" style="display: inline-block;">
-                            <li class="mb-2">Check your spam or junk folder</li>
-                            <li class="mb-2">Make sure you entered the correct email</li>
-                            <li>Wait a few minutes and try again</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <a href="{% url 'home' %}" class="theme-btn mr-3 mb-3">
-                            <i class="fas fa-home mr-2"></i> Go Home
-                        </a>
-                        <a href="{% url 'login' %}" class="theme-btn style-two mb-3">
-                            <i class="fas fa-sign-in-alt mr-2"></i> Login
-                        </a>
-                        <a href="{% url 'email_register' %}" class="theme-btn style-three mb-3">
-                            <i class="fas fa-user-plus mr-2"></i> Try Again
+        <div class="reg-area bg de-padding">
+            <div class="container">
+                <div class="reg-wpr grid-center">
+                    <div class="login-form text-center" style="max-width: 520px;">
+
+                        <i class="header-icon mb-30">
+                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
+                        </i>
+
+                        <div class="mb-40">
+                            <i class="icofont-email" style="font-size: 90px; color: #37582D;"></i>
+                        </div>
+
+                        <h3 style="color: #37582D;">We've Sent You an Email!</h3>
+                        <p class="text-muted mb-30" style="font-size: 18px;">
+                            A verification link has been sent to:<br>
+                            <strong>{{ request.session.registered_email|default:"your email" }}</strong>
+                        </p>
+
+                        <div class="p-30 mb-40" style="background: rgba(55,88,45,0.08); border-radius: 16px;">
+                            <h5 class="mb-20" style="color: #37582D;">Next Steps:</h5>
+                            <ol class="text-start" style="font-size: 15px; line-height: 2;">
+                                <li>Open your email inbox</li>
+                                <li>Find the email from Oreg Organic Shop</li>
+                                <li>Click the verification button</li>
+                            </ol>
+                        </div>
+
+                        <p class="text-muted mb-40">
+                            <strong>Tip:</strong> Check your <strong>Spam/Junk</strong> folder if you don't see it.
+                        </p>
+
+                        <a href="{% url 'home' %}" class="btn-6" style="padding: 14px 40px;">
+                            <i class="icofont-home mr-2"></i> Back to Home
                         </a>
                     </div>
                 </div>
@@ -71,5 +57,4 @@
         </div>
     </div>
 </section>
-<!-- Contact Section End -->
 {% endblock %}

@@ -1,90 +1,183 @@
-<!-- Footer Area Start -->
-<footer class="main-footer bg-green text-white">
-    <div class="container">
-       <div class="footer-top-newsletter py-80 mb-75">
-            <div class="section-title">
-                <h2>Newsletter Subscribe</h2>
-            </div>
-            <form action="#">
-                <input type="email" placeholder="Email Address" required>
-                <button class="theme-btn">subscribe now <i class="fas fa-angle-double-right"></i></button>
-            </form>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6 order-md-2">
-                <div class="footer-widget about-widget text-center">
-                    <div class="footer-logo mb-30">
-                        <a href="index.html">
-                            <img src="/static/assets/images/logos/logo.png" alt="Logo">
-                        </a>
+{% load static %}
+
+<!-- Start Footer -->
+<footer>
+    <div class="footer-shp">
+        <img src="{% static 'assets/img/about/cow.png' %}" alt="thumb">
+    </div>
+    <div class="footer-widget">
+        <div class="container">
+            <div class="footer-widget-wpr de-padding">
+                <div class="row g-5">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="footer-widget-box about-us">
+                            <div class="footer-logo">
+                                <img src="{% static 'assets/img/logo/logo.png' %}" alt="thumb">
+                            </div>
+                            <p>
+                                Affronting discretion as do is announcing. Now months esteem oppose nearer enable too six. as do nearer is announcing.
+                            </p>
+                            <ul class="footer-social">
+                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <p>Sit amet consectetur adipiscing elit sed eiusmod tempor incididunt ut labore et dolore magna aliqua. quis ipsum suspendisse ultrices gravida.</p>
-                    <div class="social-style-two pt-10">
-                        <a href="contact.html"><i class="fab fa-facebook-f"></i></a>
-                        <a href="contact.html"><i class="fab fa-twitter"></i></a>
-                        <a href="contact.html"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="contact.html"><i class="fab fa-youtube"></i></a>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="footer-widget-box list">
+                            <h4 class="footer-widget-title">Quick Links</h4>
+                            <ul class="footer-list">
+                                <li>
+                                    <a href="{% url 'about' %}">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        About Us
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'shop' %}">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        Our Product
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        Our Blog
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'contact' %}">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        Contact Us
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        Become a member
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <i class="icofont-long-arrow-right"></i>
+                                        Case Studies
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="footer-widget-box recent-product">
+                            <h4 class="footer-widget-title">Recent Products</h4>
+                            <ul>
+                                <li>
+                                    <a href="/">
+                                        <div class="rcp">
+                                            <div class="rcp-pic">
+                                                <img src="{% static 'assets/img/single/80x80.png' %}" alt="thumb">
+                                            </div>
+                                            <div class="rcp-desc">
+                                                <h6>Fresh Vegetable</h6>
+                                                <span>$13</span>
+                                                <div class="sh-de-rating">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <div class="rcp">
+                                            <div class="rcp-pic">
+                                                <img src="{% static 'assets/img/single/80x80.png' %}" alt="thumb">
+                                            </div>
+                                            <div class="rcp-desc">
+                                                <h6>Fresh Fruit</h6>
+                                                <span>$13</span>
+                                                <div class="sh-de-rating">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <div class="rcp">
+                                            <div class="rcp-pic">
+                                                <img src="{% static 'assets/img/single/80x80.png' %}" alt="thumb">
+                                            </div>
+                                            <div class="rcp-desc">
+                                                <h6>Fresh Bean</h6>
+                                                <span>$13</span>
+                                                <div class="sh-de-rating">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="footer-widget-box in-touch">
+                            <h4 class="footer-widget-title">Subscribe</h4>
+                            <div class="footer-address">
+                                <ul>
+                                    <li>
+                                        <strong>Address:</strong>
+                                        5919 Trussville Crossings Pkwy, Birmingham AL 35235
+                                    </li>
+                                    <li>
+                                        <strong>Phone:</strong>
+                                        <a href="tel:+8801688005654">+8801688005654</a>
+                                    </li>
+                                    <li>
+                                        <div class="footer-sub">
+                                            <form method="post" action="/">
+                                                {% csrf_token %}
+                                                <input type="email" name="email" class="input-style-1" placeholder="Enter Email.." required>
+                                                <button type="submit" class="input-btn">
+                                                    <i class="flaticon-envelope"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 order-md-1">
-                <div class="footer-widget menu-widget two-column">
-                    <h4 class="footer-title">Quick Links</h4>
-                    <ul>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="contact.html">Documentation</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="services.html">Elements</a></li>
-                        <li><a href="portfolio-grid.html">Our Projects</a></li>
-                        <li><a href="shop-grid.html">Best Products</a></li>
-                        <li><a href="farmers.html">Meet Farmers</a></li>
-                        <li><a href="service-details.html">Technology</a></li>
-                        <li><a href="blog-grid.html">Latest News</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="service-details.html">Vegetables</a></li>
-                        <li><a href="contact.html">Setting & Privacy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 order-md-3">
-                <div class="footer-widget contact-widget">
-                    <h4 class="footer-title">Contact Us</h4>
-                    <p>Quis autem vel eum reprehenderit voluptate velit esse quamnue </p>
-                    <ul>
-                        <li>
-                            <i class="fal fa-map-marker-alt"></i>
-                            53 Main Street, 2nd Mountain 3rd Floor, New York
-                        </li>
-                        <li>
-                            <i class="far fa-envelope"></i>
-                            <a href="calto:+012(345)67899">+012 (345) 678 99</a>
-                        </li>
-                        <li>
-                            <i class="far fa-phone"></i>
-                            <a href="mailto:support@gmail.com">support@gmail.com</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-area pt-25 pb-10">
-            <p>Copyright © 2022 MunFirm. All Rights Reserved.</p>
-            <ul class="footer-menu">
-                <li><a href="contact.html">Setting & Privacy</a></li>
-                <li><a href="faqs.html">Faqs</a></li>
-                <li><a href="contact.html">Payments</a></li>
-            </ul>
-            
-            <!-- Scroll Top Button -->
-            <button class="scroll-top scroll-to-target" data-target="html"><span class="fas fa-angle-double-up"></span></button>
         </div>
     </div>
-    <div class="footer-shapes">
-        <img class="footer-bg" src="/static/assets/images/background/footer-bg-shape.png" alt="Shape">
-        <img class="shape-one" src="/static/assets/images/shapes/footer1.png" alt="Shape">
-        <img class="shape-two" src="/static/assets/images/shapes/footer2.png" alt="Shape">
-        <img class="shape-three" src="/static/assets/images/shapes/footer3.png" alt="Shape">
-        <img class="shape-four" src="/static/assets/images/shapes/footer4.png" alt="Shape">
+    <div class="copyright">
+        <div class="container">
+            <div class="copyright-content">
+                <p class="mb-0">
+                    Copyright © {% now "Y" %}. All Rights Reserved 
+                    <a href="https://themeforest.net/user/templatebucket/portfolio" target="_blank" class="temp-bucket"> 
+                        Templatebucket
+                    </a>.
+                </p>
+            </div>
+        </div>
     </div>
-</footer>
-<!-- Footer Area End -->
+</footer>    
+<!-- End Footer-->

@@ -1,129 +1,190 @@
-<!-- main header -->
-<header class="main-header menu-absolute">
+{% load static %}
 
-   <div class="header-top-wrap bg-light-green text-white py-10">
-       <div class="container-fluid">
-           <div class="header-top">
-               <div class="row">
-                   <div class="col-xl-7 col-lg-6">
-                       <div class="top-left">
-                           <ul>
-                                <li><i class="far fa-envelope"></i> <b>Email Us :</b> <a href="mailto:support@gmail.com">support@gmail.com</a></li>
-                                <li><i class="far fa-clock"></i> <b>Working Hours :</b> Monday - Friday, 08 am - 05 pm</li>
-                            </ul>
-                       </div>
-                   </div>
-                   <div class="col-xl-5 col-lg-6">
-                       <div class="top-right text-lg-right">
-                           <ul>
-                                <li><i class="far fa-phone"></i> <b>Call :</b> <a href="callto:+012(345)67899">+012 (345) 678 99</a></li>
+<!-- Start header -->
+<header class="header header-1">
+    <div class="main-navigation">
+        <nav id="navbar_top" class="navbar navbar-expand-lg">
+            <div class="container order-menu g-0">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'assets/img/logo/logo-white.png' %}" class="logo-display" alt="thumb">
+                    <img src="{% static 'assets/img/logo/logo.png' %}" class="logo-scrolled" alt="thumb">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i class="ti-menu-alt"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="main_nav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  
+                               Home
+                            </a>
+                            <ul class="dropdown-menu fade-up">
                                 <li>
-                                    <div class="social-style-one">
-                                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        <a href="#"><i class="fab fa-twitter"></i></a>
-                                        <a href="#"><i class="fab fa-youtube"></i></a>
-                                        <a href="#"><i class="fab fa-instagram"></i></a>
-                                    </div>
+                                    <a class="dropdown-item" href="{% url 'home' %}"> 
+                                        Home Version 1
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item menu-ribbon" href="/"> 
+                                        Home Version 2
+                                        <span class="menu-ribbon-txt">
+                                            new
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/"> 
+                                        Home Version 3
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/"> 
+                                        Home Version 4
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/"> 
+                                        OnePage Version
+                                    </a>
                                 </li>
                             </ul>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-   
-    <!--Header-Upper-->
-    <div class="header-upper">
-        <div class="container-fluid clearfix">
-
-            <div class="header-inner d-flex align-items-center">
-                <div class="logo-outer">
-                    <div class="logo"><a href="{% url 'home' %}"><img src="/static/assets/images/logos/logo.png" alt="Logo" title="Logo"></a></div>
-                </div>
-
-                <div class="nav-outer clearfix">
-                    <!-- Main Menu -->
-                    <nav class="main-menu navbar-expand-lg">
-                        <div class="navbar-header">
-                           <div class="mobile-logo my-15">
-                               <a href="{% url 'home' %}">
-                                    <img src="/static/assets/images/logos/logo.png" alt="Logo" title="Logo">
-                               </a>
-                           </div>
-                           
-                            <!-- Toggle Button -->
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-
-                        <div class="navbar-collapse collapse clearfix">
-                            <ul class="navigation clearfix">
-                                <li><a href="{% url 'home' %}">Home</a></li>
-                                <li><a href="{% url 'about' %}">About Us</a></li>
-                                <li class="dropdown"><a href="#">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}"> About Us </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  
+                               Shop
+                            </a>
+                            <ul class="dropdown-menu fade-up">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'shop' %}"> 
+                                        Shop Page
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/"> 
+                                        Shop Single
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'cart' %}"> 
+                                        Cart Page
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'checkout' %}"> 
+                                        Checkout Page
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> 
+                                My Account
+                            </a>
+                            <ul class="dropdown-menu fade-up">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'login' %}"> 
+                                        Login
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/">
+                                        Register
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> 
+                                Blog  
+                            </a>
+                            <ul class="dropdown-menu fade-up">
+                                <li><a class="dropdown-item" href="/"> Blog </a></li>
+                                <li>
+                                    <a class="dropdown-item" href="/"> 
+                                        Blog Right Sidebar
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/">
+                                        Blog Left Sidebar
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item" href="/"> Blog Single</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"> Contact </a></li>
+                    </ul>
+                </div> <!-- navbar-collapse.// -->
+                <div class="search-cart">
+                    <ul class="cart-li">
+                        <li>
+                            <div class="site-cart">
+                                <input type="checkbox" class="site-checkbox-cart" id="site-checkbox-cart">
+                                <label for="site-checkbox-cart" class="site-cart-label">
+                                    <i class="icofont-shopping-cart"></i>
+                                </label>
+                                <div class="site-cart-list">
                                     <ul>
-                                        <li><a href="{% url 'shop' %}">All Products</a></li>
-                                        <li><a href="{% url 'cart:view_cart' %}">Cart</a></li>
-                                        <li><a href="{% url 'cart:checkout_delivery' %}">Checkout</a></li>
+                                        <li>
+                                            <div class="site-cart-up">
+                                                <div class="site-cart-pic">
+                                                    <img src="{% static 'assets/img/single/cart-pic.jpg' %}" alt="thumb">
+                                                </div>
+                                                <div class="site-cart-desc">
+                                                    <h6>Lampost Frame Loft</h6>
+                                                    <span>1 × $299.00</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="site-cart-up">
+                                                <div class="site-cart-pic">
+                                                    <img src="{% static 'assets/img/single/cart-pic.jpg' %}" alt="thumb">
+                                                </div>
+                                                <div class="site-cart-desc">
+                                                    <h6>Lampost Frame Loft</h6>
+                                                    <span>1 × $299.00</span>
+                                                </div>
+                                            </div>
+                                        </li>
                                     </ul>
-                                </li>
-                                <li><a href="{% url 'contact' %}">Contact</a></li>
-                            </ul>
-                        </div>
-
-                    </nav>
-                    <!-- Main Menu End-->
+                                    <div class="site-cart-bottom text-center">
+                                        <div class="sub-total">
+                                            <span>Subtotal: $499.00</span>
+                                        </div>
+                                        <div class="site-cart-button">
+                                            <a href="{% url 'cart' %}" class="button-btns">View Cart</a>
+                                            <a href="{% url 'checkout' %}" class="button-btns">Checkout</a>             
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="site-search">
+                                <input type="checkbox" class="site-input-checkbox" id="site-input-checkbox">
+                                <label for="site-input-checkbox" class="site-input-label">
+                                    <i class="icofont-search"></i>
+                                    <span class="site-close">
+                                        <i class="icofont-close"></i>
+                                    </span>
+                                </label>
+                                <div class="navigation__background">&nbsp;</div>
+                                <div class="site-search-content">
+                                    <form>
+                                        <input type="text" placeholder="Search" class="input-style-3">
+                                        <button type="submit">Search</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                
-                <!-- Menu Button -->
-                <div class="menu-icons d-flex align-items-center">
-                    <!-- Cart Icon - Links to CART APP -->
-                    <a href="{% url 'cart:view_cart' %}" class="cart mr-3 position-relative" title="Shopping Cart">
-                        <i class="far fa-shopping-basket" style="font-size: 20px; color: #1a2428;"></i>
-                        <span class="cart-count" style="position: absolute; top: -8px; right: -8px; background: #ff7800; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
-                            0
-                        </span>
-                    </a>
-                    
-                    {% if user.is_authenticated %}
-                        <!-- Show when user is LOGGED IN -->
-                        <a href="{% url 'profile' %}" class="user d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: white; border-radius: 50%; margin-right: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                            <i class="far fa-user-circle" style="font-size: 20px; color: #76a713;"></i>
-                        </a>
-                        
-                        <form method="post" action="{% url 'logout' %}" class="mb-0" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="theme-btn" style="background: #76a713; border: none; cursor: pointer; padding: 10px 20px; font-size: 14px;">
-                                Logout <i class="fas fa-sign-out-alt" style="margin-left: 5px;"></i>
-                            </button>
-                        </form>
-                    {% else %}
-                        <!-- Show when user is LOGGED OUT -->
-                        <a href="{% url 'login' %}" class="theme-btn" style="margin-right: 10px;">Login <i class="fas fa-angle-double-right"></i></a>
-                        
-                        <a href="{% url 'email_register' %}" class="theme-btn style-two" style="padding: 10px 20px; font-size: 14px;">
-                            Register <i class="fas fa-user-plus" style="margin-left: 5px;"></i>
-                        </a>
-                    {% endif %}
-                    
-                    <!-- Menu sidebar -->
-                    <div class="menu-sidebar ml-3">
-                        <button style="background: none; border: none; cursor: pointer;">
-                            <i class="far fa-ellipsis-h" style="color: #1a2428;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </div> <!-- container -->
+        </nav>
     </div>
-    <!--End Header Upper-->
 </header>
-
-<!--Form Back Drop-->
-<div class="form-back-drop"></div>
-
-{% include 'includes/sidebar.html' %}
+<!-- End header -->

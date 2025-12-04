@@ -1,203 +1,162 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}My Profile - Munfirm{% endblock %}
+{% block title %}My Profile - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<!-- Page Banner Start -->
-<div class="page-banner-area overlay overlay-color pt-80 pb-75" style="background-image: url(/static/assets/images/background/page-banner.jpg);">
+
+<section class="page-wrapper de-padding">
     <div class="container">
-        <div class="row">
-            <div class="page-banner-text text-center col-12">
-                <h1>My Profile</h1>
-                <ul class="breadcrumb">
+
+        <!-- Breadcrumb -->
+        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+            <div class="container">
+                <h2 class="breadcrumb-title">My Profile</h2>
+                <ul class="breadcrumb-menu clearfix">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li>My Profile</li>
+                    <li class="active">My Profile</li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
-<!-- Page Banner End -->
 
-<!-- Profile Section Start -->
-<section class="contact-section pt-100 rpt-70 pb-130 rpb-100">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <!-- Sidebar Menu -->
-                <div class="profile-sidebar mb-30 wow fadeInUp delay-0-2s">
-                    <div class="user-info text-center mb-30" style="background: #f8f9fa; border-radius: 15px; padding: 30px;">
-                        <div class="user-avatar mb-3">
-                            {% if user.profile_picture %}
-                                <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
-                            {% else %}
-                                <div style="width: 100px; height: 100px; background: #76a713; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-                                    <i class="far fa-user-circle" style="font-size: 50px; color: white;"></i>
+        <!-- Profile Area -->
+        <div class="reg-area bg de-padding">
+            <div class="container">
+                <div class="row g-5">
+
+                    <!-- Sidebar -->
+                    <div class="col-lg-4">
+                        <div class="profile-sidebar" style="background: #f8f9fa; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+
+                            <!-- User Info -->
+                            <div class="text-center mb-30">
+                                <div class="user-avatar mb-20">
+                                    {% if user.profile_picture %}
+                                        <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name }}" 
+                                             style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                    {% else %}
+                                        <div style="width: 110px; height: 110px; background: #37582D; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 5px solid #f1f8e9; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                            <i class="icofont-user-suited" style="font-size: 52px; color: white;"></i>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
-                        <h4>{{ user.get_full_name|default:user.email }}</h4>
-                        <p class="text-muted">{{ user.email }}</p>
-                        <div class="verification-badge mt-2">
-                            {% if user.is_verified %}
-                                <span class="badge" style="background: #76a713; color: white; padding: 5px 15px; border-radius: 20px;">
-                                    <i class="fas fa-check-circle mr-1"></i> Verified
-                                </span>
-                            {% else %}
-                                <span class="badge" style="background: #ffc107; color: #212529; padding: 5px 15px; border-radius: 20px;">
-                                    <i class="fas fa-exclamation-circle mr-1"></i> Not Verified
-                                </span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="sidebar-menu" style="background: #f8f9fa; border-radius: 15px; padding: 25px;">
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <a href="{% url 'profile' %}" class="d-block p-3" style="border-radius: 10px; background: white; color: #1a2428; font-weight: 600;">
-                                    <i class="far fa-user-circle mr-2"></i> Profile Information
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-block p-3" style="border-radius: 10px; color: #666;">
-                                    <i class="far fa-shopping-basket mr-2"></i> My Orders
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-block p-3" style="border-radius: 10px; color: #666;">
-                                    <i class="far fa-heart mr-2"></i> Wishlist
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-block p-3" style="border-radius: 10px; color: #666;">
-                                    <i class="far fa-map-marker-alt mr-2"></i> Address Book
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-block p-3" style="border-radius: 10px; color: #666;">
-                                    <i class="far fa-credit-card mr-2"></i> Payment Methods
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'logout' %}" class="d-block p-3" style="border-radius: 10px; background: #f44336; color: white; font-weight: 600;">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-8">
-                <!-- Profile Form -->
-                <div class="profile-form wow fadeInUp delay-0-4s">
-                    <div class="section-title mb-30">
-                        <h2>Profile Information</h2>
-                        <p class="sub-title">Update your personal details</p>
-                    </div>
-                    
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} mb-20" style="background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; 
-                                                                       color: {% if message.tags == 'success' %}#155724{% else %}#721c24{% endif %}; 
-                                                                       padding: 15px; border-radius: 7px; border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% else %}#f5c6cb{% endif %};">
-                                {{ message }}
+                                <h4 style="color: #37582D; font-weight: 600;">{{ user.get_full_name|default:user.username }}</h4>
+                                <p class="text-muted mb-2">{{ user.email }}</p>
+                                {% if user.is_verified %}
+                                    <span class="badge" style="background: #37582D; color: white; padding: 6px 16px; border-radius: 30px; font-size: 13px;">
+                                        <i class="icofont-check-circled"></i> Verified Account
+                                    </span>
+                                {% else %}
+                                    <span class="badge" style="background: #fff3cd; color: #856404; padding: 6px 16px; border-radius: 30px; font-size: 13px; border: 1px solid #ffeaa7;">
+                                        <i class="icofont-close-circled"></i> Not Verified
+                                    </span>
+                                {% endif %}
                             </div>
-                        {% endfor %}
-                    {% endif %}
 
-                    <form method="post" enctype="multipart/form-data" id="profileForm" style="background: #f8f9fa; border-radius: 15px; padding: 30px;">
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="id_first_name">First Name</label>
+                            <!-- Sidebar Menu - EXACTLY AS YOU REQUESTED -->
+                            <ul class="list-unstyled sidebar-menu">
+                                <li class="active mb-2">
+                                    <a href="{% url 'profile' %}" style="background: #37582D; color: white;">
+                                        <i class="icofont-user-alt-3 mr-3"></i> Profile Information
+                                    </a>
+                                </li>
+                                <li class="mb-2"><a href="#"><i class="icofont-shopping-cart mr-3"></i> My Orders</a></li>
+                                <li class="mb-2"><a href="#"><i class="icofont-heart mr-3"></i> Wishlist</a></li>
+                                <li class="mb-2"><a href="#"><i class="icofont-location-pin mr-3"></i> Address Book</a></li>
+                                <li class="mb-2"><a href="#"><i class="icofont-credit-card mr-3"></i> Payment Methods</a></li>
+                                <li><a href="{% url 'logout' %}" style="background: #e74c3c; color: white;"><i class="icofont-logout mr-3"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main Content - Profile Form -->
+                    <div class="col-lg-8">
+                        <div class="login-form" style="background: white; border-radius: 16px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+
+                            <h3 class="mb-10" style="color: #37582D;">Profile Information</h3>
+                            <p class="text-muted mb-30">Keep your personal details up to date</p>
+
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} mb-20" style="border-radius: 10px; padding: 15px; border: none; {% if message.tags == 'success' %}background: #d4edda; color: #155724;{% else %}background: #f8d7da; color: #721c24;{% endif %}">
+                                    <i class="icofont-check-circled mr-2"></i> {{ message }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <form method="post" enctype="multipart/form-data" class="row g-4">
+                                {% csrf_token %}
+
+                                <div class="col-md-6">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">First Name</label>
                                     {{ form.first_name }}
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="id_last_name">Last Name</label>
+                                <div class="col-md-6">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Last Name</label>
                                     {{ form.last_name }}
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group mb-3">
-                            <label for="id_email">Email Address</label>
-                            <input type="email" class="form-control" value="{{ user.email }}" disabled>
-                            <small class="text-muted">Email cannot be changed. Contact support for email changes.</small>
-                        </div>
-                        
-                        <div class="form-group mb-3">
-                            <label for="id_phone">Phone Number</label>
-                            {{ form.phone }}
-                        </div>
-                        
-                        <div class="form-group mb-3">
-                            <label for="id_address">Address</label>
-                            {{ form.address }}
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="id_city">City</label>
-                                    {{ form.city }}
+
+                                <div class="col-12">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Email Address</label>
+                                    <input type="email" class="form-control" value="{{ user.email }}" disabled style="background: #f1f3f5;">
+                                    <small class="text-muted">Contact support to change email</small>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="id_country">Country</label>
-                                    {{ form.country }}
+
+                                <div class="col-md-6">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Phone Number</label>
+                                    {{ form.phone_number }}
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group mb-4">
-                            <label for="id_profile_picture">Profile Picture</label>
-                            {{ form.profile_picture }}
-                            {% if user.profile_picture %}
-                                <small class="text-muted">Current: {{ user.profile_picture.name }}</small>
-                            {% endif %}
-                        </div>
-                        
-                        <button type="submit" class="theme-btn">Update Profile <i class="fas fa-save"></i></button>
-                    </form>
-                    
-                    <!-- Account Information -->
-                    <div class="account-info mt-40" style="background: #f8f9fa; border-radius: 15px; padding: 30px;">
-                        <h5 class="mb-4"><i class="fas fa-info-circle mr-2"></i>Account Information</h5>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <strong>Email:</strong>
-                                    <p class="mb-0">{{ user.email }}</p>
+                                <div class="col-md-6">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Zone</label>
+                                    {{ form.zone }}
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <strong>Account Status:</strong>
-                                    <p class="mb-0">
-                                        {% if user.is_verified %}
-                                            <span class="text-success">✓ Verified</span>
-                                        {% else %}
-                                            <span class="text-warning">⚠ Not Verified</span>
+
+                                <div class="col-md-8">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Address</label>
+                                    {{ form.address }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">County</label>
+                                    {{ form.county }}
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label" style="color: #37582D; font-weight: 600;">Profile Picture</label>
+                                    <div class="custom-file-upload">
+                                        {{ form.profile_picture }}
+                                        {% if user.profile_picture %}
+                                            <small class="text-success"><i class="icofont-check"></i> Current photo uploaded</small>
                                         {% endif %}
-                                    </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <strong>Date Joined:</strong>
-                                    <p class="mb-0">{{ user.date_joined|date:"F d, Y" }}</p>
+
+                                <div class="col-12 mt-30">
+                                    <button type="submit" class="btn-6" style="padding: 14px 40px; font-size: 16px;">
+                                        <i class="icofont-save mr-2"></i> Update Profile
+                                    </button>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="info-item">
-                                    <strong>Last Login:</strong>
-                                    <p class="mb-0">{{ user.last_login|date:"F d, Y H:i" }}</p>
+                            </form>
+
+                            <!-- Account Summary -->
+                            <div class="mt-50 p-30" style="background: #f8fff8; border-radius: 12px; border: 1px solid #d4edda;">
+                                <h5 style="color: #37582D;"><i class="icofont-info-circle mr-2"></i> Account Summary</h5>
+                                <div class="row mt-20">
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Member Since:</strong><br>
+                                        <span class="text-muted">{{ user.date_joined|date:"F d, Y" }}</span>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Last Login:</strong><br>
+                                        <span class="text-muted">{{ user.last_login|date:"M d, Y - H:i"|default:"Never" }}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong>Account Status:</strong><br>
+                                        {% if user.is_verified %}
+                                            <span style="color: #37582D; font-weight: 600;"><i class="icofont-check-circled"></i> Verified</span>
+                                        {% else %}
+                                            <span style="color: #e67e22;"><i class="icofont-close-circled"></i> Not Verified</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -207,5 +166,38 @@
         </div>
     </div>
 </section>
-<!-- Profile Section End -->
+
+<!-- Simple CSS for nice form styling (already works perfectly) -->
+<style>
+    .form-control, select, input[type="file"] {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 15px;
+        width: 100%;
+    }
+    .form-control:focus {
+        border-color: #37582D;
+        box-shadow: 0 0 0 0.2rem rgba(55, 88, 45, 0.15);
+    }
+    .sidebar-menu li a {
+        display: block;
+        padding: 14px 20px;
+        border-radius: 10px;
+        color: #555;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    .sidebar-menu li a:hover, .sidebar-menu li.active a {
+        background: #37582D;
+        color: white !important;
+    }
+    .custom-file-upload input[type="file"] {
+        padding: 10px;
+        border: 2px dashed #37582D;
+        border-radius: 10px;
+        background: #f8fff8;
+    }
+</style>
+
 {% endblock %}
