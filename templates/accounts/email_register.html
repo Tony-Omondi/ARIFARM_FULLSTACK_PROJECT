@@ -1,101 +1,286 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register - Oreg Organic Shop{% endblock %}
+{% block title %}Register - Obrien Organic Shop{% endblock %}
 
 {% block content %}
-
-<section class="page-wrapper de-padding">
-    <div class="container">
-
-        <!-- Breadcrumb -->
-        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
+        <!-- Breadcrumb Area Start Here -->
+        <div class="breadcrumbs-area position-relative">
             <div class="container">
-                <h2 class="breadcrumb-title">Create Account</h2>
-                <ul class="breadcrumb-menu clearfix">
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li class="active">Register</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Register Area -->
-        <div class="reg-area bg de-padding">
-            <div class="container">
-                <div class="reg-wpr grid-center">
-                    <div class="login-form text-center" style="max-width: 500px; margin: 0 auto;">
-
-                        <i class="header-icon mb-30">
-                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
-                        </i>
-
-                        <h3 style="color: #37582D; font-weight: 600;">Join Oreg Organic Shop</h3>
-                        <p class="text-muted mb-40">Sign up to get started with fresh organic products</p>
-
-                        {% if messages %}
-                            {% for message in messages %}
-                            <div class="alert mb-20" style="border-radius: 12px; padding: 15px; {% if message.tags == 'success' %}background: #d4edda; color: #155724;{% else %}background: #f8d7da; color: #721c24;{% endif %}">
-                                {{ message }}
-                            </div>
-                            {% endfor %}
-                        {% endif %}
-
-                        <form method="post" class="text-start">
-                            {% csrf_token %}
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <input type="text" name="first_name" class="form-control" placeholder="First Name" required style="height: 56px; border-radius: 12px;">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" name="last_name" class="form-control" placeholder="Last Name" required style="height: 56px; border-radius: 12px;">
-                                </div>
-                                <div class="col-12">
-                                    <input type="email" name="email" class="form-control" placeholder="Email Address" required style="height: 56px; border-radius: 12px;">
-                                </div>
-                                <div class="col-12">
-                                    <input type="password" name="password1" class="form-control" placeholder="Create Password" required style="height: 56px; border-radius: 12px;">
-                                </div>
-                                <div class="col-12">
-                                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required style="height: 56px; border-radius: 12px;">
-                                </div>
-                            </div>
-
-                            <div class="form-check mt-20 mb-30">
-                                <input class="form-check-input" type="checkbox" id="terms" required>
-                                <label class="form-check-label" for="terms" style="font-size: 14px; color: #555;">
-                                    I agree to the <a href="#" style="color: #37582D;">Terms of Service</a> and <a href="#" style="color: #37582D;">Privacy Policy</a>
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn-6 w-100 mb-20" style="height: 56px; font-size: 17px; font-weight: 600;">
-                                Create Account
-                            </button>
-
-                            <p class="text-center text-muted">
-                                Already have an account? 
-                                <a href="{% url 'login' %}" style="color: #37582D; font-weight: 600;">Login Here</a>
-                            </p>
-
-                            <div class="text-center position-relative my-30">
-                                <hr>
-                                <span style="background: white; padding: 0 15px; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: #999;">
-                                    Or sign up with
-                                </span>
-                            </div>
-
-                            <a href="{% url 'social:begin' 'google-oauth2' %}" 
-                               class="btn w-100 d-flex align-items-center justify-content-center" 
-                               style="height: 56px; background: white; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; color: #333;">
-                                <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20" class="me-3">
-                                Continue with Google
-                            </a>
-                        </form>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="breadcrumb-content position-relative section-content">
+                            <h3 class="title-3">Create Account</h3>
+                            <ul>
+                                <li><a href="{% url 'home' %}">Home</a></li>
+                                <li>Register</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+        <!-- Breadcrumb Area End Here -->
+        
+        <!-- Register Area Start Here -->
+        <div class="login-register-area mt-no-text mb-no-text">
+            <div class="container container-default-2 custom-area">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-custom">
+                        <div class="login-register-wrapper">
+                            <!-- Logo -->
+                            <div class="text-center mb-4">
+                                <a href="{% url 'home' %}">
+                                    <img src="{% static 'assets/images/logo/logo.png' %}" alt="Obrien Logo" style="height: 60px;">
+                                </a>
+                            </div>
+                            
+                            <div class="section-content text-center mb-5">
+                                <h2 class="title-4 mb-2">Join Obrien Organic Shop</h2>
+                                <p class="desc-content">Sign up to get started with fresh organic products</p>
+                            </div>
+                            
+                            <!-- Messages -->
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert mb-4" style="border-radius: 8px; padding: 12px; {% if message.tags == 'success' %}background: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% else %}background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;{% endif %}">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <!-- Form Errors -->
+                            {% if form.errors %}
+                                <div class="alert mb-4" style="border-radius: 8px; padding: 12px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+                                    <strong>Please correct the following errors:</strong>
+                                    <ul class="mb-0" style="padding-left: 20px;">
+                                        {% for field in form %}
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Register Form -->
+                            <form method="post">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="single-input-item mb-3">
+                                            <input type="text" name="first_name" placeholder="First Name" required 
+                                                   value="{{ form.first_name.value|default:'' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="single-input-item mb-3">
+                                            <input type="text" name="last_name" placeholder="Last Name" required 
+                                                   value="{{ form.last_name.value|default:'' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <input type="email" name="email" placeholder="Email Address" required 
+                                           value="{{ form.email.value|default:'' }}">
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <input type="password" name="password1" placeholder="Create Password" required>
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <input type="password" name="password2" placeholder="Confirm Password" required>
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
+                                        <div class="remember-meta mb-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="newsletter" name="newsletter">
+                                                <label class="custom-control-label" for="newsletter">Subscribe to Our Newsletter</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <div class="terms-meta mb-3">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="terms" name="terms" required>
+                                            <label class="custom-control-label" for="terms">
+                                                I agree to the <a href="#" style="color: #37582D;">Terms of Service</a> and <a href="#" style="color: #37582D;">Privacy Policy</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="single-input-item mb-3">
+                                    <button type="submit" class="btn obrien-button-2 primary-color w-100">Create Account</button>
+                                </div>
+                            </form>
+                            
+                            <!-- Login Link -->
+                            <div class="single-input-item text-center">
+                                <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login Here</a></p>
+                            </div>
+                            
+                            <!-- Divider -->
+                            <div class="position-relative my-4">
+                                <hr>
+                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-3" style="color: #6c757d; font-size: 14px;">
+                                    Or sign up with
+                                </span>
+                            </div>
+                            
+                            <!-- Google Register Button -->
+                            <div class="single-input-item">
+                                <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'email_register' %}" 
+                                   class="btn w-100 d-flex align-items-center justify-content-center"
+                                   style="height: 50px; background: white; border: 1px solid #dee2e6; border-radius: 8px; font-size: 16px; color: #333; font-weight: 500; transition: all 0.3s;">
+                                    <!-- Google SVG Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" class="me-3">
+                                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                                    </svg>
+                                    Continue with Google
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Register Area End Here -->
+{% endblock %}
 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password strength indicator
+    const password1 = document.querySelector('input[name="password1"]');
+    const password2 = document.querySelector('input[name="password2"]');
+    const termsCheckbox = document.getElementById('terms');
+    const form = document.querySelector('form');
+    
+    // Password validation
+    function validatePasswords() {
+        if (password1.value && password2.value) {
+            if (password1.value !== password2.value) {
+                password2.style.borderColor = '#dc3545';
+                password2.style.boxShadow = '0 0 0 0.2rem rgba(220,53,69,.25)';
+                return false;
+            } else {
+                password2.style.borderColor = '#28a745';
+                password2.style.boxShadow = '0 0 0 0.2rem rgba(40,167,69,.25)';
+                return true;
+            }
+        }
+        return true;
+    }
+    
+    // Check password match on input
+    password2.addEventListener('input', validatePasswords);
+    password1.addEventListener('input', validatePasswords);
+    
+    // Check password strength
+    password1.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        // Visual feedback
+        const colors = ['#dc3545', '#fd7e14', '#ffc107', '#28a745'];
+        const messages = ['Weak', 'Fair', 'Good', 'Strong'];
+        
+        if (password.length > 0) {
+            this.style.borderColor = colors[strength - 1] || '#dc3545';
+            this.style.boxShadow = `0 0 0 0.2rem ${colors[strength - 1]}40` || '';
+        }
+    });
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        // Check terms agreement
+        if (!termsCheckbox.checked) {
+            e.preventDefault();
+            termsCheckbox.style.outline = '2px solid #dc3545';
+            alert('Please agree to the Terms of Service and Privacy Policy');
+            return false;
+        }
+        
+        // Check password match
+        if (!validatePasswords()) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+            return false;
+        }
+        
+        // Check password strength
+        if (password1.value.length < 8) {
+            e.preventDefault();
+            alert('Password must be at least 8 characters long');
+            return false;
+        }
+    });
+    
+    // Form validation styling
+    const inputs = form.querySelectorAll('input[required]');
+    inputs.forEach(input => {
+        input.addEventListener('invalid', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#dc3545';
+            this.style.boxShadow = '0 0 0 0.2rem rgba(220,53,69,.25)';
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.checkValidity()) {
+                this.style.borderColor = '#28a745';
+                this.style.boxShadow = '0 0 0 0.2rem rgba(40,167,69,.25)';
+            }
+        });
+    });
+});
+</script>
+
+<!-- Password toggle visibility (optional) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add password toggle functionality
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+    passwordFields.forEach(field => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'position-relative';
+        field.parentNode.insertBefore(wrapper, field);
+        wrapper.appendChild(field);
+        
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'btn btn-sm position-absolute end-0 top-50 translate-middle-y';
+        toggleBtn.style.background = 'transparent';
+        toggleBtn.style.border = 'none';
+        toggleBtn.innerHTML = '<i class="fa fa-eye"></i>';
+        
+        toggleBtn.addEventListener('click', function() {
+            const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+            field.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+        });
+        
+        wrapper.appendChild(toggleBtn);
+        wrapper.style.paddingRight = '40px';
+    });
+});
+</script>
 {% endblock %}

@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cart.apps.CartConfig',
     
     # Third-party apps
     'social_django',  # for Google OAuth
@@ -72,7 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart_context',
                 
                 # Social Django context processors
                 'social_django.context_processors.backends',

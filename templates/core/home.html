@@ -1,1411 +1,870 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Obrien - Organic Food | Home{% endblock %}
+{% block description %}Welcome to Obrien - Your trusted source for organic food and healthy lifestyle products. Fresh, natural, and sustainable organic products delivered to your doorstep.{% endblock %}
+
 {% block content %}
-
-    <!-- Start Slider -->
-    <div class="hero-section bg-theme-3">
-        <div class="hero-single">
-            <div class="hero-1">
-                <img src="{% static 'assets/img/bg/tomato.png' %}" class="up-move" alt="thumb">
-                <img src="{% static 'assets/img/header/right.png' %}" class="sec-pic" alt="thumb">
-                <img src="{% static 'assets/img/shape/shape.png' %}" class="sec-pic" alt="thumb">
+        <!-- Begin Slider Area One -->
+        <div class="slider-area">
+            <div class="obrien-slider arrow-style" data-slick-options='{
+        "slidesToShow": 1,
+        "slidesToScroll": 1,
+        "infinite": true,
+        "arrows": true,
+        "dots": true,
+        "autoplay" : true,
+        "fade" : true,
+        "autoplaySpeed" : 7000,
+        "pauseOnHover" : false,
+        "pauseOnFocus" : false
+        }' data-slick-responsive='[
+        {"breakpoint":992, "settings": {
+        "slidesToShow": 1,
+        "arrows": false,
+        "dots": true
+        }}
+        ]'>
+                <div class="slide-item slide-1 bg-position slide-bg-1 animation-style-01">
+                    <div class="slider-content">
+                        <h4 class="slider-small-title">Cold processed organic fruit</h4>
+                        <h2 class="slider-large-title">Fresh Avocado</h2>
+                        <div class="slider-btn">
+                            <a class="obrien-button black-btn" href="{% url 'shop' %}">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-item slide-2 bg-position slide-bg-1 animation-style-01">
+                    <div class="slider-content">
+                        <h4 class="slider-small-title">Healthy life with</h4>
+                        <h2 class="slider-large-title">Natural Organic</h2>
+                        <div class="slider-btn">
+                            <a class="obrien-button black-btn" href="{% url 'shop' %}">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="container">
+        </div>
+        <!-- Slider Area One End Here -->
+        <!-- Feature Area Start Here -->
+        <div class="feature-area">
+            <div class="container container-default custom-wrapper">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
+                        <div class="feature-content-wrapper">
+                            <h2 class="title">Important to eat fruit</h2>
+                            <p class="desc-content">Eating fruit provides health benefits — people who eat more fruits and vegetables as part of an overall healthy diet are likely to have a reduced risk of some chronic diseases. Fruits provide nutrients vital for health and maintenance of your body.</p>
+                            <p class="desc-content"> Fruits are sources of many essential nutrients that are underconsumed, including potassium, dietary fiber, vitamin C, and folate (folic acid).</p>
+                            <p class="desc-content"> Most fruits are naturally low in fat, sodium, and calories. None have cholesterol.</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
+                        <div class="feature-image">
+                            <img src="{% static 'assets/images/feature/feature-1.jpg' %}" alt="Obrien Feature">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Feature Area End Here -->
+        <!-- Product Area Start Here -->
+        <div class="product-area">
+            <div class="container container-default custom-area">
+                <div class="row">
+                    <div class="col-lg-5 m-auto text-center col-custom">
+                        <div class="section-content">
+                            <h2 class="title-1 text-uppercase">Best Sale</h2>
+                            <div class="desc-content">
+                                <p>All best seller product are now available for you and your can buy this product from here any time any where so sop now</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 product-wrapper col-custom">
+                        <div class="product-slider" data-slick-options='{
+                        "slidesToShow": 4,
+                        "slidesToScroll": 1,
+                        "infinite": true,
+                        "arrows": false,
+                        "dots": false
+                        }' data-slick-responsive='[
+                        {"breakpoint": 1200, "settings": {
+                        "slidesToShow": 3
+                        }},
+                        {"breakpoint": 992, "settings": {
+                        "slidesToShow": 2
+                        }},
+                        {"breakpoint": 576, "settings": {
+                        "slidesToShow": 1
+                        }}
+                        ]'>
+                            <div class="single-item">
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/2.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy name</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="label-product">
+                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/8.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy name</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/9.jpg' %}" alt="" class="product-image-1">
+                                            <img src="{% static 'assets/images/product/10.jpg' %}" alt="" class="product-image-2 position-absolute top-0 left-0">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Product Area End Here -->
+        <!-- Mission Area Start Here -->
+        <div class="feature-area feature-area-boxed-home mb-text">
+            <div class="container container-default custom-area">
                 <div class="row align-items-center">
-                    <div class="col-xl-6">
-                         <div class="hero-content">
-                             <h2 class="hero-title">
-                                Organic And Healthy Food
-                            </h2>
-                             <p>
-                                Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae  vel illum qui dolorem eum velit esse quam nihil consequatur qui in ea el eum iure reprehenderit
-                             </p>
-                            <div class="hero-btn">
-                                <a href="{% url 'shop' %}" class="tm-btn-2">
-                                    Shop Now
-                                    <i class="icofont-long-arrow-right"></i>
+                    <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
+                        <div class="feature-content-wrapper">
+                            <h2 class="title">Our Mission</h2>
+                            <p class="desc-content">At Obrien, we are dedicated to providing the highest quality organic products that nourish both your body and the planet. Our commitment to sustainability and health drives everything we do.</p>
+                            <p class="desc-content"> We source our products from certified organic farms that practice sustainable agriculture, ensuring that every item you purchase supports environmental stewardship and healthy communities.</p>
+                            <p class="desc-content"> Our mission is to make organic living accessible to everyone while maintaining the highest standards of quality and ethical practices.</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
+                        <div class="feature-image position-relative">
+                            <img src="{% static 'assets/images/feature/feature-2.jpg' %}" alt="Obrien Mission">
+                            <div class="popup-video position-absolute">
+                                <a class="popup-vimeo" href="https://www.youtube.com/watch?v=_9VUPq3SxOc">
+                                    <i class="ion-play"></i>
                                 </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="hero-pic text-center">
-                            <div class="hero-dot">
-                                <img src="{% static 'assets/img/bg/radish.png' %}" class="up-move" alt="thumb">
-                                <img src="{% static 'assets/img/shape/dot.png' %}" alt="thumb">
-                            </div>
-                            <img src="{% static 'assets/img/header/hero-main.png' %}" class="img-fluid" alt="Organic Food">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Slider -->
-
-    <!-- Start About -->
-    <div class="about pos-rel de-pt">
-        <div class="container">
-            <div class="about-wpr grid-2">
-                <div class="about-left">
-                    <div class="row g-3">
-                        <div class="col-xl-12"><img src="{% static 'assets/img/about/600x200.png' %}" alt="thumb"></div>
-                        <div class="col-xl-6"><img src="{% static 'assets/img/about/400x400.png' %}" alt="thumb"></div>
-                        <div class="col-xl-6">
-                            <img src="{% static 'assets/img/about/415x200.png' %}" class="mb-10" alt="thumb">
-                            <img src="{% static 'assets/img/about/415x200.png' %}" alt="thumb">
-                        </div>
-                        <div class="col-xl-4"><img src="{% static 'assets/img/about/290x200.png' %}" alt="thumb"></div>
-                        <div class="col-xl-8"><img src="{% static 'assets/img/about/600x200.png' %}" alt="thumb"></div>
-                    </div>
-                </div>
-                <div class="about-right">
-                    <h2 class="hero-title">Our goal Is To Provide Best Organic Products.</h2>
-                    <h3>Add Some Organics to your Diet </h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem reprehenderit, debitis! Earum obcaecati nostrum temporibus cumque suscipit, autem explicabo ducimus vitae quia et dicta pariatur quae unde corporis porro facilis.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem reprehenderit, debitis! Earum obcaecati nostrum temporibus cumque suscipit, autem explicabo ducimus vitae quia et dicta pariatur quae unde corporis porro facilis.</p>
-                    <ul class="about-list">
-                        <li>
-                            <div class="about-opt">
-                                <img src="{% static 'assets/img/shape/list-bg.png' %}" class="lst" alt="thumb">
-                                <img src="{% static 'assets/img/shape/leaves.png' %}" class="leav" alt="thumb">
-                                <div class="about-content">
-                                    <h4>100%</h4>
-                                    <span>Organic</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="about-opt">
-                                <img src="{% static 'assets/img/shape/list-bg.png' %}" class="lst" alt="thumb">
-                                <img src="{% static 'assets/img/shape/leaves.png' %}" class="leav" alt="thumb">
-                                <div class="about-content">
-                                    <h4>100%</h4>
-                                    <span>Tasty</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="about-opt">
-                                <img src="{% static 'assets/img/shape/list-bg.png' %}" class="lst" alt="thumb">
-                                <img src="{% static 'assets/img/shape/leaves.png' %}" class="leav" alt="thumb">
-                                <div class="about-content">
-                                    <h4>100%</h4>
-                                    <span>Fresh</span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End About -->
-
-    <!-- Start Counter -->
-    <div class="counter-area de-padding">
-        <img src="{% static 'assets/img/shape/icon-3.png' %}" class="circle-shape round-move" alt="thumb">
-        <div class="counter-chm">
-            <img src="{% static 'assets/img/tree/chema3.png' %}" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="counter-wpr grid-4 gap-0 counter-1 bg-theme pd-60">
-                <div class="fun-fact">
-                    <div class="fun-icon"><i class="flaticon-coins"></i></div>
-                    <div class="fun-desc">
-                        <p class="timer" data-to="200" data-speed="3000">200</p>
-                        <span class="medium">Activate Products</span>
-                    </div>
-                </div>
-                <div class="fun-fact">
-                    <div class="fun-icon"><i class="flaticon-user"></i></div>
-                    <div class="fun-desc">
-                        <p class="timer" data-to="950" data-speed="3000">950</p>
-                        <span class="medium">Per Day Visitors</span>
-                    </div>
-                </div>
-                <div class="fun-fact">
-                    <div class="fun-icon"><i class="flaticon-employee"></i></div>
-                    <div class="fun-desc">
-                        <p class="timer" data-to="630" data-speed="3000">630</p>
-                        <span class="medium">Satisfied Clients</span>
-                    </div>
-                </div>
-                <div class="fun-fact">
-                    <div class="fun-icon"><i class="flaticon-diamond"></i></div>
-                    <div class="fun-desc">
-                        <p class="timer" data-to="10" data-speed="3000">10</p>
-                        <span class="medium">Award Winning</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Counter -->
-
-    <!-- Start Categories -->
-    <div class="cate-area pos-rel de-pt">
-        <div class="c-sp-1"></div>
-        <div class="c-sp-2"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 offset-xl-3">
-                    <div class="site-title wh text-center">
-                        <h2>Popular Categories</h2>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae quae minus, dolorem praesentium explicabo ipsam.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="cate-wpr grid-4">
-                <div class="cate-box">
-                    <div class="cate-pic">
-                        <img src="{% static 'assets/img/cate/600x400.png' %}" alt="oreg">
-                        <div class="cate-number"><span>45</span></div>
-                    </div>
-                    <div class="cate-content">
-                        <h4>Vegetable</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, eaque!</p>
-                        <a href="{% url 'shop' %}" class="tm-btn-2">Shop Now <i class="icofont-long-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="cate-box">
-                    <div class="cate-pic">
-                        <img src="{% static 'assets/img/cate/600x400.png' %}" alt="oreg">
-                        <div class="cate-number"><span>56</span></div>
-                    </div>
-                    <div class="cate-content">
-                        <h4>Fruits</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, eaque!</p>
-                        <a href="{% url 'shop' %}" class="tm-btn-2">Shop Now <i class="icofont-long-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="cate-box">
-                    <div class="cate-pic">
-                        <img src="{% static 'assets/img/cate/600x400.png' %}" alt="oreg">
-                        <div class="cate-number"><span>17</span></div>
-                    </div>
-                    <div class="cate-content">
-                        <h4>Spices</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, eaque!</p>
-                        <a href="{% url 'shop' %}" class="tm-btn-2">Shop Now <i class="icofont-long-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="cate-box">
-                    <div class="cate-pic">
-                        <img src="{% static 'assets/img/cate/600x400.png' %}" alt="oreg">
-                        <div class="cate-number"><span>20</span></div>
-                    </div>
-                    <div class="cate-content">
-                        <h4>Others</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, eaque!</p>
-                        <a href="{% url 'shop' %}" class="tm-btn-2">Shop Now <i class="icofont-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Categories -->
-
-    <!-- Start Products -->
-    <div class="products-area pos-rel de-padding">
-        <div class="product-tree">
-            <img src="{% static 'assets/img/tree/4.png' %}" alt="thumb">
-            <img src="{% static 'assets/img/tree/snake.png' %}" class="up-move" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 offset-xl-3">
-                    <div class="site-title text-center">
-                        <h2>Our Products</h2>
-                        <p class="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae quae minus, dolorem praesentium explicabo ipsam.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="products-wpr grid-4">
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="products-box">
-                    <div class="products-pic">
-                        <img src="{% static 'assets/img/product/400x400.png' %}" alt="thumb">
-                        <ul class="carts d-flex align-items-center">
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-cart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-heart-alt"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="icofont-eye-alt"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="products-desc">
-                        <a href="product-single.html" target="_blank">
-                            <h5>Mix Vegetables</h5>
-                        </a>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        </p>
-                        <div class="products-price">
-                            <span>$370 <del>$350</del></span>
-                        </div>
-                        <div class="add-to-cart">
-                            <a href="#" class="cart-btn">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="load-more text-center mt-100">
-                <a href="{% url 'shop' %}" class="tm-btn-2">
-                    Load More
-                    <i class="icofont-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- End Products -->
-    
-    <!-- Start Choose -->
-    <div class="choose-area">
-        <div class="choose-wpr grid-2 gap-0">
-            <div class="choose-left">
-                <div class="choose-left-pic">
-                    <img src="{% static 'assets/img/choose/1200x1200.png' %}" alt="thumb">
-                </div>
-            </div>
-            <div class="choose-right bg-theme">
-                <div class="choose-up">
-                    <h5 class="hero-sub-title">Why CHoose Us?</h5>
-                    <h2>
-                        We do not buy from the open market & traders.
-                    </h2>
-                    <p class="mb-0">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur quas nemo, quis ducimus, repellat quos! consectetur adipisicing elit. Aspernatur quas nemo, quis.Lorem ipsum dolor sit amet, consectetur
-                    </p>
-                </div>
-                <div class="choose-feature grid-2">
-                    <div class="choose-box ope-1">
-                        <div class="choose-icon">
-                            <i class="icofont-money-bag"></i>
-                        </div>
-                        <div class="choose-desc">
-                            <h5 class="mb-0">Return Policy</h5>
-                        </div>
-                    </div>
-                    <div class="choose-box">
-                        <div class="choose-icon">
-                            <i class="icofont-ssl-security"></i>
-                        </div>
-                        <div class="choose-desc">
-                            <h5 class="mb-0">Secured Payment</h5>
-                        </div>
-                    </div>
-                    <div class="choose-box">
-                        <div class="choose-icon">
-                            <i class="icofont-delivery-time"></i>
-                        </div>
-                        <div class="choose-desc">
-                            <h5 class="mb-0">On Time Delivery</h5>
-                        </div>
-                    </div>
-                    <div class="choose-box ope-1">
-                        <div class="choose-icon">
-                            <i class="icofont-live-support"></i>
-                        </div>
-                        <div class="choose-desc">
-                            <h5 class="mb-0">Support 24/7</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Choose -->
-    
-    <!-- Start Partner -->
-    <div class="partner-area">
-        <div class="container">
-            <div class="partner-wpr partner-sldr owl-carousel owl-theme">
-                <img src="{% static 'assets/img/partner/client-1.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-2.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-3.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-4.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-5.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-6.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-7.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-8.png' %}" alt="thumb">
-                <img src="{% static 'assets/img/partner/client-1.png' %}" alt="thumb">
-            </div>
-        </div>
-    </div>
-    <!-- End Partner -->
-    
-    <!-- Start Gallery -->
-    <div class="project-area pos-rel de-padding">
-        <div class="project-shape">
-            <img src="{% static 'assets/img/tree/grass.jpg' %}" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 offset-xl-3">
-                    <div class="site-title text-center">
-                        <h2>Our Gallery</h2>
-                        <p class="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae quae minus, dolorem praesentium explicabo ipsam.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="sec-btn-area text-center">
-                <div class="filter-menu-style-1 filter-menu-active">
-                    <button class="active" data-filter="*">All</button>
-                    <button data-filter=".cat-1">Business</button>
-                    <button data-filter=".cat-2">Development</button>
-                    <button data-filter=".cat-3">Technology</button>
-                    <button data-filter=".cat-4">Agency</button>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row g-3 filter-active magnific-mix-gallery">
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-1 cat-2">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-3 cat-4">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-3 cat-4">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-5 col-xxl-6 filter-item cat-2 cat-4 cat-1">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/800x600.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/800x600.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-5 col-xxl-6 filter-item cat-2 cat-4 cat-1">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/800x600.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/800x600.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-1 cat-2 cat-3">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-1 cat-2 cat-4">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-xxl-4 filter-item cat-1 cat-2 cat-4">
-                    <div class="proj-card">
-                        <div class="proj-img">
-                            <img src="{% static 'assets/img/gallery/600x500.png' %}" alt="thumb" class="w-100">
-                            <div class="proj-overlay">
-                                <div class="img-hover">
-                                    <ul>
-                                        <li>
-                                            <a href="{% static 'assets/img/gallery/600x500.png' %}"  class="item popup-link">
-                                                <i class="icofont-eye-open"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="project-single.html" target="_blank">
-                                                <i class="icofont-external-link"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="text-center load-more mt-100">
-            <a href="galery.html" class="tm-btn-2">
-                Load More
-                <i class="icofont-long-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-    <!-- End Gallery -->
-    
-    <!-- Start Countdown -->
-    <div class="cd-area de-padding">
-        <div class="container">
-            <div class="cd-wpr grid-2">
-                <div class="cd-left">
-                    <div class="cd-up">
-                        <h2 class="cd-title">
-                            Grab the best offer of this week!
-                        </h2>
-                        <ul id="example" class="countdown">
-                            <li>
-                                <h2 class="days">00</h2>
-                                <p class="days_text">Days</p>
-                            </li>
-                            <li>
-                                <h2 class="hours">00</h2>
-                                <p class="hours_text">Hours</p>
-                            </li>
-                            <li>
-                                <h2 class="minutes">00</h2>
-                                <p class="minutes_text">Minutes</p>
-                            </li>
-                            <li>
-                                <h2 class="seconds">00</h2>
-                                <p class="seconds_text">Seconds</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="cd-right">
-                    <div class="cd-right-pic text-center">
-                        <img src="{% static 'assets/img/bg/bg-2.png' %}" class="up-move" alt="thumb">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Countdown -->
-    
-    <!-- Start Review -->
-    <div class="rev-area de-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 offset-xl-2">
-                    <div class="site-title wh text-center">
-                        <h2>Client Feedback</h2>
-                        <p class="mb-0">
-                            Outlived no dwelling denoting in peculiar as he believed. Behaviour excellent middleton be as it curiosity departure ourselves very extreme future.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="rev-wpr">
-                <div class="rev-sldr owl-carousel owl-theme">
-                    <div class="rev-content">
-                        <div class="rev-icon">
-                            <div class="rev-pc">
-                                <img src="{% static 'assets/img/shape/qoute.png' %}" alt="thumb">
-                            </div>
-                        </div>
-                        <div class="rev-desc">
-                            <blockquote>
-                                For 50 years, WWF has been protecting the future of nature. The world's leading WWF works in 100 countries supported million members.
-                            </blockquote>
-                            <div class="rev-bio">
-                                <div class="rev-pic">
-                                    <img src="{% static 'assets/img/single/50x50.png' %}" alt="thumb">
-                                </div>
-                                <div class="rev-txt">
-                                    <h4>Devin Hamilton</h4>
-                                    <span>Client</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="rev-content">
-                        <div class="rev-icon">
-                            <div class="rev-pc">
-                                <img src="{% static 'assets/img/shape/qoute.png' %}" alt="thumb">
-                            </div>
-                        </div>
-                        <div class="rev-desc">
-                            <blockquote>
-                                For 50 years, WWF has been protecting the future of nature. The world's leading WWF works in 100 countries supported million members.
-                            </blockquote>
-                            <div class="rev-bio">
-                                <div class="rev-pic">
-                                    <img src="{% static 'assets/img/single/50x50.png' %}" alt="thumb">
-                                </div>
-                                <div class="rev-txt">
-                                    <h4>Lucille Goodwin</h4>
-                                    <span>Client</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="rev-content">
-                        <div class="rev-icon">
-                            <div class="rev-pc">
-                                <img src="{% static 'assets/img/shape/qoute.png' %}" alt="thumb">
-                            </div>
-                        </div>
-                        <div class="rev-desc">
-                            <blockquote>
-                                For 50 years, WWF has been protecting the future of nature. The world's leading WWF works in 100 countries supported million members.
-                            </blockquote>
-                            <div class="rev-bio">
-                                <div class="rev-pic">
-                                    <img src="{% static 'assets/img/single/50x50.png' %}" alt="thumb">
-                                </div>
-                                <div class="rev-txt">
-                                    <h4>Ira Crawford</h4>
-                                    <span>Client</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Review -->
-    
-    <!-- Start Faq -->
-    <div class="faq-area de-padding">
-        <div class="faq-tree">
-            <img src="{% static 'assets/img/tree/1.png' %}" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="faq-wpr grid-2">
-                <div class="course-accordion">
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                    1.How much it will cost For Web Design?
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p class="mb-0">
-                                        In business, time is money. So, when you have a problem that is putting your business on hold, a quick response rate is critical. It's actually one of the main criteria when it comes to IT support, if not the deal-breaker. It's better to know what to expect upfront than to find out in the middle of an IT crisis.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingTwo">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    2. How long does it takes to complete the Web Design?
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p class="mb-0">
-                                        In business, time is money. So, when you have a problem that is putting your business on hold, a quick response rate is critical. It's actually one of the main criteria when it comes to IT support, if not the deal-breaker. It's better to know what to expect upfront than to find out in the middle of an IT crisis.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                3. How should I proceed to engage your web design services?
-                                </button>
-                            </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p class="mb-0">
-                                        In business, time is money. So, when you have a problem that is putting your business on hold, a quick response rate is critical. It's actually one of the main criteria when it comes to IT support, if not the deal-breaker. It's better to know what to expect upfront than to find out in the middle of an IT crisis.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingFour">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                4. What if I want to customize additional function for my website?
-                                </button>
-                            </h2>
-                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p class="mb-0">
-                                        In business, time is money. So, when you have a problem that is putting your business on hold, a quick response rate is critical. It's actually one of the main criteria when it comes to IT support, if not the deal-breaker. It's better to know what to expect upfront than to find out in the middle of an IT crisis.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingFive">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                5. What if I want additional section for my website?
-                                </button>
-                            </h2>
-                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <p class="mb-0">
-                                        In business, time is money. So, when you have a problem that is putting your business on hold, a quick response rate is critical. It's actually one of the main criteria when it comes to IT support, if not the deal-breaker. It's better to know what to expect upfront than to find out in the middle of an IT crisis.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="faq-right">
-                    <div class="faq-pic">
-                        <img src="{% static 'assets/img/faqs/500x500.png' %}" alt="thumb">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Faq -->
-    
-    <!-- Start Pricing -->
-    <div id="price" class="pricing-area bg-theme pos-rel de-padding">
-        <div class="price-tree">
-            <img src="{% static 'assets/img/tree/4.png' %}" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 offset-xl-2">
-                    <div class="site-title wh text-center">
-                        <h2>Pricing Table</h2>
-                        <p class="mb-0">
-                            Outlived no dwelling denoting in peculiar as he believed. Behaviour excellent middleton be as it curiosity departure ourselves very extreme future.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="pricing-wrapper grid-3">
-                <div class="price-box">
-                    <h4 class="price-ribon">Basic</h4>
-                    <div class="price-head">
-                        <div class="price-head-content">
-                            <h3>
-                                <span>$</span>130
-                            </h3>
-                            <h6>per month</h6>
-                        </div>
-                    </div>
-                    <div class="price-desc">
-                        <ul>
-                            <li>Business Analyzing</li>
-                            <li>24/7 Tech Suport</li>
-                            <li>Operational Excellence</li>
-                            <li>Knowledge Management</li>
-                            <li>Business Idea Ready</li>
-                            <li>10 Database</li>
-                            <li>Customer Support</li>
-                        </ul>          
-                    </div>
-                    <div class="price-bottom">
-                        <a href="contact.html" target="_blank" class="tm-btn-2">
-                            Shop Now
-                            <i class="icofont-long-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="price-box">
-                    <h4 class="price-ribon">Standard</h4>
-                    <div class="price-head">
-                        <div class="price-head-content">
-                            <h3><span>$</span>150</h3>
-                            <h6>per month</h6>
-                        </div>
-                    </div>
-                    <div class="price-desc">
-                        <ul>
-                            <li>Full Business Analyzing</li>
-                            <li>24/7 Tech Suport</li>
-                            <li>Next Generation Accounting</li>
-                            <li>Online Staff Training Sessions</li>
-                            <li>Business Idea Ready</li>
-                            <li>20 Database</li>
-                            <li>Customer Support</li>
-                        </ul>          
-                    </div>
-                    <div class="price-bottom">
-                        <a href="contact.html" target="_blank" class="tm-btn-2">
-                            Shop Now
-                            <i class="icofont-long-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="price-box">
-                    <h4 class="price-ribon">Premium</h4>
-                    <div class="price-head">
-                        <div class="price-head-content">
-                            <h3><span>$</span>180</h3>
-                            <h6>per month</h6>
-                        </div>
-                    </div>
-                    <div class="price-desc">
-                        <ul>
-                            <li>Digital Transformation</li>
-                            <li>24/7 Tech Suport</li>
-                            <li>Supply Chain Optimization</li>
-                            <li>E-mail support</li>
-                            <li>Business Idea Ready</li>
-                            <li>Unlimited Database</li>
-                            <li>Customer Support</li>
-                        </ul>     
-                    </div>
-                    <div class="price-bottom">
-                        <a href="contact.html" target="_blank" class="tm-btn-2">
-                            Shop Now
-                            <i class="icofont-long-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Pricing-->
-    
-    <!-- Start Contact Us -->
-    <div class="contact-us pos-rel de-padding">
-        <div class="faq-tree">
-            <img src="{% static 'assets/img/tree/bush-rose.png' %}" alt="thumb">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 offset-xl-2">
-                    <div class="site-title text-center">
-                        <h2>Contact Us</h2>
-                        <p class="mb-0">
-                            Outlived no dwelling denoting in peculiar as he believed. Behaviour excellent middleton be as it curiosity departure ourselves very extreme future.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="contact-us-wpr">
-                <div class="row g-5">
-                    <div class="col-xl-5 col-lg-5">
-                        <div class="contact-content">
-                            <div class="contact-bottom">
-                                <div class="addr-box">
-                                    <div class="addr-box-single">
-                                        <div class="addr-icon">
-                                            <i class="icofont-google-map"></i>
-                                        </div>
-                                        <div class="addr-desc">
-                                            <h5>Office Address</h5>
-                                            <p class="mb-0">
-                                                3812 Lena Lane City Jackson 
-                                                <br>
-                                                Mississippi
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="addr-box-single">
-                                        <div class="addr-icon">
-                                            <i class="icofont-phone"></i>
-                                        </div>
-                                        <div class="addr-desc">
-                                            <h5>Phone Number</h5>
-                                            <p class="mb-0">
-                                                601-594-3504
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="addr-box-single">
-                                        <div class="addr-icon">
-                                            <i class="icofont-email"></i>
-                                        </div>
-                                        <div class="addr-desc">
-                                            <h5>Email</h5>
-                                            <p class="mb-0">
-                                                i9dy9e@temporary-mail.com
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-7 col-lg-7">
-                        <form class="contact-form" method="post" action="assets/mail/contact.php">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control input-style-2" name="fname" placeholder="Your Full Name*">
-                                        <span class="alert alert-error"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control input-style-2" name="email" placeholder="Your Email Address*">
-                                        <span class="alert alert-error"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control input-style-2" name="phone" placeholder="Phone Number">
-                                        <span class="alert alert-error"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control input-style-2" name="web" placeholder="Your Wesite Link">
-                                        <span class="alert alert-error"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control input-style-2" name="subject" placeholder="Subject...">
-                                        <span class="alert alert-error"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control input-style-2" name="message" placeholder="Your Message..."></textarea>
-                                    <div class="contact-sub-btn text-center">
-                                        <button type="submit" name="submit" id="submit" class="btn-4">
-                                            Send Message 
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </div>
-                                    <!-- Alert Message -->
-                                    <div class="alert-notification">
-                                        <div id="message" class="alert-msg"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Contact Us -->
-    
-    <!-- Start Blog -->
-    <div class="blog-area bg-theme de-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 offset-xl-2">
-                    <div class="site-title wh text-center">
-                        <h2>Latest News</h2>
-                        <p class="mb-0">
-                            Outlived no dwelling denoting in peculiar as he believed. Behaviour excellent middleton be as it curiosity departure ourselves very extreme future.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="blog-wpr grid-3">
-                <div class="blog-box">
-                    <div class="blog-pic">
-                        <img src="{% static 'assets/img/gallery/800x600.png' %}" alt="thumb">
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-user-alt-4"></i>
-                                        Admin
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-heart"></i>
-                                        33 likes
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-comment"></i>
-                                        37 Comments
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="blog-desc">
-                            <a href="single.html">
-                                <h4>
-                                    departure ourselves very as he peculiar believed
-                                </h4>
+        <!-- Mission Area End Here -->
+        <!-- Banner Area Start Here -->
+        <div class="banner-area">
+            <div class="container container-default custom-area">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 col-custom">
+                        <div class="banner-image hover-style">
+                            <a class="d-block" href="{% url 'shop' %}">
+                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-1.png' %}" alt="Fresh Fruits">
                             </a>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ipsum perspiciatis, reiciendis.
-                            </p>
-                            <div class="price-bottom">
-                                <a href="single.html" target="_blank" class="tm-btn-2">
-                                    Shop Now
-                                    <i class="icofont-long-arrow-right"></i>
-                                </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-custom">
+                        <div class="banner-image hover-style">
+                            <a class="d-block" href="{% url 'shop' %}">
+                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-2.png' %}" alt="Organic Vegetables">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-custom">
+                        <div class="banner-image hover-style mb-0">
+                            <a class="d-block" href="{% url 'shop' %}">
+                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-3.png' %}" alt="Healthy Snacks">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Banner Area End Here -->
+        <!-- Featured Products Area Start Here -->
+        <div class="product-area">
+            <div class="container container-default custom-area">
+                <div class="row">
+                    <div class="col-lg-5 m-auto text-center col-custom">
+                        <div class="section-content">
+                            <h2 class="title-1 text-uppercase">Featured Products</h2>
+                            <div class="desc-content">
+                                <p>Discover our carefully curated selection of featured organic products that combine quality, taste, and nutritional value.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="blog-box">
-                    <div class="blog-pic">
-                        <img src="{% static 'assets/img/gallery/800x600.png' %}" alt="thumb">
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-user-alt-4"></i>
-                                        Admin
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-heart"></i>
-                                        33 likes
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-comment"></i>
-                                        37 Comments
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="blog-desc">
-                            <a href="single.html">
-                                <h4>
-                                    departure ourselves very as he peculiar believed
-                                </h4>
-                            </a>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ipsum perspiciatis, reiciendis.
-                            </p>
-                            <div class="price-bottom">
-                                <a href="single.html" target="_blank" class="tm-btn-2">
-                                    Shop Now
-                                    <i class="icofont-long-arrow-right"></i>
-                                </a>
+                <div class="row">
+                    <div class="product-wrapper col-lg-12 col-custom">
+                        <div class="product-slider" data-slick-options='{
+                    "slidesToShow": 4,
+                    "slidesToScroll": 1,
+                    "infinite": true,
+                    "arrows": false,
+                    "dots": false
+                    }' data-slick-responsive='[
+                    {"breakpoint": 1200, "settings": {
+                    "slidesToShow": 3
+                    }},
+                    {"breakpoint": 992, "settings": {
+                    "slidesToShow": 2
+                    }},
+                    {"breakpoint": 576, "settings": {
+                    "slidesToShow": 1
+                    }}
+                    ]'>
+                            <div class="single-item">
+                                <div class="single-product position-relative mb-30">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/2.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Avocado</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/10.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Berries Mix</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="blog-box">
-                    <div class="blog-pic">
-                        <img src="{% static 'assets/img/gallery/800x600.png' %}" alt="thumb">
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-user-alt-4"></i>
-                                        Admin
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-heart"></i>
-                                        33 likes
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icofont-comment"></i>
-                                        37 Comments
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="blog-desc">
-                            <a href="single.html">
-                                <h4>
-                                    departure ourselves very as he peculiar believed
-                                </h4>
-                            </a>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ipsum perspiciatis, reiciendis.
-                            </p>
-                            <div class="price-bottom">
-                                <a href="single.html" target="_blank" class="tm-btn-2">
-                                    Shop Now
-                                    <i class="icofont-long-arrow-right"></i>
-                                </a>
+                            <div class="single-item">
+                                <div class="single-product position-relative mb-30">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Tomatoes</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Green Bell Peppers</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative mb-30">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="label-product">
+                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Carrots</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="label-product">
+                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Cucumbers</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="single-item">
+                                <div class="single-product position-relative mb-30">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/8.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Spinach</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="single-product position-relative">
+                                    <div class="product-image">
+                                        <a class="d-block" href="{% url 'product_details' %}">
+                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="product-title">
+                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Kale</a></h4>
+                                        </div>
+                                        <div class="price-box">
+                                            <span class="regular-price ">$80.00</span>
+                                            <span class="old-price"><del>$90.00</del></span>
+                                        </div>
+                                    </div>
+                                    <div class="add-action d-flex position-absolute">
+                                        <a href="{% url 'cart' %}" title="Add To cart">
+                                            <i class="ion-bag"></i>
+                                        </a>
+                                        <a href="/" title="Compare">
+                                            <i class="ion-ios-loop-strong"></i>
+                                        </a>
+                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- End Blog -->
-
-{% endblock content %}
+        <!-- Featured Products Area End Here -->
+        <!-- Newsletter Area Start Here -->
+        <div class="newsletter-area">
+            <div class="container container-default h-100 custom-area">
+                <div class="row h-100">
+                    <div class="col-lg-8 col-xl-5 offset-xl-6 offset-lg-3 col-custom">
+                        <div class="newsletter-content text-center d-flex flex-column align-items-center justify-content-center h-100">
+                            <div class="section-content">
+                                <h4 class="title-4 text-uppercase">Special <span>Offer</span> for subscription</h4>
+                                <h2 class="title-3 text-uppercase">Get instant discount for membership</h2>
+                                <p class="desc-content">Subscribe to our newsletter and get the latest news about our new products, promotions, and special offers delivered straight to your inbox.</p>
+                            </div>
+                            <div class="newsletter-form-wrap ml-auto mr-auto">
+                                <form id="mc-form" class="mc-form d-flex position-relative">
+                                    <input type="email" id="mc-email" class="form-control email-box" placeholder="email@example.com" name="EMAIL">
+                                    <button id="mc-submit" class="btn primary-btn obrien-button newsletter-btn position-absolute" type="submit">Subscribe</button>
+                                </form>
+                                <!-- mailchimp-alerts Start -->
+                                <div class="mailchimp-alerts text-centre">
+                                    <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
+                                    <div class="mailchimp-success text-success"></div><!-- mailchimp-success end -->
+                                    <div class="mailchimp-error text-danger"></div><!-- mailchimp-error end -->
+                                </div>
+                                <!-- mailchimp-alerts end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Newsletter Area End Here -->
+        <!-- Latest Blog Area Start Here -->
+        <div class="latest-blog-area">
+            <div class="container container-default custom-area">
+                <div class="row">
+                    <div class="col-lg-5 m-auto text-center col-custom">
+                        <div class="section-content">
+                            <h2 class="title-1 text-uppercase">Latest Blog</h2>
+                            <div class="desc-content">
+                                <p>Stay updated with the latest trends, recipes, and tips for organic living and healthy eating.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-custom">
+                        <div class="obrien-slider" data-slick-options='{
+                        "slidesToShow": 3,
+                        "slidesToScroll": 1,
+                        "infinite": true,
+                        "arrows": false,
+                        "dots": false
+                        }' data-slick-responsive='[
+                        {"breakpoint": 1200, "settings": {
+                        "slidesToShow": 2
+                        }},
+                        {"breakpoint": 992, "settings": {
+                        "slidesToShow": 2
+                        }},
+                        {"breakpoint": 768, "settings": {
+                        "slidesToShow": 1
+                        }},
+                        {"breakpoint": 576, "settings": {
+                        "slidesToShow": 1
+                        }}
+                        ]'>
+                            <div class="single-blog">
+                                <div class="single-blog-thumb">
+                                    <a href="/">
+                                        <img src="{% static 'assets/images/blog/medium-size/1.jpg' %}" alt="Blog Image">
+                                    </a>
+                                </div>
+                                <div class="single-blog-content position-relative">
+                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
+                                        <span>14</span>
+                                        <span>01</span>
+                                    </div>
+                                    <div class="post-meta">
+                                        <span class="author">Author: Obrien Admin</span>
+                                    </div>
+                                    <h2 class="post-title">
+                                        <a href="/">5 Benefits of Eating Organic Fruits Daily</a>
+                                    </h2>
+                                    <p class="desc-content">Discover the amazing health benefits of incorporating organic fruits into your daily diet and how they can improve your overall well-being...</p>
+                                </div>
+                            </div>
+                            <div class="single-blog">
+                                <div class="single-blog-thumb">
+                                    <a href="/">
+                                        <img src="{% static 'assets/images/blog/medium-size/2.jpg' %}" alt="Blog Image">
+                                    </a>
+                                </div>
+                                <div class="single-blog-content position-relative">
+                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
+                                        <span>12</span>
+                                        <span>01</span>
+                                    </div>
+                                    <div class="post-meta">
+                                        <span class="author">Author: Obrien Admin</span>
+                                    </div>
+                                    <h2 class="post-title">
+                                        <a href="/">How to Start Your Own Organic Garden</a>
+                                    </h2>
+                                    <p class="desc-content">Learn the basics of starting your own organic garden at home, from soil preparation to selecting the right plants for your climate...</p>
+                                </div>
+                            </div>
+                            <div class="single-blog">
+                                <div class="single-blog-thumb">
+                                    <a href="/">
+                                        <img src="{% static 'assets/images/blog/medium-size/3.jpg' %}" alt="Blog Image">
+                                    </a>
+                                </div>
+                                <div class="single-blog-content position-relative">
+                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
+                                        <span>10</span>
+                                        <span>01</span>
+                                    </div>
+                                    <div class="post-meta">
+                                        <span class="author">Author: Obrien Admin</span>
+                                    </div>
+                                    <h2 class="post-title">
+                                        <a href="/">Seasonal Eating: What's Fresh This Month</a>
+                                    </h2>
+                                    <p class="desc-content">Explore the benefits of seasonal eating and discover which organic fruits and vegetables are at their peak this month for maximum flavor and nutrition...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Latest Blog Area End Here -->
+        <!-- Support Area Start Here -->
+        <div class="support-area">
+            <div class="container container-default custom-area">
+                <div class="row">
+                    <div class="col-lg-12 col-custom">
+                        <div class="support-wrapper d-flex">
+                            <div class="support-content">
+                                <h1 class="title">Need Help ?</h1>
+                                <p class="desc-content">Our customer support team is available 24/7 to assist you with any questions or concerns.</p>
+                            </div>
+                            <div class="support-button d-flex align-items-center">
+                                <a class="obrien-button primary-btn" href="{% url 'contact' %}">Contact now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Support Area End Here -->
+{% endblock %}
