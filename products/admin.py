@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .models import (
     Category, Product, ProductBasket, BasketItem, 
-    Recipe, RecipeIngredient, Merchandise
+    Recipe, RecipeIngredient, Merchandise, ProductReview
 )
 
 # Register your models here.
@@ -164,3 +164,17 @@ class MerchandiseAdmin(admin.ModelAdmin):
     search_fields = ['name', 'product_id', 'description']
     list_editable = ['price', 'stock', 'is_active']
     readonly_fields = ['product_id', 'created_at', 'updated_at']
+
+
+
+# products/admin.py
+
+
+
+@admin.register(ProductReview)
+class ProductReviewAdmin(admin.ModelAdmin):
+    list_display = ['product', 'get_reviewer_name', 'rating', 'rating_stars', 'created_at', 'is_approved']
+    list_filter = ['rating', 'is_approved', 'created_at', 'product__category']
+    search_fields = ['user__email', 'user__first_name', 'user__last_name', 'review_text', 'product__name']
+    readonly_fields = ['created_at']  # only keep created_at read-only
+    list_editable = ['is_approved']

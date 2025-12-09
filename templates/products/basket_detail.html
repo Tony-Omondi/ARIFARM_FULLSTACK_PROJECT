@@ -1,49 +1,428 @@
-{% extends 'products/base.html' %}
+{# templates/products/basket_detail.html #}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block products_content %}
-<div>
-    <img src="{{ basket.image.url }}" width="300">
-</div>
+{% block title %}{{ basket.name }} - Combo Offer - Shop{% endblock %}
 
-<div>
-    <h1>{{ basket.name }}</h1>
-    <p>ID: {{ basket.basket_id }}</p>
-    <p>Price: ${{ basket.price }}</p>
-    <p>Original Price: ${{ original_price }}</p>
-    <p>You Save: ${{ savings }} ({{ discount_percentage }}%)</p>
-    <p>Stock: {{ basket.stock }}</p>
-    
-    <h3>Description</h3>
-    <p>{{ basket.description }}</p>
-    
-    <h3>Contains:</h3>
-    {% for item in basket_items %}
-    <div>
-        <h4><a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a></h4>
-        <p>Quantity: {{ item.quantity }}</p>
-        <p>Price each: ${{ item.product.price }}</p>
-        <p>Subtotal: ${{ item.item_total_price }}</p>
+{% block content %}
+<div class="shop-wrapper">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">{{ basket.name }}</h3>
+                        <ul>
+                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:basket_list' %}">Combo Offers</a></li>
+                            <li>{{ basket.name|truncatechars:30 }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    
-    {% if basket.stock > 0 %}
-    <form method="post" action="{% url 'cart:add_basket' basket.id %}">
-        {% csrf_token %}
-        <input type="number" name="quantity" value="1" min="1" max="{{ basket.stock }}">
-        <button type="submit">Add Combo to Cart</button>
-    </form>
-    {% else %}
-    <p>Out of Stock</p>
-    {% endif %}
-</div>
 
-{% if related_baskets %}
-<h3>More Combos</h3>
-{% for related in related_baskets %}
-<div>
-    <h4><a href="{% url 'products:basket_detail' related.slug %}">{{ related.name }}</a></h4>
-    <p>Price: ${{ related.price }}</p>
+    <!-- Basket Main Area -->
+    <div class="single-product-main-area">
+        <div class="container container-default custom-area">
+            <div class="row">
+                <!-- Basket Image -->
+                <div class="col-lg-5 col-custom">
+                    <div class="product-details-img">
+                        <div class="single-image border">
+                            <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="img-fluid">
+                        </div>
+                        
+                        <!-- Savings Badge -->
+                        {% if basket.discount_percentage > 0 %}
+                        <div class="savings-badge text-center mt-3">
+                            <div class="alert alert-success mb-0">
+                                <h4 class="mb-1">SAVE {{ basket.discount_percentage }}%</h4>
+                                <p class="mb-0">₵{{ savings|floatformat:2 }} OFF</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Basket Info -->
+                <div class="col-lg-7 col-custom">
+                    <div class="product-summery position-relative">
+                        <div class="product-head mb-3">
+                            <h2 class="product-title">{{ basket.name }}</h2>
+                        </div>
+                        
+                        <!-- Basket ID -->
+                        <div class="sku mb-3">
+                            <span>Basket ID: {{ basket.basket_id }}</span>
+                        </div>
+                        
+                        <!-- Price Comparison -->
+                        <div class="price-comparison mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-4">
+                                    <h3 class="text-success mb-0">₵{{ basket.price }}</h3>
+                                    <small class="text-muted">Combo Price</small>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-danger mb-0" style="text-decoration: line-through;">₵{{ original_price|floatformat:2 }}</h4>
+                                    <small class="text-muted">Individual Price</small>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-success mb-0">₵{{ savings|floatformat:2 }}</h4>
+                                    <small class="text-success">You Save</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="desc-content mb-5">
+                            <p>{{ basket.description }}</p>
+                        </div>
+
+                        <!-- Included Products -->
+                        <div class="included-products mb-5">
+                            <h4 class="mb-3">This Combo Includes:</h4>
+                            <div class="row">
+                                {% for item in basket_items %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="included-product card">
+                                        <div class="card-body p-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-4">
+                                                    <a href="{{ item.product.get_absolute_url }}">
+                                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                                    </a>
+                                                </div>
+                                                <div class="col-8">
+                                                    <h6 class="mb-1">
+                                                        <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                                    </h6>
+                                                    <p class="text-muted small mb-1">
+                                                        <i class="fa fa-tag"></i> ₵{{ item.product.price }} each
+                                                    </p>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="badge badge-info">Qty: {{ item.quantity }}</span>
+                                                        <span class="font-weight-bold">₵{{ item.item_total_price|floatformat:2 }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Stock Status -->
+                        <div class="stock-status mb-4">
+                            {% if basket.is_in_stock %}
+                                <span class="text-success">
+                                    <i class="fa fa-check-circle"></i> In Stock ({{ basket.stock }} combo{{ basket.stock|pluralize }} available)
+                                </span>
+                            {% else %}
+                                <span class="text-danger">
+                                    <i class="fa fa-times-circle"></i> Out of Stock
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Add to Cart Section -->
+                        <div class="quantity-with_btn mb-4">
+                            <div class="quantity">
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" value="1" type="text" {% if not basket.is_in_stock %}disabled{% endif %}>
+                                    <div class="dec qtybutton">-</div>
+                                    <div class="inc qtybutton">+</div>
+                                </div>
+                            </div>
+                            <div class="add-to_cart">
+                                {% if basket.is_in_stock %}
+                                    <a class="btn obrien-button primary-btn" href="#" id="add-basket-to-cart">Add to cart</a>
+                                    <a class="btn obrien-button-3 black-button" href="#" id="buy-basket-now">Buy it now</a>
+                                {% else %}
+                                    <a class="btn obrien-button primary-btn disabled" href="#" style="opacity: 0.6; cursor: not-allowed;">Out of Stock</a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="quick-links mb-4">
+                            <a href="{% url 'products:basket_list' %}" class="btn obrien-button-2 treansparent-color">
+                                <i class="ion-ios-list"></i> View All Combos
+                            </a>
+                            <a href="#" class="btn obrien-button-2 treansparent-color ml-2">
+                                <i class="ion-ios-heart-outline"></i> Save Combo
+                            </a>
+                        </div>
+
+                        <!-- Social Share -->
+                        <div class="social-share mb-4">
+                            <span>Share this deal:</span>
+                            <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
+                            <a href="#"><i class="fa fa-twitter-square twitter-color"></i></a>
+                            <a href="#"><i class="fa fa-whatsapp" style="color: #25D366;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basket Benefits -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="basket-benefits p-4 border rounded">
+                        <h4 class="text-center mb-4">Why Choose This Combo?</h4>
+                        <div class="row">
+                            <div class="col-md-3 text-center mb-4">
+                                <div class="benefit-icon">
+                                    <i class="fa fa-percent fa-3x text-success mb-3"></i>
+                                    <h5>Save {{ discount_percentage }}%</h5>
+                                    <p class="text-muted small">Biggest discount on bundled items</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-4">
+                                <div class="benefit-icon">
+                                    <i class="fa fa-shopping-cart fa-3x text-primary mb-3"></i>
+                                    <h5>One-Click Order</h5>
+                                    <p class="text-muted small">Get everything in a single order</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-4">
+                                <div class="benefit-icon">
+                                    <i class="fa fa-truck fa-3x text-info mb-3"></i>
+                                    <h5>Free Shipping*</h5>
+                                    <p class="text-muted small">On orders over ₵100</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center mb-4">
+                                <div class="benefit-icon">
+                                    <i class="fa fa-gift fa-3x text-warning mb-3"></i>
+                                    <h5>Perfect Gift</h5>
+                                    <p class="text-muted small">Ready-made gift package</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Calculation -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="value-calculation p-4 border rounded bg-light">
+                        <h4 class="text-center mb-4">Value Breakdown</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th colspan="2" class="text-center">Buying Individually</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in basket_items %}
+                                        <tr>
+                                            <td>{{ item.quantity }} × {{ item.product.name }}</td>
+                                            <td class="text-right">₵{{ item.item_total_price|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr class="table-secondary">
+                                            <td><strong>Total Individual Price</strong></td>
+                                            <td class="text-right"><strong>₵{{ original_price|floatformat:2 }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th colspan="2" class="text-center">Buying as Combo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Combo Package Price</td>
+                                            <td class="text-right">₵{{ basket.price }}</td>
+                                        </tr>
+                                        <tr class="table-success">
+                                            <td><strong>Your Savings</strong></td>
+                                            <td class="text-right"><strong class="text-success">₵{{ savings|floatformat:2 }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount Percentage</td>
+                                            <td class="text-right"><strong class="text-danger">{{ discount_percentage }}% OFF</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Baskets -->
+    {% if related_baskets %}
+    <div class="product-area mb-text">
+        <div class="container container-default custom-area">
+            <div class="row">
+                <div class="col-lg-5 m-auto text-center col-custom">
+                    <div class="section-content">
+                        <h2 class="title-1 text-uppercase">More Combo Deals</h2>
+                        <div class="desc-content">
+                            <p>Check out these other great combo offers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 product-wrapper col-custom">
+                    <div class="product-slider">
+                        {% for related in related_baskets %}
+                        <div class="single-item">
+                            <div class="single-product position-relative">
+                                <div class="product-image">
+                                    <a class="d-block" href="{{ related.get_absolute_url }}">
+                                        <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image-1 w-100">
+                                    </a>
+                                    {% if related.discount_percentage > 0 %}
+                                        <span class="badge badge-danger position-absolute" style="top:10px;left:10px;">
+                                            Save {{ related.discount_percentage }}%
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div class="product-content">
+                                    <div class="product-title">
+                                        <h4 class="title-2">
+                                            <a href="{{ related.get_absolute_url }}">{{ related.name|truncatechars:40 }}</a>
+                                        </h4>
+                                    </div>
+                                    <div class="price-box">
+                                        <span class="regular-price text-success">₵{{ related.price }}</span>
+                                        {% if related.total_original_price > related.price %}
+                                            <span class="old-price text-muted" style="text-decoration: line-through; font-size: 0.9em;">₵{{ related.total_original_price|floatformat:2 }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="savings-info">
+                                        <small class="text-success">
+                                            Save ₵{{ related.savings_per_basket|floatformat:2 }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="add-action d-flex position-absolute">
+                                    <a href="{{ related.get_absolute_url }}" title="View Combo"><i class="ion-eye"></i></a>
+                                    <a href="#" title="Save Combo"><i class="ion-ios-heart-outline"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- CTA Section -->
+    <div class="support-area">
+        <div class="container container-default custom-area">
+            <div class="row">
+                <div class="col-lg-12 col-custom">
+                    <div class="support-wrapper d-flex justify-content-between align-items-center">
+                        <div class="support-content">
+                            <h1 class="title">Have Questions About This Combo?</h1>
+                            <p class="desc-content">Contact our support team for any questions</p>
+                        </div>
+                        <div class="support-button">
+                            <a class="btn obrien-button primary-btn mr-3" href="{% url 'contact' %}">Contact Support</a>
+                            <a class="btn obrien-button-2 treansparent-color" href="{% url 'products:basket_list' %}">View All Combos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-{% endfor %}
-{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity controls
+    $('.qtybutton').on('click', function() {
+        var $button = $(this);
+        var oldValue = $button.parent().find('input').val();
+        if ($button.hasClass('inc')) {
+            var newVal = parseFloat(oldValue) + 1;
+            var maxStock = {{ basket.stock }};
+            if (newVal > maxStock) {
+                newVal = maxStock;
+                alert('Only ' + maxStock + ' combo{{ basket.stock|pluralize }} available');
+            }
+        } else {
+            if (oldValue > 1) {
+                var newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 1;
+            }
+        }
+        $button.parent().find('input').val(newVal);
+    });
+
+    // Add basket to cart
+    $('#add-basket-to-cart').on('click', function(e) {
+        e.preventDefault();
+        var quantity = $('.cart-plus-minus-box').val();
+        var basketId = '{{ basket.id }}';
+        
+        alert('Added ' + quantity + ' combo{{ quantity|pluralize }} to cart');
+        // AJAX call to add basket to cart
+    });
+
+    // Buy basket now
+    $('#buy-basket-now').on('click', function(e) {
+        e.preventDefault();
+        var quantity = $('.cart-plus-minus-box').val();
+        
+        alert('Proceeding to checkout with ' + quantity + ' combo{{ quantity|pluralize }}');
+        // Redirect to checkout with basket
+    });
+
+    // Save combo
+    $('.quick-links a:contains("Save Combo")').on('click', function(e) {
+        e.preventDefault();
+        alert('Combo saved to your favorites!');
+        $(this).html('<i class="ion-ios-heart"></i> Combo Saved');
+        $(this).addClass('text-danger');
+    });
+});
+</script>
+<style>
+.included-product {
+    transition: all 0.3s ease;
+    border: 1px solid #eaeaea;
+}
+.included-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: #28a745;
+}
+.benefit-icon {
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+.benefit-icon:hover {
+    transform: translateY(-10px);
+}
+.value-calculation .table {
+    margin-bottom: 0;
+}
+.savings-badge .alert {
+    border-radius: 10px;
+}
+</style>
 {% endblock %}

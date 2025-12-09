@@ -1,3 +1,4 @@
+{# templates/products/home.html #}
 {% extends 'base.html' %}
 {% load static %}
 
@@ -5,866 +6,659 @@
 {% block description %}Welcome to Obrien - Your trusted source for organic food and healthy lifestyle products. Fresh, natural, and sustainable organic products delivered to your doorstep.{% endblock %}
 
 {% block content %}
-        <!-- Begin Slider Area One -->
-        <div class="slider-area">
-            <div class="obrien-slider arrow-style" data-slick-options='{
-        "slidesToShow": 1,
-        "slidesToScroll": 1,
-        "infinite": true,
-        "arrows": true,
-        "dots": true,
-        "autoplay" : true,
-        "fade" : true,
-        "autoplaySpeed" : 7000,
-        "pauseOnHover" : false,
-        "pauseOnFocus" : false
-        }' data-slick-responsive='[
-        {"breakpoint":992, "settings": {
-        "slidesToShow": 1,
-        "arrows": false,
-        "dots": true
-        }}
-        ]'>
-                <div class="slide-item slide-1 bg-position slide-bg-1 animation-style-01">
-                    <div class="slider-content">
-                        <h4 class="slider-small-title">Cold processed organic fruit</h4>
-                        <h2 class="slider-large-title">Fresh Avocado</h2>
-                        <div class="slider-btn">
-                            <a class="obrien-button black-btn" href="{% url 'shop' %}">Shop Now</a>
-                        </div>
-                    </div>
+<!-- Begin Slider Area One -->
+<div class="slider-area">
+    <div class="obrien-slider arrow-style" data-slick-options='{
+    "slidesToShow": 1,
+    "slidesToScroll": 1,
+    "infinite": true,
+    "arrows": true,
+    "dots": true,
+    "autoplay" : true,
+    "fade" : true,
+    "autoplaySpeed" : 7000,
+    "pauseOnHover" : false,
+    "pauseOnFocus" : false
+    }' data-slick-responsive='[
+    {"breakpoint":992, "settings": {
+    "slidesToShow": 1,
+    "arrows": false,
+    "dots": true
+    }}
+    ]'>
+        <div class="slide-item slide-1 bg-position slide-bg-1 animation-style-01">
+            <div class="slider-content">
+                <h4 class="slider-small-title">Cold processed organic fruit</h4>
+                <h2 class="slider-large-title">Fresh Avocado</h2>
+                <div class="slider-btn">
+                    <a class="obrien-button black-btn" href="{% url 'products:product_list' %}">Shop Now</a>
                 </div>
-                <div class="slide-item slide-2 bg-position slide-bg-1 animation-style-01">
-                    <div class="slider-content">
-                        <h4 class="slider-small-title">Healthy life with</h4>
-                        <h2 class="slider-large-title">Natural Organic</h2>
-                        <div class="slider-btn">
-                            <a class="obrien-button black-btn" href="{% url 'shop' %}">Shop Now</a>
-                        </div>
+            </div>
+        </div>
+        <div class="slide-item slide-2 bg-position slide-bg-1 animation-style-01">
+            <div class="slider-content">
+                <h4 class="slider-small-title">Healthy life with</h4>
+                <h2 class="slider-large-title">Natural Organic</h2>
+                <div class="slider-btn">
+                    <a class="obrien-button black-btn" href="{% url 'products:product_list' %}">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Slider Area One End Here -->
+
+<!-- Feature Area Start Here -->
+<div class="feature-area">
+    <div class="container container-default custom-wrapper">
+        <div class="row">
+            <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
+                <div class="feature-content-wrapper">
+                    <h2 class="title">Important to eat fruit</h2>
+                    <p class="desc-content">Eating fruit provides health benefits — people who eat more fruits and vegetables as part of an overall healthy diet are likely to have a reduced risk of some chronic diseases. Fruits provide nutrients vital for health and maintenance of your body.</p>
+                    <p class="desc-content"> Fruits are sources of many essential nutrients that are underconsumed, including potassium, dietary fiber, vitamin C, and folate (folic acid).</p>
+                    <p class="desc-content"> Most fruits are naturally low in fat, sodium, and calories. None have cholesterol.</p>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
+                <div class="feature-image">
+                    <img src="{% static 'assets/images/feature/feature-1.jpg' %}" alt="Obrien Feature">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Feature Area End Here -->
+
+{# Replace this section in home.html #}
+
+<!-- Latest Products Area Start Here -->
+<div class="product-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-5 m-auto text-center col-custom">
+                <div class="section-content">
+                    <h2 class="title-1 text-uppercase">Latest Products</h2>
+                    <div class="desc-content">
+                        <p>Check out our newest additions to the organic collection. Fresh arrivals just for you!</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Slider Area One End Here -->
-        <!-- Feature Area Start Here -->
-        <div class="feature-area">
-            <div class="container container-default custom-wrapper">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
-                        <div class="feature-content-wrapper">
-                            <h2 class="title">Important to eat fruit</h2>
-                            <p class="desc-content">Eating fruit provides health benefits — people who eat more fruits and vegetables as part of an overall healthy diet are likely to have a reduced risk of some chronic diseases. Fruits provide nutrients vital for health and maintenance of your body.</p>
-                            <p class="desc-content"> Fruits are sources of many essential nutrients that are underconsumed, including potassium, dietary fiber, vitamin C, and folate (folic acid).</p>
-                            <p class="desc-content"> Most fruits are naturally low in fat, sodium, and calories. None have cholesterol.</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
-                        <div class="feature-image">
-                            <img src="{% static 'assets/images/feature/feature-1.jpg' %}" alt="Obrien Feature">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Feature Area End Here -->
-        <!-- Product Area Start Here -->
-        <div class="product-area">
-            <div class="container container-default custom-area">
-                <div class="row">
-                    <div class="col-lg-5 m-auto text-center col-custom">
-                        <div class="section-content">
-                            <h2 class="title-1 text-uppercase">Best Sale</h2>
-                            <div class="desc-content">
-                                <p>All best seller product are now available for you and your can buy this product from here any time any where so sop now</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 product-wrapper col-custom">
-                        <div class="product-slider" data-slick-options='{
-                        "slidesToShow": 4,
-                        "slidesToScroll": 1,
-                        "infinite": true,
-                        "arrows": false,
-                        "dots": false
-                        }' data-slick-responsive='[
-                        {"breakpoint": 1200, "settings": {
-                        "slidesToShow": 3
-                        }},
-                        {"breakpoint": 992, "settings": {
-                        "slidesToShow": 2
-                        }},
-                        {"breakpoint": 576, "settings": {
-                        "slidesToShow": 1
-                        }}
-                        ]'>
-                            <div class="single-item">
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/2.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy name</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
+        <div class="row">
+            <div class="col-lg-12 product-wrapper col-custom">
+                <div class="product-slider" data-slick-options='{
+                "slidesToShow": 4,
+                "slidesToScroll": 1,
+                "infinite": true,
+                "arrows": false,
+                "dots": false
+                }' data-slick-responsive='[
+                {"breakpoint": 1200, "settings": {"slidesToShow": 3}},
+                {"breakpoint": 992, "settings": {"slidesToShow": 2}},
+                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
+                ]'>
+                    {% for product in featured_products|slice:":5" %}
+                    <div class="single-item">
+                        <div class="single-product position-relative">
+                            <div class="product-image">
+                                <a class="d-block" href="{{ product.get_absolute_url }}">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1 w-100">
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ product.name }}" class="product-image-1 w-100">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                    {% endif %}
+                                </a>
+                                {% if product.is_new %}
+                                    <span class="badge badge-warning position-absolute" style="top:10px;left:10px;">New</span>
+                                {% endif %}
+                                {% if product.stock <= 0 %}
                                     <div class="label-product">
                                         <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
                                     </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="product-content">
+                                <div class="product-title">
+                                    <h4 class="title-2">
+                                        <a href="{{ product.get_absolute_url }}">{{ product.name|truncatechars:40 }}</a>
+                                    </h4>
+                                </div>
+                                {% if product.category %}
+                                <div class="product-category mb-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-tag"></i> {{ product.category.name }}
+                                    </small>
+                                </div>
+                                {% endif %}
+                                <div class="price-box">
+                                    <span class="regular-price">₵{{ product.price }}</span>
+                                </div>
+                                <!-- Added Date -->
+                                <div class="added-date mt-1">
+                                    <small class="text-muted">
+                                        <i class="fa fa-calendar"></i> Added {{ product.created_at|timesince }} ago
+                                    </small>
                                 </div>
                             </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/8.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy name</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/9.jpg' %}" alt="" class="product-image-1">
-                                            <img src="{% static 'assets/images/product/10.jpg' %}" alt="" class="product-image-2 position-absolute top-0 left-0">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Product dummy title</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Product Area End Here -->
-        <!-- Mission Area Start Here -->
-        <div class="feature-area feature-area-boxed-home mb-text">
-            <div class="container container-default custom-area">
-                <div class="row align-items-center">
-                    <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
-                        <div class="feature-content-wrapper">
-                            <h2 class="title">Our Mission</h2>
-                            <p class="desc-content">At Obrien, we are dedicated to providing the highest quality organic products that nourish both your body and the planet. Our commitment to sustainability and health drives everything we do.</p>
-                            <p class="desc-content"> We source our products from certified organic farms that practice sustainable agriculture, ensuring that every item you purchase supports environmental stewardship and healthy communities.</p>
-                            <p class="desc-content"> Our mission is to make organic living accessible to everyone while maintaining the highest standards of quality and ethical practices.</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
-                        <div class="feature-image position-relative">
-                            <img src="{% static 'assets/images/feature/feature-2.jpg' %}" alt="Obrien Mission">
-                            <div class="popup-video position-absolute">
-                                <a class="popup-vimeo" href="https://www.youtube.com/watch?v=_9VUPq3SxOc">
-                                    <i class="ion-play"></i>
+                            <div class="add-action d-flex position-absolute">
+                                {% if product.stock > 0 %}
+                                    <a href="#" title="Add To cart" data-product-id="{{ product.id }}">
+                                        <i class="ion-bag"></i>
+                                    </a>
+                                {% endif %}
+                                <a href="{{ product.get_absolute_url }}" title="Quick View">
+                                    <i class="ion-eye"></i>
+                                </a>
+                                <a href="#" title="Add To Wishlist">
+                                    <i class="ion-ios-heart-outline"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
+                    {% empty %}
+                    <div class="col-12 text-center">
+                        <p>No latest products available yet.</p>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <!-- Mission Area End Here -->
-        <!-- Banner Area Start Here -->
-        <div class="banner-area">
-            <div class="container container-default custom-area">
-                <div class="row">
-                    <div class="col-md-4 col-sm-12 col-custom">
-                        <div class="banner-image hover-style">
-                            <a class="d-block" href="{% url 'shop' %}">
-                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-1.png' %}" alt="Fresh Fruits">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 col-custom">
-                        <div class="banner-image hover-style">
-                            <a class="d-block" href="{% url 'shop' %}">
-                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-2.png' %}" alt="Organic Vegetables">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 col-custom">
-                        <div class="banner-image hover-style mb-0">
-                            <a class="d-block" href="{% url 'shop' %}">
-                                <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-3.png' %}" alt="Healthy Snacks">
-                            </a>
-                        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{% url 'products:product_list' %}?ordering=-created_at" class="btn obrien-button-2 treansparent-color">
+                    <i class="ion-ios-refresh"></i> View All Latest Products
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Latest Products Area End Here -->
+
+<!-- Mission Area Start Here -->
+<div class="feature-area feature-area-boxed-home mb-text">
+    <div class="container container-default custom-area">
+        <div class="row align-items-center">
+            <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
+                <div class="feature-content-wrapper">
+                    <h2 class="title">Our Mission</h2>
+                    <p class="desc-content">At Obrien, we are dedicated to providing the highest quality organic products that nourish both your body and the planet. Our commitment to sustainability and health drives everything we do.</p>
+                    <p class="desc-content"> We source our products from certified organic farms that practice sustainable agriculture, ensuring that every item you purchase supports environmental stewardship and healthy communities.</p>
+                    <p class="desc-content"> Our mission is to make organic living accessible to everyone while maintaining the highest standards of quality and ethical practices.</p>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
+                <div class="feature-image position-relative">
+                    <img src="{% static 'assets/images/feature/feature-2.jpg' %}" alt="Obrien Mission">
+                    <div class="popup-video position-absolute">
+                        <a class="popup-vimeo" href="https://www.youtube.com/watch?v=_9VUPq3SxOc">
+                            <i class="ion-play"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Banner Area End Here -->
-        <!-- Featured Products Area Start Here -->
-        <div class="product-area">
-            <div class="container container-default custom-area">
-                <div class="row">
-                    <div class="col-lg-5 m-auto text-center col-custom">
-                        <div class="section-content">
-                            <h2 class="title-1 text-uppercase">Featured Products</h2>
-                            <div class="desc-content">
-                                <p>Discover our carefully curated selection of featured organic products that combine quality, taste, and nutritional value.</p>
+    </div>
+</div>
+<!-- Mission Area End Here -->
+
+<!-- Banner Area Start Here -->
+<div class="banner-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 col-custom">
+                <div class="banner-image hover-style">
+                    <a class="d-block" href="{% url 'products:product_list' %}">
+                        <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-1.png' %}" alt="Fresh Fruits">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 col-custom">
+                <div class="banner-image hover-style">
+                    <a class="d-block" href="{% url 'products:recipe_list' %}">
+                        <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-2.png' %}" alt="Recipes">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 col-custom">
+                <div class="banner-image hover-style mb-0">
+                    <a class="d-block" href="{% url 'products:basket_list' %}">
+                        <img class="w-100" src="{% static 'assets/images/banner/small-banner/1-3.png' %}" alt="Combo Offers">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Banner Area End Here -->
+
+<!-- Combo Offers Area Start Here -->
+{% if product_baskets %}
+<div class="product-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-5 m-auto text-center col-custom">
+                <div class="section-content">
+                    <h2 class="title-1 text-uppercase">Special Combo Offers</h2>
+                    <div class="desc-content">
+                        <p>Save more by buying our specially curated combo packages. Perfect for gifts or stocking up!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 product-wrapper col-custom">
+                <div class="product-slider" data-slick-options='{
+                "slidesToShow": 3,
+                "slidesToScroll": 1,
+                "infinite": true,
+                "arrows": false,
+                "dots": false
+                }' data-slick-responsive='[
+                {"breakpoint": 1200, "settings": {"slidesToShow": 2}},
+                {"breakpoint": 768, "settings": {"slidesToShow": 1}},
+                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
+                ]'>
+                    {% for basket in product_baskets %}
+                    <div class="single-item">
+                        <div class="single-product position-relative">
+                            <div class="product-image">
+                                <a class="d-block" href="{{ basket.get_absolute_url }}">
+                                    {% if basket.image %}
+                                        <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-1 w-100">
+                                        <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-2 position-absolute w-100">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ basket.name }}" class="product-image-1 w-100">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ basket.name }}" class="product-image-2 position-absolute w-100">
+                                    {% endif %}
+                                </a>
+                                {% if basket.discount_percentage > 0 %}
+                                    <span class="badge badge-danger position-absolute" style="top:10px;left:10px;">
+                                        Save {{ basket.discount_percentage }}%
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="product-content">
+                                <div class="product-title">
+                                    <h4 class="title-2">
+                                        <a href="{{ basket.get_absolute_url }}">{{ basket.name|truncatechars:40 }}</a>
+                                    </h4>
+                                </div>
+                                <div class="price-box">
+                                    <span class="regular-price text-success">₵{{ basket.price }}</span>
+                                    {% if basket.total_original_price > basket.price %}
+                                        <span class="old-price text-muted ml-2" style="text-decoration: line-through; font-size: 0.9em;">₵{{ basket.total_original_price|floatformat:2 }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="savings-info mt-2">
+                                    <small class="text-success">
+                                        <i class="fa fa-tag"></i> Save ₵{{ basket.savings_per_basket|floatformat:2 }}
+                                    </small>
+                                </div>
+                                <div class="basket-products-count mt-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-cube"></i> Contains {{ basket.included_products.count }} items
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="add-action d-flex position-absolute">
+                                <a href="{{ basket.get_absolute_url }}" title="View Combo">
+                                    <i class="ion-eye"></i>
+                                </a>
+                                <a href="#" title="Save Combo">
+                                    <i class="ion-ios-heart-outline"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                <div class="row">
-                    <div class="product-wrapper col-lg-12 col-custom">
-                        <div class="product-slider" data-slick-options='{
-                    "slidesToShow": 4,
-                    "slidesToScroll": 1,
-                    "infinite": true,
-                    "arrows": false,
-                    "dots": false
-                    }' data-slick-responsive='[
-                    {"breakpoint": 1200, "settings": {
-                    "slidesToShow": 3
-                    }},
-                    {"breakpoint": 992, "settings": {
-                    "slidesToShow": 2
-                    }},
-                    {"breakpoint": 576, "settings": {
-                    "slidesToShow": 1
-                    }}
-                    ]'>
-                            <div class="single-item">
-                                <div class="single-product position-relative mb-30">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/2.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Avocado</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/10.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Berries Mix</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{% url 'products:basket_list' %}" class="btn obrien-button-3 black-button">
+                    View All Combo Offers
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Combo Offers Area End Here -->
+
+<!-- Featured Recipes Area Start Here -->
+{% if featured_recipes %}
+<div class="product-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-5 m-auto text-center col-custom">
+                <div class="section-content">
+                    <h2 class="title-1 text-uppercase">Featured Recipes</h2>
+                    <div class="desc-content">
+                        <p>Try these delicious recipes using our fresh organic ingredients. Free recipes to inspire healthy cooking!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 product-wrapper col-custom">
+                <div class="product-slider" data-slick-options='{
+                "slidesToShow": 3,
+                "slidesToScroll": 1,
+                "infinite": true,
+                "arrows": false,
+                "dots": false
+                }' data-slick-responsive='[
+                {"breakpoint": 1200, "settings": {"slidesToShow": 2}},
+                {"breakpoint": 768, "settings": {"slidesToShow": 1}},
+                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
+                ]'>
+                    {% for recipe in featured_recipes %}
+                    <div class="single-item">
+                        <div class="single-product position-relative">
+                            <div class="product-image">
+                                <a class="d-block" href="{{ recipe.get_absolute_url }}">
+                                    {% if recipe.image %}
+                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
+                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" alt="{{ recipe.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
+                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" alt="{{ recipe.title }}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                    {% endif %}
+                                </a>
+                                <span class="badge position-absolute" style="top:10px;left:10px; 
+                                    {% if recipe.difficulty == 'easy' %}background-color:#28a745;
+                                    {% elif recipe.difficulty == 'medium' %}background-color:#ffc107;color:#000;
+                                    {% elif recipe.difficulty == 'hard' %}background-color:#dc3545;
+                                    {% else %}background-color:#6c757d;
+                                    {% endif %}">
+                                    {{ recipe.get_difficulty_display }}
+                                </span>
+                                {% if recipe.is_featured %}
+                                    <span class="badge badge-warning position-absolute" style="top:10px;right:10px;">
+                                        <i class="fa fa-star"></i> Featured
+                                    </span>
+                                {% endif %}
                             </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative mb-30">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/4.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Tomatoes</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
+                            <div class="product-content">
+                                <div class="product-title">
+                                    <h4 class="title-2">
+                                        <a href="{{ recipe.get_absolute_url }}">{{ recipe.title|truncatechars:40 }}</a>
+                                    </h4>
                                 </div>
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Green Bell Peppers</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
+                                <div class="recipe-meta mb-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-clock-o"></i> {{ recipe.total_time }}min
+                                        <i class="fa fa-users ml-2"></i> {{ recipe.servings }} serves
+                                    </small>
                                 </div>
+                                <p class="desc-content text-muted small">
+                                    {{ recipe.description|truncatewords:15 }}
+                                </p>
                             </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative mb-30">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/5.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
+                            <div class="add-action d-flex position-absolute">
+                                <a href="{{ recipe.get_absolute_url }}" title="View Recipe">
+                                    <i class="ion-eye"></i>
+                                </a>
+                                <a href="#" title="Save Recipe">
+                                    <i class="ion-ios-bookmark-outline"></i>
+                                </a>
+                                <a href="#" title="Print Recipe">
+                                    <i class="ion-printer"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{% url 'products:recipe_list' %}" class="btn obrien-button primary-btn">
+                    View All Recipes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Featured Recipes Area End Here -->
+
+<!-- Merchandise Area Start Here -->
+{% if merchandise %}
+<div class="product-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-5 m-auto text-center col-custom">
+                <div class="section-content">
+                    <h2 class="title-1 text-uppercase">Merchandise & Gifts</h2>
+                    <div class="desc-content">
+                        <p>Check out our exclusive merchandise collection - perfect gifts for organic food lovers!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 product-wrapper col-custom">
+                <div class="product-slider" data-slick-options='{
+                "slidesToShow": 4,
+                "slidesToScroll": 1,
+                "infinite": true,
+                "arrows": false,
+                "dots": false
+                }' data-slick-responsive='[
+                {"breakpoint": 1200, "settings": {"slidesToShow": 3}},
+                {"breakpoint": 992, "settings": {"slidesToShow": 2}},
+                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
+                ]'>
+                    {% for merch in merchandise %}
+                    <div class="single-item">
+                        <div class="single-product position-relative">
+                            <div class="product-image">
+                                <a class="d-block" href="{{ merch.get_absolute_url }}">
+                                    {% if merch.image %}
+                                        <img src="{{ merch.image.url }}" alt="{{ merch.name }}" class="product-image-1 w-100">
+                                        <img src="{{ merch.image.url }}" alt="{{ merch.name }}" class="product-image-2 position-absolute w-100">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="{{ merch.name }}" class="product-image-1 w-100">
+                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="{{ merch.name }}" class="product-image-2 position-absolute w-100">
+                                    {% endif %}
+                                </a>
+                                {% if merch.stock <= 0 %}
                                     <div class="label-product">
                                         <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
                                     </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Carrots</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="product-content">
+                                <div class="product-title">
+                                    <h4 class="title-2">
+                                        <a href="{{ merch.get_absolute_url }}">{{ merch.name|truncatechars:40 }}</a>
+                                    </h4>
                                 </div>
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/6.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="label-product">
-                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Cucumbers</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
+                                <div class="price-box">
+                                    <span class="regular-price">₵{{ merch.price }}</span>
+                                </div>
+                                <div class="stock-status-small">
+                                    {% if merch.stock > 0 %}
+                                        <small class="text-success">In Stock</small>
+                                    {% else %}
+                                        <small class="text-danger">Out of Stock</small>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <div class="single-item">
-                                <div class="single-product position-relative mb-30">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/7.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/8.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Organic Spinach</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="single-product position-relative">
-                                    <div class="product-image">
-                                        <a class="d-block" href="{% url 'product_details' %}">
-                                            <img src="{% static 'assets/images/product/1.jpg' %}" alt="" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/3.jpg' %}" alt="" class="product-image-2 position-absolute w-100">
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="product-title">
-                                            <h4 class="title-2"> <a href="{% url 'product_details' %}">Fresh Kale</a></h4>
-                                        </div>
-                                        <div class="price-box">
-                                            <span class="regular-price ">$80.00</span>
-                                            <span class="old-price"><del>$90.00</del></span>
-                                        </div>
-                                    </div>
-                                    <div class="add-action d-flex position-absolute">
-                                        <a href="{% url 'cart' %}" title="Add To cart">
-                                            <i class="ion-bag"></i>
-                                        </a>
-                                        <a href="/" title="Compare">
-                                            <i class="ion-ios-loop-strong"></i>
-                                        </a>
-                                        <a href="{% url 'wishlist' %}" title="Add To Wishlist">
-                                            <i class="ion-ios-heart-outline"></i>
-                                        </a>
-                                        <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                            <i class="ion-eye"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Featured Products Area End Here -->
-        <!-- Newsletter Area Start Here -->
-        <div class="newsletter-area">
-            <div class="container container-default h-100 custom-area">
-                <div class="row h-100">
-                    <div class="col-lg-8 col-xl-5 offset-xl-6 offset-lg-3 col-custom">
-                        <div class="newsletter-content text-center d-flex flex-column align-items-center justify-content-center h-100">
-                            <div class="section-content">
-                                <h4 class="title-4 text-uppercase">Special <span>Offer</span> for subscription</h4>
-                                <h2 class="title-3 text-uppercase">Get instant discount for membership</h2>
-                                <p class="desc-content">Subscribe to our newsletter and get the latest news about our new products, promotions, and special offers delivered straight to your inbox.</p>
-                            </div>
-                            <div class="newsletter-form-wrap ml-auto mr-auto">
-                                <form id="mc-form" class="mc-form d-flex position-relative">
-                                    <input type="email" id="mc-email" class="form-control email-box" placeholder="email@example.com" name="EMAIL">
-                                    <button id="mc-submit" class="btn primary-btn obrien-button newsletter-btn position-absolute" type="submit">Subscribe</button>
-                                </form>
-                                <!-- mailchimp-alerts Start -->
-                                <div class="mailchimp-alerts text-centre">
-                                    <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
-                                    <div class="mailchimp-success text-success"></div><!-- mailchimp-success end -->
-                                    <div class="mailchimp-error text-danger"></div><!-- mailchimp-error end -->
-                                </div>
-                                <!-- mailchimp-alerts end -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Newsletter Area End Here -->
-        <!-- Latest Blog Area Start Here -->
-        <div class="latest-blog-area">
-            <div class="container container-default custom-area">
-                <div class="row">
-                    <div class="col-lg-5 m-auto text-center col-custom">
-                        <div class="section-content">
-                            <h2 class="title-1 text-uppercase">Latest Blog</h2>
-                            <div class="desc-content">
-                                <p>Stay updated with the latest trends, recipes, and tips for organic living and healthy eating.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 col-custom">
-                        <div class="obrien-slider" data-slick-options='{
-                        "slidesToShow": 3,
-                        "slidesToScroll": 1,
-                        "infinite": true,
-                        "arrows": false,
-                        "dots": false
-                        }' data-slick-responsive='[
-                        {"breakpoint": 1200, "settings": {
-                        "slidesToShow": 2
-                        }},
-                        {"breakpoint": 992, "settings": {
-                        "slidesToShow": 2
-                        }},
-                        {"breakpoint": 768, "settings": {
-                        "slidesToShow": 1
-                        }},
-                        {"breakpoint": 576, "settings": {
-                        "slidesToShow": 1
-                        }}
-                        ]'>
-                            <div class="single-blog">
-                                <div class="single-blog-thumb">
-                                    <a href="/">
-                                        <img src="{% static 'assets/images/blog/medium-size/1.jpg' %}" alt="Blog Image">
+                            <div class="add-action d-flex position-absolute">
+                                {% if merch.stock > 0 %}
+                                    <a href="#" title="Add To cart" data-merch-id="{{ merch.id }}">
+                                        <i class="ion-bag"></i>
                                     </a>
-                                </div>
-                                <div class="single-blog-content position-relative">
-                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
-                                        <span>14</span>
-                                        <span>01</span>
-                                    </div>
-                                    <div class="post-meta">
-                                        <span class="author">Author: Obrien Admin</span>
-                                    </div>
-                                    <h2 class="post-title">
-                                        <a href="/">5 Benefits of Eating Organic Fruits Daily</a>
-                                    </h2>
-                                    <p class="desc-content">Discover the amazing health benefits of incorporating organic fruits into your daily diet and how they can improve your overall well-being...</p>
-                                </div>
-                            </div>
-                            <div class="single-blog">
-                                <div class="single-blog-thumb">
-                                    <a href="/">
-                                        <img src="{% static 'assets/images/blog/medium-size/2.jpg' %}" alt="Blog Image">
-                                    </a>
-                                </div>
-                                <div class="single-blog-content position-relative">
-                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
-                                        <span>12</span>
-                                        <span>01</span>
-                                    </div>
-                                    <div class="post-meta">
-                                        <span class="author">Author: Obrien Admin</span>
-                                    </div>
-                                    <h2 class="post-title">
-                                        <a href="/">How to Start Your Own Organic Garden</a>
-                                    </h2>
-                                    <p class="desc-content">Learn the basics of starting your own organic garden at home, from soil preparation to selecting the right plants for your climate...</p>
-                                </div>
-                            </div>
-                            <div class="single-blog">
-                                <div class="single-blog-thumb">
-                                    <a href="/">
-                                        <img src="{% static 'assets/images/blog/medium-size/3.jpg' %}" alt="Blog Image">
-                                    </a>
-                                </div>
-                                <div class="single-blog-content position-relative">
-                                    <div class="post-date text-center border rounded d-flex flex-column position-absolute">
-                                        <span>10</span>
-                                        <span>01</span>
-                                    </div>
-                                    <div class="post-meta">
-                                        <span class="author">Author: Obrien Admin</span>
-                                    </div>
-                                    <h2 class="post-title">
-                                        <a href="/">Seasonal Eating: What's Fresh This Month</a>
-                                    </h2>
-                                    <p class="desc-content">Explore the benefits of seasonal eating and discover which organic fruits and vegetables are at their peak this month for maximum flavor and nutrition...</p>
-                                </div>
+                                {% endif %}
+                                <a href="{{ merch.get_absolute_url }}" title="Quick View">
+                                    <i class="ion-eye"></i>
+                                </a>
+                                <a href="#" title="Add To Wishlist">
+                                    <i class="ion-ios-heart-outline"></i>
+                                </a>
                             </div>
                         </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{% url 'products:merchandise_list' %}" class="btn obrien-button-2 treansparent-color">
+                    View All Merchandise
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Merchandise Area End Here -->
+
+<!-- Categories Area Start Here -->
+{% if categories %}
+<div class="feature-area mb-text">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-5 m-auto text-center col-custom mb-4">
+                <div class="section-content">
+                    <h2 class="title-1 text-uppercase">Shop by Category</h2>
+                    <div class="desc-content">
+                        <p>Browse our organic products by category to find exactly what you're looking for.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Latest Blog Area End Here -->
-        <!-- Support Area Start Here -->
-        <div class="support-area">
-            <div class="container container-default custom-area">
-                <div class="row">
-                    <div class="col-lg-12 col-custom">
-                        <div class="support-wrapper d-flex">
-                            <div class="support-content">
-                                <h1 class="title">Need Help ?</h1>
-                                <p class="desc-content">Our customer support team is available 24/7 to assist you with any questions or concerns.</p>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-3 col-sm-6 col-custom mb-4">
+                <div class="category-card text-center">
+                    <a href="{{ category.get_absolute_url }}" class="d-block">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="category-icon mb-3" style="width: 150px; height: 150px; margin: 0 auto; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-leaf fa-3x text-success"></i>
                             </div>
-                            <div class="support-button d-flex align-items-center">
-                                <a class="obrien-button primary-btn" href="{% url 'contact' %}">Contact now</a>
-                            </div>
+                        {% endif %}
+                        <h5>{{ category.name }}</h5>
+                        <p class="text-muted small">
+                            {{ category.get_products_count }} product{{ category.get_products_count|pluralize }}
+                        </p>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row mt-2">
+            <div class="col-12 text-center">
+                <a href="{% url 'products:category_list' %}" class="btn obrien-button-3 black-button">
+                    View All Categories
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Categories Area End Here -->
+
+<!-- Newsletter Area Start Here -->
+<div class="newsletter-area">
+    <div class="container container-default h-100 custom-area">
+        <div class="row h-100">
+            <div class="col-lg-8 col-xl-5 offset-xl-6 offset-lg-3 col-custom">
+                <div class="newsletter-content text-center d-flex flex-column align-items-center justify-content-center h-100">
+                    <div class="section-content">
+                        <h4 class="title-4 text-uppercase">Special <span>Offer</span> for subscription</h4>
+                        <h2 class="title-3 text-uppercase">Get instant discount for membership</h2>
+                        <p class="desc-content">Subscribe to our newsletter and get the latest news about our new products, promotions, and special offers delivered straight to your inbox.</p>
+                    </div>
+                    <div class="newsletter-form-wrap ml-auto mr-auto">
+                        <form id="mc-form" class="mc-form d-flex position-relative">
+                            <input type="email" id="mc-email" class="form-control email-box" placeholder="email@example.com" name="EMAIL">
+                            <button id="mc-submit" class="btn primary-btn obrien-button newsletter-btn position-absolute" type="submit">Subscribe</button>
+                        </form>
+                        <!-- mailchimp-alerts Start -->
+                        <div class="mailchimp-alerts text-centre">
+                            <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
+                            <div class="mailchimp-success text-success"></div><!-- mailchimp-success end -->
+                            <div class="mailchimp-error text-danger"></div><!-- mailchimp-error end -->
                         </div>
+                        <!-- mailchimp-alerts end -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Support Area End Here -->
+    </div>
+</div>
+<!-- Newsletter Area End Here -->
+
+<!-- Support Area Start Here -->
+<div class="support-area">
+    <div class="container container-default custom-area">
+        <div class="row">
+            <div class="col-lg-12 col-custom">
+                <div class="support-wrapper d-flex">
+                    <div class="support-content">
+                        <h1 class="title">Need Help?</h1>
+                        <p class="desc-content">Our customer support team is available 24/7 to assist you with any questions or concerns.</p>
+                    </div>
+                    <div class="support-button d-flex align-items-center">
+                        <a class="obrien-button primary-btn" href="{% url 'contact' %}">Contact now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Support Area End Here -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add to cart functionality for products
+    document.querySelectorAll('a[data-product-id]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            alert('Product added to cart!');
+            // Add your cart logic here
+        });
+    });
+
+    // Add to cart functionality for merchandise
+    document.querySelectorAll('a[data-merch-id]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const merchId = this.getAttribute('data-merch-id');
+            alert('Merchandise added to cart!');
+            // Add your cart logic here
+        });
+    });
+
+    // Save recipe/bookmark functionality
+    document.querySelectorAll('a[title="Save Recipe"], a[title="Save Combo"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const title = this.getAttribute('title');
+            alert(title + ' saved to your collection!');
+            // Update icon to show saved state
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('ion-ios-heart-outline')) {
+                icon.classList.remove('ion-ios-heart-outline');
+                icon.classList.add('ion-ios-heart', 'text-danger');
+                this.setAttribute('title', title.replace('Save', 'Saved'));
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

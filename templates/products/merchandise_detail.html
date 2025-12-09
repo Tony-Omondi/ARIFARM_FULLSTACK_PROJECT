@@ -1,37 +1,376 @@
-{% extends 'products/base.html' %}
+{# templates/products/merchandise_detail.html #}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block products_content %}
-<div>
-    <img src="{{ merchandise.image.url }}" width="300">
-</div>
+{% block title %}{{ merchandise.name }} - Merchandise - Shop{% endblock %}
 
-<div>
-    <h1>{{ merchandise.name }}</h1>
-    <p>ID: {{ merchandise.product_id }}</p>
-    <p>Price: ${{ merchandise.price }}</p>
-    <p>Stock: {{ merchandise.stock }}</p>
-    
-    <h3>Description</h3>
-    <p>{{ merchandise.description }}</p>
-    
-    {% if merchandise.stock > 0 %}
-    <form method="post" action="{% url 'cart:add_merchandise' merchandise.id %}">
-        {% csrf_token %}
-        <input type="number" name="quantity" value="1" min="1" max="{{ merchandise.stock }}">
-        <button type="submit">Add to Cart</button>
-    </form>
-    {% else %}
-    <p>Out of Stock</p>
+{% block content %}
+<div class="shop-wrapper">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">{{ merchandise.name }}</h3>
+                        <ul>
+                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:merchandise_list' %}">Merchandise</a></li>
+                            <li>{{ merchandise.name|truncatechars:30 }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merchandise Main Area -->
+    <div class="single-product-main-area">
+        <div class="container container-default custom-area">
+            <div class="row">
+                <!-- Merchandise Image -->
+                <div class="col-lg-5 col-custom">
+                    <div class="product-details-img">
+                        <div class="single-image border">
+                            <img src="{{ merchandise.image.url }}" alt="{{ merchandise.name }}" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Merchandise Info -->
+                <div class="col-lg-7 col-custom">
+                    <div class="product-summery position-relative">
+                        <div class="product-head mb-3">
+                            <h2 class="product-title">{{ merchandise.name }}</h2>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="price-box mb-2">
+                            <span class="regular-price">₵{{ merchandise.price }}</span>
+                        </div>
+
+                        <!-- Stock Status -->
+                        <div class="stock-status mb-3">
+                            {% if merchandise.stock > 0 %}
+                                <span class="text-success">
+                                    <i class="fa fa-check-circle"></i> In Stock
+                                    {% if merchandise.stock <= 5 %}
+                                        <span class="text-warning">(Only {{ merchandise.stock }} left!)</span>
+                                    {% endif %}
+                                </span>
+                            {% else %}
+                                <span class="text-danger">
+                                    <i class="fa fa-times-circle"></i> Out of Stock
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Product ID -->
+                        <div class="sku mb-3">
+                            <span>Product ID: {{ merchandise.product_id }}</span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="desc-content mb-5">
+                            <h4 class="mb-3">Description</h4>
+                            <p>{{ merchandise.description }}</p>
+                        </div>
+
+                        <!-- Add to Cart Section -->
+                        <div class="quantity-with_btn mb-4">
+                            <div class="quantity">
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" value="1" type="text" {% if merchandise.stock <= 0 %}disabled{% endif %}>
+                                    <div class="dec qtybutton">-</div>
+                                    <div class="inc qtybutton">+</div>
+                                </div>
+                            </div>
+                            <div class="add-to_cart">
+                                {% if merchandise.stock > 0 %}
+                                    <a class="btn obrien-button primary-btn" href="#" id="add-to-cart">Add to cart</a>
+                                    <a class="btn obrien-button-3 black-button" href="#" id="buy-now">Buy it now</a>
+                                {% else %}
+                                    <a class="btn obrien-button primary-btn disabled" href="#" style="opacity: 0.6; cursor: not-allowed;">Out of Stock</a>
+                                    <button class="btn obrien-button-2 treansparent-color pt-0 pb-0" id="notify-me">Notify when available</button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Wishlist -->
+                        <div class="wishlist-btn mb-5">
+                            <a href="#" class="btn obrien-button-2 treansparent-color">
+                                <i class="ion-ios-heart-outline"></i> Add to Wishlist
+                            </a>
+                        </div>
+
+                        <!-- Social Share -->
+                        <div class="social-share mb-4">
+                            <span>Share :</span>
+                            <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
+                            <a href="#"><i class="fa fa-twitter-square twitter-color"></i></a>
+                            <a href="#"><i class="fa fa-pinterest-square pinterest-color"></i></a>
+                            <a href="#"><i class="fa fa-linkedin-square linkedin-color"></i></a>
+                        </div>
+
+                        <!-- Created Date -->
+                        <div class="created-date mb-3">
+                            <small class="text-muted">
+                                <i class="fa fa-calendar"></i> Added: {{ merchandise.created_at|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merchandise Tabs -->
+            <div class="row mt-no-text">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" id="merchTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active text-uppercase" id="details-tab" data-bs-toggle="tab" href="#details" role="tab">Product Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" id="shipping-tab" data-bs-toggle="tab" href="#shipping" role="tab">Shipping & Returns</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mb-text" id="merchTabContent">
+                        <!-- Details Tab -->
+                        <div class="tab-pane fade show active" id="details" role="tabpanel">
+                            <div class="p-4">
+                                <h4 class="mb-4">Product Details</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <th width="40%">Product ID</th>
+                                                    <td>{{ merchandise.product_id }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Price</th>
+                                                    <td>₵{{ merchandise.price }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Stock Status</th>
+                                                    <td>
+                                                        {% if merchandise.stock > 0 %}
+                                                            <span class="text-success">In Stock ({{ merchandise.stock }} available)</span>
+                                                        {% else %}
+                                                            <span class="text-danger">Out of Stock</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <th width="40%">Added Date</th>
+                                                    <td>{{ merchandise.created_at|date:"F d, Y" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Last Updated</th>
+                                                    <td>{{ merchandise.updated_at|date:"F d, Y" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Status</th>
+                                                    <td>
+                                                        {% if merchandise.is_active %}
+                                                            <span class="text-success">Active</span>
+                                                        {% else %}
+                                                            <span class="text-danger">Inactive</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div class="full-description mt-4">
+                                    <h5>Full Description</h5>
+                                    <p>{{ merchandise.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Tab -->
+                        <div class="tab-pane fade" id="shipping" role="tabpanel">
+                            <div class="p-4">
+                                <h4 class="mb-4">Shipping & Returns Policy</h4>
+                                
+                                <div class="shipping-info mb-5">
+                                    <h5 class="mb-3"><i class="fa fa-truck"></i> Shipping Information</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h6>Standard Shipping</h6>
+                                                    <p class="mb-1">Delivery in 3-5 business days</p>
+                                                    <p class="text-success mb-0">₵15.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <h6>Express Shipping</h6>
+                                                    <p class="mb-1">Delivery in 1-2 business days</p>
+                                                    <p class="text-success mb-0">₵25.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="return-policy">
+                                    <h5 class="mb-3"><i class="fa fa-refresh"></i> Return Policy</h5>
+                                    <div class="alert alert-light">
+                                        <ul class="mb-0">
+                                            <li>30-day return policy from delivery date</li>
+                                            <li>Items must be unused and in original packaging</li>
+                                            <li>Return shipping fees are the responsibility of the customer</li>
+                                            <li>Refunds are processed within 5-7 business days</li>
+                                            <li>Contact customer service for return authorization</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Merchandise -->
+    {% if related_merchandise %}
+    <div class="product-area mb-text">
+        <div class="container container-default custom-area">
+            <div class="row">
+                <div class="col-lg-5 m-auto text-center col-custom">
+                    <div class="section-content">
+                        <h2 class="title-1 text-uppercase">Related Merchandise</h2>
+                        <div class="desc-content">
+                            <p>Check out these other great merchandise items.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 product-wrapper col-custom">
+                    <div class="product-slider">
+                        {% for related in related_merchandise %}
+                        <div class="single-item">
+                            <div class="single-product position-relative">
+                                <div class="product-image">
+                                    <a class="d-block" href="{{ related.get_absolute_url }}">
+                                        <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image-1 w-100">
+                                    </a>
+                                    {% if related.stock <= 0 %}
+                                        <div class="label-product">
+                                            <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="product-content">
+                                    <div class="product-title">
+                                        <h4 class="title-2">
+                                            <a href="{{ related.get_absolute_url }}">{{ related.name|truncatechars:40 }}</a>
+                                        </h4>
+                                    </div>
+                                    <div class="price-box">
+                                        <span class="regular-price">₵{{ related.price }}</span>
+                                    </div>
+                                    <div class="stock-status-small">
+                                        {% if related.stock > 0 %}
+                                            <small class="text-success">In Stock</small>
+                                        {% else %}
+                                            <small class="text-danger">Out of Stock</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="add-action d-flex position-absolute">
+                                    {% if related.stock > 0 %}
+                                        <a href="#" title="Add To Cart"><i class="ion-bag"></i></a>
+                                    {% endif %}
+                                    <a href="{{ related.get_absolute_url }}" title="Quick View"><i class="ion-eye"></i></a>
+                                    <a href="#" title="Add To Wishlist"><i class="ion-ios-heart-outline"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
+{% endblock %}
 
-{% if related_merchandise %}
-<h3>More Merchandise</h3>
-{% for item in related_merchandise %}
-<div>
-    <h4><a href="{% url 'products:merchandise_detail' item.id %}">{{ item.name }}</a></h4>
-    <p>Price: ${{ item.price }}</p>
-</div>
-{% endfor %}
-{% endif %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity controls
+    $('.qtybutton').on('click', function() {
+        var $button = $(this);
+        var oldValue = $button.parent().find('input').val();
+        if ($button.hasClass('inc')) {
+            var newVal = parseFloat(oldValue) + 1;
+            var maxStock = {{ merchandise.stock }};
+            if (newVal > maxStock) {
+                newVal = maxStock;
+                alert('Only ' + maxStock + ' items available in stock');
+            }
+        } else {
+            if (oldValue > 1) {
+                var newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 1;
+            }
+        }
+        $button.parent().find('input').val(newVal);
+    });
+
+    // Add to cart
+    $('#add-to-cart').on('click', function(e) {
+        e.preventDefault();
+        var quantity = $('.cart-plus-minus-box').val();
+        var productId = '{{ merchandise.id }}';
+        
+        alert('Added ' + quantity + ' item(s) to cart');
+        // AJAX call to add to cart
+    });
+
+    // Buy now
+    $('#buy-now').on('click', function(e) {
+        e.preventDefault();
+        var quantity = $('.cart-plus-minus-box').val();
+        
+        alert('Proceeding to checkout with ' + quantity + ' item(s)');
+        // Redirect to checkout
+    });
+
+    // Notify when available
+    $('#notify-me').on('click', function(e) {
+        e.preventDefault();
+        var email = prompt('Enter your email to get notified when this item is back in stock:');
+        if (email) {
+            alert('Thank you! We will notify you at ' + email + ' when this item is back in stock.');
+        }
+    });
+
+    // Add to wishlist
+    $('.wishlist-btn a').on('click', function(e) {
+        e.preventDefault();
+        alert('Added to your wishlist!');
+        $(this).html('<i class="ion-ios-heart"></i> In Wishlist');
+        $(this).addClass('text-danger');
+    });
+});
+</script>
 {% endblock %}

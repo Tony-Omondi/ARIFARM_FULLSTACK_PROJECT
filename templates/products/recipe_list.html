@@ -1,36 +1,317 @@
-{% extends 'products/base.html' %}
+{# templates/products/recipe_list.html #}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block products_content %}
-<h1>Recipes</h1>
+{% block title %}
+    {% if request.GET.q %}Search Results - {% endif %}
+    Recipes - Shop
+{% endblock %}
 
-<form method="get">
-    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search recipes">
-    <button type="submit">Search</button>
-</form>
+{% block content %}
+<div class="shop-wrapper">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">
+                            {% if request.GET.q %}
+                                Recipe Search: "{{ request.GET.q }}"
+                            {% else %}
+                                Recipes
+                            {% endif %}
+                        </h3>
+                        <ul>
+                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li>Recipes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-{% for recipe in recipes %}
-<div>
-    <img src="{{ recipe.image.url }}" width="150">
-    <h2><a href="{% url 'products:recipe_detail' recipe.slug %}">{{ recipe.title }}</a></h2>
-    <p>Prep: {{ recipe.prep_time }}min | Cook: {{ recipe.cook_time }}min</p>
-    <p>Servings: {{ recipe.servings }} | Difficulty: {{ recipe.difficulty }}</p>
-    <p>{{ recipe.description|truncatewords:20 }}</p>
+    <!-- Recipes Main Area -->
+    <div class="shop-main-area">
+        <div class="container container-default custom-area">
+            <div class="row flex-row-reverse">
+                <!-- ==================== RECIPES GRID ==================== -->
+                <div class="col-lg-9 col-12 col-custom widget-mt">
+                    <!-- Toolbar -->
+                    <div class="shop_toolbar_wrapper mb-4">
+                        <div class="shop_toolbar_btn">
+                            <button type="button" class="active btn-list" data-role="grid_list"><i class="fa fa-th-list"></i></button>
+                            <button type="button" class="btn-grid-3" data-role="grid_3"><i class="fa fa-th"></i></button>
+                        </div>
+                        <div class="shop-select">
+                            <form method="get">
+                                <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
+                                    <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
+                                    <option value="title">Title: A-Z</option>
+                                    <option value="-title">Title: Z-A</option>
+                                    <option value="prep_time">Prep Time: Low to High</option>
+                                    <option value="-prep_time">Prep Time: High to Low</option>
+                                    <option value="total_time">Total Time: Low to High</option>
+                                </select>
+                                {% if request.GET.q %}
+                                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Recipe Cards -->
+                    <div class="row shop_wrapper grid_list">
+                        {% for recipe in recipes %}
+                        <div class="col-12 col-custom product-area">
+                            <div class="single-product position-relative">
+                                <!-- Image -->
+                                <div class="product-image">
+                                    <a class="d-block" href="{{ recipe.get_absolute_url }}">
+                                        {% if recipe.image %}
+                                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
+                                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                        {% else %}
+                                            <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
+                                            <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                        {% endif %}
+                                    </a>
+
+                                    <!-- Difficulty Badge -->
+                                    <span class="badge position-absolute" style="top:10px;left:10px; 
+                                        {% if recipe.difficulty == 'easy' %}background-color:#28a745;
+                                        {% elif recipe.difficulty == 'medium' %}background-color:#ffc107;color:#000;
+                                        {% elif recipe.difficulty == 'hard' %}background-color:#dc3545;
+                                        {% else %}background-color:#6c757d;
+                                        {% endif %}">
+                                        {{ recipe.get_difficulty_display }}
+                                    </span>
+
+                                    {% if recipe.is_featured %}
+                                        <span class="badge badge-warning position-absolute" style="top:10px;right:10px;">
+                                            <i class="fa fa-star"></i> Featured
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Main Content -->
+                                <div class="product-content">
+                                    <div class="product-title">
+                                        <h4 class="title-2">
+                                            <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
+                                        </h4>
+                                    </div>
+
+                                    <!-- Recipe Meta -->
+                                    <div class="recipe-meta mb-2">
+                                        <div class="d-flex flex-wrap">
+                                            <span class="mr-3 text-muted">
+                                                <i class="fa fa-clock-o"></i> Prep: {{ recipe.prep_time }}min
+                                            </span>
+                                            <span class="mr-3 text-muted">
+                                                <i class="fa fa-fire"></i> Cook: {{ recipe.cook_time }}min
+                                            </span>
+                                            <span class="text-muted">
+                                                <i class="fa fa-users"></i> Serves: {{ recipe.servings }}
+                                            </span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <small class="text-muted">
+                                                Total: {{ recipe.total_time }} minutes
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <p class="recipe-description text-muted small">
+                                        {{ recipe.description|truncatewords:25 }}
+                                    </p>
+
+                                    <!-- Ingredients Count -->
+                                    {% with ingredient_count=recipe.ingredients.count %}
+                                    {% if ingredient_count > 0 %}
+                                    <div class="ingredients-count mt-2">
+                                        <small class="text-muted">
+                                            <i class="fa fa-list"></i> {{ ingredient_count }} ingredient{{ ingredient_count|pluralize }}
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                </div>
+
+                                <!-- Hover Buttons -->
+                                <div class="add-action d-flex position-absolute">
+                                    <a href="{{ recipe.get_absolute_url }}" title="View Recipe"><i class="ion-eye"></i></a>
+                                    <a href="#" title="Save Recipe"><i class="ion-ios-bookmark-outline"></i></a>
+                                    <a href="#" title="Print Recipe"><i class="ion-printer"></i></a>
+                                </div>
+
+                                <!-- List View Extra -->
+                                <div class="product-content-listview">
+                                    <h4 class="title-2"><a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a></h4>
+                                    
+                                    <!-- Full Meta Info -->
+                                    <div class="recipe-meta-full mb-3">
+                                        <div class="d-flex flex-wrap mb-2">
+                                            <span class="badge mr-2" style="background-color: 
+                                                {% if recipe.difficulty == 'easy' %}#28a745
+                                                {% elif recipe.difficulty == 'medium' %}#ffc107
+                                                {% elif recipe.difficulty == 'hard' %}#dc3545
+                                                {% else %}#6c757d
+                                                {% endif %}; color: {% if recipe.difficulty == 'medium' %}#000{% else %}#fff{% endif %}">
+                                                {{ recipe.get_difficulty_display }}
+                                            </span>
+                                            <span class="text-muted mr-3">
+                                                <i class="fa fa-clock-o"></i> Total: {{ recipe.total_time }}min
+                                            </span>
+                                            <span class="text-muted mr-3">
+                                                <i class="fa fa-users"></i> {{ recipe.servings }} serving{{ recipe.servings|pluralize }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <p class="desc-content">{{ recipe.description|truncatewords:40 }}</p>
+                                    
+                                    <!-- Ingredients Preview -->
+                                    {% with ingredients=recipe.ingredients.all|slice:":5" %}
+                                    {% if ingredients %}
+                                    <div class="ingredients-preview mb-3">
+                                        <small class="text-muted d-block mb-1">
+                                            <strong>Key Ingredients:</strong>
+                                        </small>
+                                        <div class="d-flex flex-wrap">
+                                            {% for ingredient in ingredients %}
+                                            <span class="badge badge-light mr-1 mb-1">{{ ingredient.display_name }}</span>
+                                            {% endfor %}
+                                            {% if recipe.ingredients.count > 5 %}
+                                            <span class="badge badge-secondary">+{{ recipe.ingredients.count|add:"-5" }} more</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    <div class="add-action-listview d-flex">
+                                        <a href="{{ recipe.get_absolute_url }}" title="View Full Recipe"><i class="ion-eye"></i></a>
+                                        <a href="#" title="Save to Cookbook"><i class="ion-ios-bookmark-outline"></i></a>
+                                        <a href="#" title="Print Recipe"><i class="ion-printer"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center py-5">
+                            <h4>No recipes found</h4>
+                            {% if request.GET.q %}
+                                <p class="text-muted">No recipes found for "{{ request.GET.q }}"</p>
+                            {% else %}
+                                <p class="text-muted">Check back soon for new recipes!</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <nav class="pagination pagination-wrap">
+                                <ul class="pagination">
+                                    {% if page_obj.has_previous %}
+                                        <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                    {% endif %}
+                                    <li class="active"><a>{{ page_obj.number }}</a></li>
+                                    {% if page_obj.has_next %}
+                                        <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- ==================== END RECIPES GRID ==================== -->
+
+                <!-- ==================== SIDEBAR ==================== -->
+                <div class="col-lg-3 col-12 col-custom">
+                    <aside class="sidebar_widget widget-mt">
+                        <div class="widget_inner">
+                            <!-- Recipe Search -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Search Recipes</h3>
+                                <div class="search-box">
+                                    <form action=".">
+                                        <div class="input-group">
+                                            <input type="text" name="q" class="form-control" placeholder="Search recipes..." value="{{ request.GET.q|default:'' }}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Filter by Difficulty -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Filter by Difficulty</h3>
+                                <ul class="sidebar-list">
+                                    <li><a href="?difficulty=easy">Easy Recipes</a></li>
+                                    <li><a href="?difficulty=medium">Medium Recipes</a></li>
+                                    <li><a href="?difficulty=hard">Hard Recipes</a></li>
+                                    <li><a href="{% url 'products:recipe_list' %}">All Difficulties</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Filter by Time -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Quick Meals</h3>
+                                <ul class="sidebar-list">
+                                    <li><a href="?max_time=30">Under 30 minutes</a></li>
+                                    <li><a href="?max_time=60">Under 1 hour</a></li>
+                                    <li><a href="?max_time=90">Under 1.5 hours</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Shop By -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Shop By</h3>
+                                <ul class="sidebar-list">
+                                    <li><a href="{% url 'products:product_list' %}">All Products</a></li>
+                                    <li><a href="{% url 'products:basket_list' %}">Combo Offers</a></li>
+                                    <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
+                                    <li><a href="{% url 'products:recipe_list' %}" class="active">Recipes</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Featured Recipes -->
+                            <div class="widget-list">
+                                <h3 class="widget-title">Featured Recipes</h3>
+                                <div class="sidebar-body">
+                                    {% for featured_recipe in recipes|slice:":3" %}
+                                    <div class="sidebar-product align-items-center mb-3">
+                                        <a href="{{ featured_recipe.get_absolute_url }}" class="image">
+                                            <img src="{{ featured_recipe.image.url|default:'/static/assets/images/recipe/placeholder.jpg' }}" alt="{{ featured_recipe.title }}" width="80" style="height: 80px; object-fit: cover;">
+                                        </a>
+                                        <div class="product-content">
+                                            <h6 class="title-2 mb-1"><a href="{{ featured_recipe.get_absolute_url }}">{{ featured_recipe.title|truncatechars:30 }}</a></h6>
+                                            <div class="recipe-meta-small">
+                                                <small class="text-muted">
+                                                    <i class="fa fa-clock-o"></i> {{ featured_recipe.total_time }}min
+                                                    <span class="badge badge-light ml-1">{{ featured_recipe.get_difficulty_display }}</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <!-- ==================== END SIDEBAR ==================== -->
+            </div>
+        </div>
+    </div>
 </div>
-{% empty %}
-<p>No recipes found</p>
-{% endfor %}
-
-{% if is_paginated %}
-<div>
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-    
-    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-    
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
-</div>
-{% endif %}
 {% endblock %}

@@ -42,13 +42,11 @@
                                         </a>
                                         <ul class="dropdown-submenu dropdown-hover">
                                             <li><a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home Page - 1</a></li>
-                                            <li><a href="/">Home Page - 2</a></li>
-                                            <li><a href="/">Home Page - 3</a></li>
-                                            <li><a href="/">Home Page - 4</a></li>
+
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="{% url 'shop' %}">
+                                        <a href="{% url 'products:product_list' %}">
                                             <span class="menu-text">Shop</span>
                                             <i class="fa fa-angle-down"></i>
                                         </a>
@@ -56,31 +54,24 @@
                                             <div class="menu-colum">
                                                 <ul>
                                                     <li><span class="mega-menu-text">Shop</span></li>
-                                                    <li><a href="{% url 'shop' %}">Shop Left Sidebar</a></li>
-                                                    <li><a href="/">Shop Right Sidebar</a></li>
-                                                    <li><a href="/">Shop List Left Sidebar</a></li>
-                                                    <li><a href="/">Shop List Right Sidebar</a></li>
-                                                    <li><a href="/">Shop Full Width</a></li>
+                                                    <li><a href="{% url 'products:product_list' %}">Shop Left Sidebar</a></li>
+
                                                 </ul>
                                             </div>
                                             <div class="menu-colum">
                                                 <ul>
                                                     <li><span class="mega-menu-text">Product</span></li>
-                                                    <li><a href="{% url 'product_details' %}">Single Product</a></li>
-                                                    <li><a href="/">Variable Product</a></li>
-                                                    <li><a href="/">External Product</a></li>
-                                                    <li><a href="/">Gallery Product</a></li>
-                                                    <li><a href="/">Countdown Product</a></li>
+                                                    <li><a href="{% url 'products:product_list' %}">Single Product</a></li>
+
+
                                                 </ul>
                                             </div>
                                             <div class="menu-colum">
                                                 <ul>
                                                     <li><span class="mega-menu-text">Others</span></li>
-                                                    <li><a href="{% url 'error_404' %}">Error 404</a></li>
-                                                    <li><a href="/">Compare Page</a></li>
-                                                    <li><a href="{% url 'cart' %}">Cart Page</a></li>
-                                                    <li><a href="{% url 'checkout' %}">Checkout Page</a></li>
-                                                    <li><a href="/">Wishlist Page</a></li>
+                                                    <li><a href="/">Cart Page</a></li>
+                                                    <li><a href="/">Checkout Page</a></li>
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -91,14 +82,9 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="dropdown-submenu dropdown-hover">
-                                            <li><a href="/">Blog Left Sidebar</a></li>
-                                            <li><a href="/">Blog List Right Sidebar</a></li>
-                                            <li><a href="/">Blog List Fullwidth</a></li>
-                                            <li><a href="/">Blog Grid Page</a></li>
-                                            <li><a href="/">Blog Grid Right Sidebar</a></li>
+
                                             <li><a href="/">Blog Grid Fullwidth</a></li>
-                                            <li><a href="/">Blog Details Sidebar</a></li>
-                                            <li><a href="/">Blog Details Fullwidth</a></li>
+
                                         </ul>
                                     </li>
                                     <li>
@@ -107,7 +93,7 @@
                                             <i class="fa fa-angle-down"></i>
                                         </a>
                                         <ul class="dropdown-submenu dropdown-hover">
-                                            <li><a href="{% url 'faq' %}">FAQ</a></li>
+                                            <li><a href="/">FAQ</a></li>
                                             <li><a href="/">My Account</a></li>
                                             <li><a href="{% url 'login' %}">Login</a></li>
                                             <li><a href="/">Register</a></li>
@@ -154,10 +140,10 @@
                                         <div class="cart-item-wrapper dropdown-sidemenu dropdown-hover-2">
                                             <div class="single-cart-item">
                                                 <div class="cart-img">
-                                                    <a href="{% url 'cart' %}"><img src="{% static 'assets/images/cart/1.jpg' %}" alt=""></a>
+                                                    <a href="/"><img src="{% static 'assets/images/cart/1.jpg' %}" alt=""></a>
                                                 </div>
                                                 <div class="cart-text">
-                                                    <h5 class="title"><a href="{% url 'cart' %}">11. Product with video - navy</a></h5>
+                                                    <h5 class="title"><a href="/">11. Product with video - navy</a></h5>
                                                     <div class="cart-text-btn">
                                                         <div class="cart-qty">
                                                             <span>1×</span>
@@ -169,10 +155,10 @@
                                             </div>
                                             <div class="single-cart-item">
                                                 <div class="cart-img">
-                                                    <a href="{% url 'cart' %}"><img src="{% static 'assets/images/cart/2.jpg' %}" alt=""></a>
+                                                    <a href="/"><img src="{% static 'assets/images/cart/2.jpg' %}" alt=""></a>
                                                 </div>
                                                 <div class="cart-text">
-                                                    <h5 class="title"><a href="{% url 'cart' %}" title="10. This is the large title for testing large title and there is an image for testing - white">10. This is the large title for testing...</a></h5>
+                                                    <h5 class="title"><a href="/" title="10. This is the large title for testing large title and there is an image for testing - white">10. This is the large title for testing...</a></h5>
                                                     <div class="cart-text-btn">
                                                         <div class="cart-qty">
                                                             <span>1×</span>
@@ -184,10 +170,10 @@
                                             </div>
                                             <div class="single-cart-item">
                                                 <div class="cart-img">
-                                                    <a href="{% url 'cart' %}"><img src="{% static 'assets/images/cart/3.jpg' %}" alt=""></a>
+                                                    <a href="/"><img src="{% static 'assets/images/cart/3.jpg' %}" alt=""></a>
                                                 </div>
                                                 <div class="cart-text">
-                                                    <h5 class="title"><a href="{% url 'cart' %}">1. New and sale badge product - s / red</a></h5>
+                                                    <h5 class="title"><a href="/">1. New and sale badge product - s / red</a></h5>
                                                     <div class="cart-text-btn">
                                                         <div class="cart-qty">
                                                             <span>1×</span>
@@ -202,8 +188,8 @@
                                                 <h5>$166.00</h5>
                                             </div>
                                             <div class="cart-links d-flex justify-content-center">
-                                                <a class="obrien-button white-btn" href="{% url 'cart' %}">View cart</a>
-                                                <a class="obrien-button white-btn" href="{% url 'checkout' %}">Checkout</a>
+                                                <a class="obrien-button white-btn" href="/">View cart</a>
+                                                <a class="obrien-button white-btn" href="/">Checkout</a>
                                             </div>
                                         </div>
                                     </li>

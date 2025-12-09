@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import (
     Product, ProductBasket, Recipe, Merchandise, 
-    BasketItem, RecipeIngredient, Category
+    BasketItem, RecipeIngredient, Category, ProductReview
 )
 
 class ProductForm(forms.ModelForm):
@@ -206,3 +206,35 @@ class ExportForm(forms.Form):
         ]
     )
     include_inactive = forms.BooleanField(required=False, initial=False)
+
+
+# products/forms.py
+
+class ProductReviewForm(forms.ModelForm):
+    class Meta:
+        model = ProductReview
+        fields = ['rating', 'review_text']
+        widgets = {
+            'rating': forms.RadioSelect(choices=ProductReview.RATING_CHOICES),
+            'review_text': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Share your experience with this product...'
+            }),
+        }
+        labels = {
+            'rating': 'Your Rating',
+            'review_text': 'Your Review (optional)',
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.product = kwargs.pop('product', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        review = super().save(commit=False)
+        review.user = self.user
+        review.product = self.product
+        if commit:
+            review.save()
+        return review

@@ -1,0 +1,16 @@
+{# templates/products/partials/_rating_stars.html #}
+{# NO 'int' filter – it doesn't exist in Django! #}
+
+{% with rating=product.average_rating|floatformat:0 %}
+    {% for i in "12345"|make_list %}
+        {% if forloop.counter <= rating %}
+            <i class="fa fa-star text-warning"></i>
+        {% else %}
+            <i class="fa fa-star-o text-muted"></i>
+        {% endif %}
+    {% endfor %}
+{% endwith %}
+
+{% if product.reviews_count > 0 %}
+    <span class="small text-muted ms-1">({{ product.reviews_count }} review{{ product.reviews_count|pluralize }})</span>
+{% endif %}

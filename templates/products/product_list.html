@@ -1,66 +1,255 @@
-{% extends 'products/base.html' %}
+{# templates/products/product_list.html #}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block products_content %}
-<h1>
-    {% if category %}
-    {{ category.name }}
-    {% else %}
-    All Products
-    {% endif %}
-</h1>
+{% block title %}
+    {% if category %}{{ category.name }} - {% endif %}
+    {% if request.GET.q %}Search Results - {% endif %}
+    All Products - Shop
+{% endblock %}
 
-<form method="get">
-    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search">
-    <button type="submit">Search</button>
-</form>
+{% block content %}
+<div class="shop-wrapper">
 
-<div>
-    <h3>Filter</h3>
-    <form method="get">
-        <select name="category">
-            <option value="">All Categories</option>
-            {% for cat in categories %}
-            <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
-                {{ cat.name }}
-            </option>
-            {% endfor %}
-        </select>
-        <input type="number" name="min_price" placeholder="Min price" value="{{ request.GET.min_price }}">
-        <input type="number" name="max_price" placeholder="Max price" value="{{ request.GET.max_price }}">
-        <label>
-            <input type="checkbox" name="is_new" {% if request.GET.is_new %}checked{% endif %}> New Only
-        </label>
-        <button type="submit">Filter</button>
-        <a href="{% url 'products:product_list' %}">Clear</a>
-    </form>
-</div>
-
-<div>
-    {% for product in products %}
-    <div>
-        <img src="{{ product.image.url }}" width="100">
-        <h3><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h3>
-        <p>Price: ${{ product.price }}</p>
-        <p>Category: {{ product.category.name|default:"None" }}</p>
-        <p>Stock: {{ product.stock }}</p>
-        {% if product.is_new %}<span>NEW</span>{% endif %}
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">
+                            {% if request.GET.q %}
+                                Search Results for "{{ request.GET.q }}"
+                            {% elif category %}
+                                {{ category.name }}
+                            {% else %}
+                                All Products
+                            {% endif %}
+                        </h3>
+                        <ul>
+                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li>
+                                {% if request.GET.q %}Search
+                                {% elif category %}{{ category.name }}
+                                {% else %}Shop
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% empty %}
-    <p>No products found</p>
-    {% endfor %}
-</div>
 
-{% if is_paginated %}
-<div>
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
-    {% endif %}
-    
-    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-    
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
-    {% endif %}
+    <!-- Shop Main Area -->
+    <div class="shop-main-area">
+        <div class="container container-default custom-area">
+            <div class="row flex-row-reverse">
+
+                <!-- ==================== PRODUCTS GRID ==================== -->
+                <div class="col-lg-9 col-12 col-custom widget-mt">
+
+                    <!-- Toolbar -->
+                    <div class="shop_toolbar_wrapper mb-4">
+                        <div class="shop_toolbar_btn">
+                            <button type="button" class="active btn-list" data-role="grid_list"><i class="fa fa-th-list"></i></button>
+                            <button type="button" class="btn-grid-3" data-role="grid_3"><i class="fa fa-th"></i></button>
+                        </div>
+                        <div class="shop-select">
+                            <form method="get">
+                                <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
+                                    <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
+                                    <option value="name">Name: A-Z</option>
+                                    <option value="-name">Name: Z-A</option>
+                                    <option value="price">Price: Low to High</option>
+                                    <option value="-price">Price: High to Low</option>
+                                    <option value="-reviews_count">Most Reviewed</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Product Cards -->
+                    <div class="row shop_wrapper grid_list">
+                        {% for product in products %}
+                        <div class="col-12 col-custom product-area">
+                            <div class="single-product position-relative">
+
+                                <!-- Image -->
+                                <div class="product-image">
+                                    <a class="d-block" href="{{ product.get_absolute_url }}">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1 w-100">
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                        {% else %}
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1 w-100">
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute w-100">
+                                        {% endif %}
+                                    </a>
+
+                                    {% if product.is_new %}
+                                        <span class="badge badge-warning position-absolute" style="top:10px;left:10px;">New</span>
+                                    {% endif %}
+
+                                    {% if product.stock <= 0 %}
+                                        <div class="out-of-stock-overlay">
+                                            <span>Out of Stock</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Main Content -->
+                                <div class="product-content">
+
+                                    <!-- 100% WORKING STAR RATING -->
+                                    <div class="product-rating">
+                                        {% with rating=product.average_rating|floatformat:0 %}
+                                            {% for i in "12345"|make_list %}
+                                                {% if forloop.counter <= rating %}
+                                                    <i class="fa fa-star"></i>
+                                                {% else %}
+                                                    <i class="fa fa-star-o"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                        {% if product.reviews_count > 0 %}
+                                            <span class="small">({{ product.reviews_count }} review{{ product.reviews_count|pluralize }})</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="product-title">
+                                        <h4 class="title-2">
+                                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                        </h4>
+                                    </div>
+
+                                    <div class="price-box">
+                                        <span class="regular-price">₵{{ product.price }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Hover Buttons -->
+                                <div class="add-action d-flex position-absolute">
+                                    {% if product.stock > 0 %}
+                                        <a href="#" title="Add To Cart"><i class="ion-bag"></i></a>
+                                    {% endif %}
+                                    <a href="{{ product.get_absolute_url }}" title="Quick View"><i class="ion-eye"></i></a>
+                                    <a href="#" title="Wishlist"><i class="ion-ios-heart-outline"></i></a>
+                                </div>
+
+                                <!-- List View Extra -->
+                                <div class="product-content-listview">
+                                    <div class="product-rating">
+                                        {% with rating=product.average_rating|floatformat:0 %}
+                                            {% for i in "12345"|make_list %}<i class="fa fa-star{% if forloop.counter > rating %}-o{% endif %}"></i>{% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <h4 class="title-2"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                                    <div class="price-box"><span class="regular-price">₵{{ product.price }}</span></div>
+                                    <p class="desc-content">{{ product.description|truncatewords:20 }}</p>
+                                    <div class="add-action-listview d-flex">
+                                        {% if product.stock > 0 %}<a href="#"><i class="ion-bag"></i></a>{% endif %}
+                                        <a href="{{ product.get_absolute_url }}"><i class="ion-eye"></i></a>
+                                        <a href="#"><i class="ion-ios-heart-outline"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center py-5">
+                            <h4>No products found</h4>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <nav class="pagination pagination-wrap">
+                                <ul class="pagination">
+                                    {% if page_obj.has_previous %}
+                                        <li><a href="?page={{ page_obj.previous_page_number }}"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                    {% endif %}
+                                    <li class="active"><a>{{ page_obj.number }}</a></li>
+                                    {% if page_obj.has_next %}
+                                        <li><a href="?page={{ page_obj.next_page_number }}"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+                <!-- ==================== END PRODUCTS GRID ==================== -->
+
+                <!-- ==================== SIDEBAR (FULLY INCLUDED) ==================== -->
+                <div class="col-lg-3 col-12 col-custom">
+                    <aside class="sidebar_widget widget-mt">
+                        <div class="widget_inner">
+
+                            <!-- Search -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Search</h3>
+                                <div class="search-box">
+                                    <form action="{% url 'products:search' %}">
+                                        <div class="input-group">
+                                            <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Categories -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Categories</h3>
+                                <ul class="sidebar-list">
+                                    <li><a href="{% url 'products:product_list' %}">All Products <span class="text-muted">({{ total_products }})</span></a></li>
+                                    {% for cat in categories %}
+                                        <li><a href="{% url 'products:category_products' cat.slug %}">{{ cat.name }} <span class="text-muted">({{ cat.get_products_count }})</span></a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <!-- Shop By -->
+                            <div class="widget-list widget-mb-4">
+                                <h3 class="widget-title">Shop By</h3>
+                                <ul class="sidebar-list">
+                                    <li><a href="{% url 'products:basket_list' %}">Combo Baskets</a></li>
+                                    <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
+                                    <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Recent Products -->
+                            <div class="widget-list">
+                                <h3 class="widget-title">Recent Products</h3>
+                                <div class="sidebar-body">
+                                    {% for p in recent_products|slice:":3" %}
+                                    <div class="sidebar-product align-items-center mb-3">
+                                        <a href="{{ p.get_absolute_url }}" class="image">
+                                            <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}">
+                                        </a>
+                                        <div class="product-content">
+                                            <h4 class="title-2"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h4>
+                                            <div class="price-box"><span class="regular-price">₵{{ p.price }}</span></div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </aside>
+                </div>
+                <!-- ==================== END SIDEBAR ==================== -->
+
+            </div>
+        </div>
+    </div>
 </div>
-{% endif %}
 {% endblock %}

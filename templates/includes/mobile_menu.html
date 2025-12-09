@@ -30,7 +30,7 @@
                             <ul class="megamenu dropdown">
                                 <li class="mega-title has-children"><a href="#">Shop Layouts</a>
                                     <ul class="dropdown">
-                                        <li><a href="{% url 'shop' %}">Shop Left Sidebar</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Shop Left Sidebar</a></li>
                                         <li><a href="/">Shop Right Sidebar</a></li>
                                         <li><a href="/">Shop List Left Sidebar</a></li>
                                         <li><a href="/}">Shop List Right Sidebar</a></li>
@@ -39,20 +39,17 @@
                                 </li>
                                 <li class="mega-title has-children"><a href="#">Product Details</a>
                                     <ul class="dropdown">
-                                        <li><a href="{% url 'product_details' %}">Single Product Details</a></li>
-                                        <li><a href="/">Variable Product Details</a></li>
-                                        <li><a href="/">External Product Details</a></li>
-                                        <li><a href="/">Gallery Product Details</a></li>
-                                        <li><a href="/">Countdown Product Details</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Single Product Details</a></li>
+
                                     </ul>
                                 </li>
                                 <li class="mega-title has-children"><a href="#">Others</a>
                                     <ul class="dropdown">
-                                        <li><a href="{% url 'error_404' %}">Error 404</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Error 404</a></li>
                                         <li><a href="/">Compare Page</a></li>
-                                        <li><a href="{% url 'cart' %}">Cart Page</a></li>
-                                        <li><a href="{% url 'checkout' %}">Checkout Page</a></li>
-                                        <li><a href="{% url 'wishlist' %}">Wish List Page</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Cart Page</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Checkout Page</a></li>
+                                        <li><a href="{% url 'products:product_list' %}">Wish List Page</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -71,7 +68,7 @@
                         </li>
                         <li class="menu-item-has-children "><a href="#">Pages</a>
                             <ul class="dropdown">
-                                <li><a href="{% url 'faq' %}">FAQ</a></li>
+                                <li><a href="/">FAQ</a></li>
                                 <li><a href="/">My Account</a></li>
                                 <li><a href="{% url 'login' %}">login &amp; register</a></li>
                             </ul>

@@ -1,21 +1,33 @@
 # products/views.py - UPDATED TO WORK WITH NEW MODELS
+# products/views.py - UPDATED TO WORK WITH NEW MODELS
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from django.db.models import Q
-from .models import (
-    Product, ProductBasket, Recipe, Merchandise, 
-    Category, BasketItem
-)
-from .forms import SearchForm, FilterForm
+from django.db.models import Q, Avg
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .forms import (
-    ProductForm, ProductBasketForm, RecipeForm, MerchandiseForm,
-    CategoryForm, RecipeIngredientForm, BasketItemForm
+
+# Import models
+from .models import (
+    Product, ProductBasket, Recipe, Merchandise, 
+    Category, BasketItem, ProductReview
 )
-from .models import Product, ProductBasket, Recipe, Merchandise, Category
+
+# Import forms
+from .forms import (
+    SearchForm, FilterForm, ProductForm, ProductBasketForm, 
+    RecipeForm, MerchandiseForm, CategoryForm, RecipeIngredientForm, 
+    BasketItemForm, ProductReviewForm
+)
+from django.db.models import Avg, Count, Q
+from django.views.generic import ListView
+from django.db.models import Avg, Count, Q, Value
+from django.db.models.functions import Coalesce
+from django.views.generic import ListView
+from django.shortcuts import get_object_or_404
+from .models import Product, Category
+
 
 # Create your views here.
 
@@ -39,73 +51,138 @@ class HomeView(TemplateView):
         context['merchandise'] = Merchandise.objects.filter(is_active=True)[:4]
         return context
 
+# products/views.py
+
+
+# products/views.py
+
+
+
+
 class ProductListView(ListView):
     model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
     paginate_by = 12
-    
+
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True).select_related('category')
-        
-        # Filter by category
-        category_slug = self.kwargs.get('category_slug')
-        if category_slug:
+        qs = Product.objects.filter(is_active=True).select_related('category')
+
+        # This line now works perfectly
+        qs = qs.annotate(
+            average_rating=Coalesce(Avg('reviews__rating'), Value(0.0)),
+            reviews_count=Count('reviews', filter=Q(reviews__is_approved=True))
+        )
+
+        # Category filter
+        if category_slug := self.kwargs.get('category_slug'):
             category = get_object_or_404(Category, slug=category_slug, is_active=True)
-            queryset = queryset.filter(category=category)
-        
-        # Search functionality
-        search_query = self.request.GET.get('q')
-        if search_query:
-            queryset = queryset.filter(
-                Q(name__icontains=search_query) |
-                Q(description__icontains=search_query) |
-                Q(category__name__icontains=search_query)
+            qs = qs.filter(category=category)
+            self.category = category
+
+        # Search
+        if q := self.request.GET.get('q'):
+            qs = qs.filter(
+                Q(name__icontains=q) |
+                Q(description__icontains=q) |
+                Q(category__name__icontains=q)
             )
-        
-        # Additional filters
-        min_price = self.request.GET.get('min_price')
-        max_price = self.request.GET.get('max_price')
-        is_new = self.request.GET.get('is_new')
-        
-        if min_price:
-            queryset = queryset.filter(price__gte=min_price)
-        if max_price:
-            queryset = queryset.filter(price__lte=max_price)
-        if is_new:
-            queryset = queryset.filter(is_new=True)
-        
-        return queryset
-    
+
+        # Price filter
+        if min_price := self.request.GET.get('min_price'):
+            qs = qs.filter(price__gte=min_price)
+        if max_price := self.request.GET.get('max_price'):
+            qs = qs.filter(price__lte=max_price)
+
+        # Only new products
+        if self.request.GET.get('is_new'):
+            qs = qs.filter(is_new=True)
+
+        # Sorting
+        ordering = self.request.GET.get('ordering', '-created_at')
+        allowed = ['name', '-name', 'price', '-price', '-created_at', '-reviews_count']
+        if ordering in allowed:
+            qs = qs.order_by(ordering)
+
+        return qs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.filter(is_active=True)
-        context['search_form'] = SearchForm(self.request.GET or None)
-        context['filter_form'] = FilterForm(self.request.GET or None)
+        context['total_products'] = Product.objects.filter(is_active=True).count()
+        if hasattr(self, 'category'):
+            context['category'] = self.category
         return context
+
+
 
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'products/product_detail.html'
     context_object_name = 'product'
-    
+
     def get_queryset(self):
         return Product.objects.filter(is_active=True).select_related('category')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get related products (same category)
+
+        # Related products (same category)
         context['related_products'] = Product.objects.filter(
             category=self.object.category,
             is_active=True
         ).exclude(id=self.object.id)[:4]
-        
-        # Get baskets that include this product
+
+        # Baskets that include this product
         context['baskets_with_product'] = self.object.baskets.filter(is_active=True)[:3]
-        
-        # Get merchandise for upsell
+
+        # Upsell merchandise
         context['merchandise'] = Merchandise.objects.filter(is_active=True)[:3]
+
+        # === REVIEWS SYSTEM ===
+        reviews = self.object.reviews.filter(is_approved=True).select_related('user')
+        context['reviews'] = reviews
+
+        # Average rating
+        avg_rating = reviews.aggregate(avg_rating=Avg('rating'))['avg_rating']
+        context['average_rating'] = round(avg_rating, 1) if avg_rating else 0
+        context['total_reviews'] = reviews.count()
+
+        # Review form for authenticated users
+        if self.request.user.is_authenticated:
+            has_reviewed = self.object.reviews.filter(user=self.request.user).exists()
+            if not has_reviewed:
+                context['review_form'] = ProductReviewForm()
+            else:
+                context['has_reviewed'] = True
+        else:
+            context['review_form'] = None
+
         return context
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "You must be logged in to leave a review.")
+            return redirect('products:product_detail', slug=self.object.slug)
+
+        # Prevent multiple reviews
+        if self.object.reviews.filter(user=self.request.user).exists():
+            messages.error(self.request, "You have already reviewed this product.")
+            return redirect('products:product_detail', slug=self.object.slug)
+
+        form = ProductReviewForm(self.request.POST, user=self.request.user, product=self.object)
+        if form.is_valid():
+            form.save()
+            messages.success(self.request, "Thank you! Your review has been submitted and will appear shortly.")
+            return redirect('products:product_detail', slug=self.object.slug)
+        else:
+            # If form invalid, re-render page with errors
+            context = self.get_context_data()
+            context['review_form'] = form
+            messages.error(self.request, "Please correct the errors below.")
+            return self.render_to_response(context)
 
 class BasketListView(ListView):
     model = ProductBasket
