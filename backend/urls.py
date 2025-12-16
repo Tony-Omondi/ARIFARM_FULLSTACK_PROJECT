@@ -10,6 +10,8 @@ urlpatterns = [
     path('auth/', include('social_django.urls', namespace='social')),
     path('', include('core.urls')),  # Your core app
     path('products/', include('products.urls')),  # Your core app
+    # backend/urls.py (add this line)
+    path('cart/', include('cart.urls')),
 ]
 
 if settings.DEBUG:

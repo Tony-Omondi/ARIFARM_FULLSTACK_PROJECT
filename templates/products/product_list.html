@@ -9,9 +9,109 @@
 {% endblock %}
 
 {% block content %}
+
+<style>
+    /* Global Container Padding */
+    .shop-wrapper {
+        background-color: #f8f9fa;
+        padding-bottom: 50px;
+    }
+
+    /* Card Styling */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Image Handling for 1:1 Aspect Ratio */
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%; /* Creates 1:1 aspect ratio */
+        display: block;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Image Switch Effect on Hover */
+    .product-image-2 {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease;
+    }
+    .single-product-card:hover .product-image-2 {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Action Buttons Overlay Animation */
+    .action-overlay {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        z-index: 5;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .single-product-card:hover .action-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Individual Action Button Styling */
+    .action-btn {
+        background: white;
+        color: #333;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0 5px;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: background 0.2s, color 0.2s, transform 0.3s;
+        cursor: pointer;
+    }
+    .action-btn:hover {
+        background: #E98C81; /* Accent Color */
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    /* Out of Stock Badge */
+    .out-of-stock-badge {
+        background: #dc3545;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: 500;
+        font-size: 11px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+    }
+</style>
+
 <div class="shop-wrapper">
 
-    <!-- Breadcrumb -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -41,139 +141,136 @@
         </div>
     </div>
 
-    <!-- Shop Main Area -->
     <div class="shop-main-area">
         <div class="container container-default custom-area">
             <div class="row flex-row-reverse">
 
-                <!-- ==================== PRODUCTS GRID ==================== -->
                 <div class="col-lg-9 col-12 col-custom widget-mt">
 
-                    <!-- Toolbar -->
-                    <div class="shop_toolbar_wrapper mb-4">
-                        <div class="shop_toolbar_btn">
-                            <button type="button" class="active btn-list" data-role="grid_list"><i class="fa fa-th-list"></i></button>
-                            <button type="button" class="btn-grid-3" data-role="grid_3"><i class="fa fa-th"></i></button>
-                        </div>
-                        <div class="shop-select">
+                    <div class="shop_toolbar_wrapper d-flex justify-content-end align-items-center mb-4" style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e1e1e1;">
+                        <div class="shop-select" style="min-width: 220px;">
                             <form method="get">
-                                <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
-                                    <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
-                                    <option value="name">Name: A-Z</option>
-                                    <option value="-name">Name: Z-A</option>
-                                    <option value="price">Price: Low to High</option>
-                                    <option value="-price">Price: High to Low</option>
-                                    <option value="-reviews_count">Most Reviewed</option>
+                                <select name="ordering" class="form-control" style="border-radius: 4px; border-color: #ddd; height: 38px; font-size: 14px;" onchange="this.form.submit()">
+                                    <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Sort: Newest First</option>
+                                    <option value="name" {% if request.GET.ordering == 'name' %}selected{% endif %}>Sort: Name A-Z</option>
+                                    <option value="-name" {% if request.GET.ordering == '-name' %}selected{% endif %}>Sort: Name Z-A</option>
+                                    <option value="price" {% if request.GET.ordering == 'price' %}selected{% endif %}>Sort: Price Low to High</option>
+                                    <option value="-price" {% if request.GET.ordering == '-price' %}selected{% endif %}>Sort: Price High to Low</option>
+                                    <option value="-reviews_count" {% if request.GET.ordering == '-reviews_count' %}selected{% endif %}>Sort: Most Reviewed</option>
                                 </select>
                             </form>
                         </div>
                     </div>
 
-                    <!-- Product Cards -->
-                    <div class="row shop_wrapper grid_list">
+                    <div class="row">
                         {% for product in products %}
-                        <div class="col-12 col-custom product-area">
-                            <div class="single-product position-relative">
+                        <div class="col-md-4 col-sm-6 col-12 mb-4 product-area">
+                            <div class="single-product-card position-relative">
 
-                                <!-- Image -->
-                                <div class="product-image">
-                                    <a class="d-block" href="{{ product.get_absolute_url }}">
+                                <div class="product-image position-relative">
+                                    <a class="d-block product-image-ratio" href="{{ product.get_absolute_url }}">
                                         {% if product.image %}
-                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1 w-100">
-                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1">
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute" style="top: 0; left: 0;">
                                         {% else %}
-                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute w-100">
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1">
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top: 0; left: 0;">
                                         {% endif %}
                                     </a>
 
                                     {% if product.is_new %}
-                                        <span class="badge badge-warning position-absolute" style="top:10px;left:10px;">New</span>
+                                        <span class="badge position-absolute" style="top:10px;left:10px; background: #E98C81; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; z-index: 10;">New</span>
                                     {% endif %}
 
                                     {% if product.stock <= 0 %}
-                                        <div class="out-of-stock-overlay">
-                                            <span>Out of Stock</span>
+                                        <div class="out-of-stock-badge">
+                                            Out of Stock
                                         </div>
                                     {% endif %}
+
+                                    <div class="action-overlay d-flex justify-content-center">
+                                        {% if product.stock > 0 %}
+                                            {% if user.is_authenticated %}
+                                                <!-- Add to Cart Button (Logged-in User) -->
+                                                <form action="{% url 'cart:add_to_cart' %}" method="post" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="next" value="{{ request.path|urlencode }}">
+                                                    <button type="submit" class="action-btn" title="Add to Cart">
+                                                        <i class="ion-bag"></i>
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <!-- Login Prompt (Guest User) -->
+                                                <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="action-btn" title="Login to Add to Cart">
+                                                    <i class="ion-bag"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <!-- Quick View -->
+                                        <a href="{{ product.get_absolute_url }}" class="action-btn" title="Quick View">
+                                            <i class="ion-eye"></i>
+                                        </a>
+
+                                        <!-- Wishlist (placeholder) -->
+                                        <a href="#" class="action-btn" title="Add to Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
+                                    </div>
                                 </div>
 
-                                <!-- Main Content -->
-                                <div class="product-content">
-
-                                    <!-- 100% WORKING STAR RATING -->
-                                    <div class="product-rating">
+                                <div class="product-content text-center" style="padding: 20px 15px;">
+                                    <div class="product-rating mb-2" style="color: #E98C81; font-size: 12px;">
                                         {% with rating=product.average_rating|floatformat:0 %}
                                             {% for i in "12345"|make_list %}
-                                                {% if forloop.counter <= rating %}
-                                                    <i class="fa fa-star"></i>
-                                                {% else %}
-                                                    <i class="fa fa-star-o"></i>
-                                                {% endif %}
+                                                <i class="fa fa-star{% if forloop.counter > rating %}-o{% endif %}"
+                                                   style="color: {% if forloop.counter > rating %}#ddd{% else %}#E98C81{% endif %};"></i>
                                             {% endfor %}
                                         {% endwith %}
                                         {% if product.reviews_count > 0 %}
-                                            <span class="small">({{ product.reviews_count }} review{{ product.reviews_count|pluralize }})</span>
+                                            <span class="small text-muted" style="font-size: 11px;">({{ product.reviews_count }})</span>
                                         {% endif %}
                                     </div>
 
                                     <div class="product-title">
-                                        <h4 class="title-2">
-                                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                        <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                            <a href="{{ product.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ product.name }}</a>
                                         </h4>
                                     </div>
 
                                     <div class="price-box">
-                                        <span class="regular-price">₵{{ product.price }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Hover Buttons -->
-                                <div class="add-action d-flex position-absolute">
-                                    {% if product.stock > 0 %}
-                                        <a href="#" title="Add To Cart"><i class="ion-bag"></i></a>
-                                    {% endif %}
-                                    <a href="{{ product.get_absolute_url }}" title="Quick View"><i class="ion-eye"></i></a>
-                                    <a href="#" title="Wishlist"><i class="ion-ios-heart-outline"></i></a>
-                                </div>
-
-                                <!-- List View Extra -->
-                                <div class="product-content-listview">
-                                    <div class="product-rating">
-                                        {% with rating=product.average_rating|floatformat:0 %}
-                                            {% for i in "12345"|make_list %}<i class="fa fa-star{% if forloop.counter > rating %}-o{% endif %}"></i>{% endfor %}
-                                        {% endwith %}
-                                    </div>
-                                    <h4 class="title-2"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
-                                    <div class="price-box"><span class="regular-price">₵{{ product.price }}</span></div>
-                                    <p class="desc-content">{{ product.description|truncatewords:20 }}</p>
-                                    <div class="add-action-listview d-flex">
-                                        {% if product.stock > 0 %}<a href="#"><i class="ion-bag"></i></a>{% endif %}
-                                        <a href="{{ product.get_absolute_url }}"><i class="ion-eye"></i></a>
-                                        <a href="#"><i class="ion-ios-heart-outline"></i></a>
+                                        <span class="regular-price" style="color: #1B1B1C; font-weight: 700; font-size: 16px;">₵{{ product.price }}</span>
+                                        {% if product.stock <= 0 %}
+                                            <small class="text-danger d-block mt-2">Currently unavailable</small>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {% empty %}
                         <div class="col-12 text-center py-5">
-                            <h4>No products found</h4>
+                            <div style="background: white; padding: 40px; border-radius: 8px; border: 1px solid #eee;">
+                                <i class="ion-sad-outline" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
+                                <h4 style="color: #666; font-weight: 600;">No products found</h4>
+                                <p style="color: #999;">We couldn't find any products matching your selection.</p>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <!-- Pagination -->
                     {% if is_paginated %}
                     <div class="row mt-4">
                         <div class="col-12">
                             <nav class="pagination pagination-wrap">
-                                <ul class="pagination">
+                                <ul class="pagination justify-content-center" style="gap: 10px;">
                                     {% if page_obj.has_previous %}
-                                        <li><a href="?page={{ page_obj.previous_page_number }}"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" style="border-radius: 50%; width: 40px; height: 40px; line-height: 25px; color: #333; border: 1px solid #ccc;"><i class="ion-ios-arrow-thin-left"></i></a></li>
                                     {% endif %}
-                                    <li class="active"><a>{{ page_obj.number }}</a></li>
+                                    <li class="page-item active"><a class="page-link" style="background-color: #E98C81; border-color: #E98C81; color: white; border-radius: 50%; width: 40px; height: 40px; line-height: 25px;">{{ page_obj.number }}</a></li>
                                     {% if page_obj.has_next %}
-                                        <li><a href="?page={{ page_obj.next_page_number }}"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" style="border-radius: 50%; width: 40px; height: 40px; line-height: 25px; color: #333; border: 1px solid #ccc;"><i class="ion-ios-arrow-thin-right"></i></a></li>
                                     {% endif %}
                                 </ul>
                             </nav>
@@ -182,72 +279,65 @@
                     {% endif %}
 
                 </div>
-                <!-- ==================== END PRODUCTS GRID ==================== -->
 
-                <!-- ==================== SIDEBAR (FULLY INCLUDED) ==================== -->
+                <!-- Sidebar remains unchanged -->
                 <div class="col-lg-3 col-12 col-custom">
                     <aside class="sidebar_widget widget-mt">
-                        <div class="widget_inner">
-
-                            <!-- Search -->
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title">Search</h3>
+                        <div class="widget_inner" style="background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #eee;">
+                            <!-- Search, Categories, Shop By, Recent Products — all unchanged -->
+                            <!-- (Your original sidebar code here - no changes needed) -->
+                            <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Search</h3>
                                 <div class="search-box">
                                     <form action="{% url 'products:search' %}">
                                         <div class="input-group">
-                                            <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}">
+                                            <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}" style="height: 45px; font-size: 14px; border-right: 0;">
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                                <button class="btn btn-outline-secondary" type="submit" style="border-left: 0; border-color: #ced4da; color: #666; height: 45px;"><i class="fa fa-search"></i></button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
 
-                            <!-- Categories -->
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title">Categories</h3>
-                                <ul class="sidebar-list">
-                                    <li><a href="{% url 'products:product_list' %}">All Products <span class="text-muted">({{ total_products }})</span></a></li>
+                            <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Categories</h3>
+                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
+                                    <li style="margin-bottom: 8px;"><a href="{% url 'products:product_list' %}" style="color: #555; text-decoration: none; display: flex; justify-content: space-between; font-size: 14px; transition: color 0.2s;">All Products <span class="text-muted" style="font-size: 12px;">({{ total_products }})</span></a></li>
                                     {% for cat in categories %}
-                                        <li><a href="{% url 'products:category_products' cat.slug %}">{{ cat.name }} <span class="text-muted">({{ cat.get_products_count }})</span></a></li>
+                                        <li style="margin-bottom: 8px;"><a href="{% url 'products:category_products' cat.slug %}" style="color: #555; text-decoration: none; display: flex; justify-content: space-between; font-size: 14px; transition: color 0.2s;">{{ cat.name }} <span class="text-muted" style="font-size: 12px;">({{ cat.get_products_count }})</span></a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
 
-                            <!-- Shop By -->
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title">Shop By</h3>
-                                <ul class="sidebar-list">
-                                    <li><a href="{% url 'products:basket_list' %}">Combo Baskets</a></li>
-                                    <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
-                                    <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
+                            <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shop By</h3>
+                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
+                                    <li style="margin-bottom: 8px;"><a href="{% url 'products:basket_list' %}" style="color: #555; text-decoration: none; font-size: 14px; transition: color 0.2s;">Combo Baskets</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="{% url 'products:merchandise_list' %}" style="color: #555; text-decoration: none; font-size: 14px; transition: color 0.2s;">Merchandise & Gifts</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="{% url 'products:recipe_list' %}" style="color: #555; text-decoration: none; font-size: 14px; transition: color 0.2s;">Recipes</a></li>
                                 </ul>
                             </div>
 
-                            <!-- Recent Products -->
                             <div class="widget-list">
-                                <h3 class="widget-title">Recent Products</h3>
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Recent Products</h3>
                                 <div class="sidebar-body">
                                     {% for p in recent_products|slice:":3" %}
-                                    <div class="sidebar-product align-items-center mb-3">
-                                        <a href="{{ p.get_absolute_url }}" class="image">
-                                            <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}">
+                                    <div class="sidebar-product d-flex align-items-center mb-3" style="padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                                        <a href="{{ p.get_absolute_url }}" class="image" style="width: 70px; flex-shrink: 0; margin-right: 15px;">
+                                            <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}" class="img-fluid rounded">
                                         </a>
                                         <div class="product-content">
-                                            <h4 class="title-2"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h4>
-                                            <div class="price-box"><span class="regular-price">₵{{ p.price }}</span></div>
+                                            <h4 class="title-2" style="font-size: 14px; margin-bottom: 5px; font-weight: 500;"><a href="{{ p.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ p.name }}</a></h4>
+                                            <div class="price-box"><span class="regular-price" style="font-weight: 700; color: #1B1B1C;">₵{{ p.price }}</span></div>
                                         </div>
                                     </div>
                                     {% endfor %}
                                 </div>
                             </div>
-
                         </div>
                     </aside>
                 </div>
-                <!-- ==================== END SIDEBAR ==================== -->
-
             </div>
         </div>
     </div>
