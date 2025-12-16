@@ -1,8 +1,8 @@
-# checkout/mpesa.py
 import os
 import base64
 import requests
 import re
+import time 
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -21,6 +21,10 @@ MPESA_BASE_URL = os.getenv('MPESA_BASE_URL', 'https://sandbox.safaricom.co.ke').
 if not all([MPESA_CONSUMER_KEY, MPESA_CONSUMER_SECRET, MPESA_PASSKEY, MPESA_SHORTCODE, MPESA_CALLBACK_URL]):
     raise ValueError("Missing required M-Pesa environment variables in .env")
 
+# --- TOKEN CACHING VARIABLES ---
+_cached_token = None
+_token_expiry = 0
+
 def format_phone_number(phone: str) -> str:
     """Convert to 254XXXXXXXXX format"""
     phone = re.sub(r"[^\d]", "", phone.strip())
@@ -34,7 +38,15 @@ def format_phone_number(phone: str) -> str:
         raise ValueError("Invalid phone number. Use 07xx, 7xx, or 2547xx format.")
 
 def get_access_token() -> str:
-    """Get OAuth access token with detailed error reporting"""
+    """Get OAuth access token with caching to prevent 403 Bans"""
+    global _cached_token, _token_expiry
+    
+    current_time = time.time()
+    
+    # Check if we have a valid cached token (buffer of 60 seconds)
+    if _cached_token and current_time < (_token_expiry - 60):
+        return _cached_token
+
     if not MPESA_CONSUMER_KEY or not MPESA_CONSUMER_SECRET:
         raise ValueError("MPESA_CONSUMER_KEY or MPESA_CONSUMER_SECRET missing")
 
@@ -47,19 +59,22 @@ def get_access_token() -> str:
     }
     url = f"{MPESA_BASE_URL}/oauth/v1/generate?grant_type=client_credentials"
 
-    print(f"[MPESA] Requesting token from: {url}")
+    print(f"[MPESA] Generating NEW Access Token...") # Log only when generating new
     try:
         response = requests.get(url, headers=headers, timeout=15)
-        print(f"[MPESA] Token response status: {response.status_code}")
-        print(f"[MPESA] Token response body: {response.text}")
-
+        
         if response.status_code == 200:
             data = response.json()
             if "access_token" in data:
-                return data["access_token"]
+                # Update Cache
+                _cached_token = data["access_token"]
+                expires_in = int(data.get("expires_in", 3599))
+                _token_expiry = current_time + expires_in
+                return _cached_token
             else:
                 raise Exception(f"Access token missing in response: {data}")
         else:
+            print(f"[MPESA ERROR] Token Response: {response.text}") # Debugging
             raise Exception(f"HTTP {response.status_code}: {response.text}")
 
     except requests.exceptions.Timeout:
@@ -73,7 +88,7 @@ def initiate_stk_push(phone_number: str, amount: int):
     """Initiate STK Push with full debugging"""
     try:
         phone = format_phone_number(phone_number)
-        token = get_access_token()
+        token = get_access_token() # Uses cache now
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         password = base64.b64encode(f"{MPESA_SHORTCODE}{MPESA_PASSKEY}{timestamp}".encode()).decode()
@@ -99,8 +114,7 @@ def initiate_stk_push(phone_number: str, amount: int):
 
         url = f"{MPESA_BASE_URL}/mpesa/stkpush/v1/processrequest"
         print(f"[MPESA] Sending STK Push to {phone} for KSh {amount}")
-        print(f"[MPESA] Payload: {payload}")
-
+        
         response = requests.post(url, json=payload, headers=headers, timeout=20)
         print(f"[MPESA] STK Push response: {response.status_code} - {response.text}")
 
@@ -113,7 +127,7 @@ def initiate_stk_push(phone_number: str, amount: int):
 def query_stk_push(checkout_request_id: str):
     """Query STK Push status with debugging"""
     try:
-        token = get_access_token()
+        token = get_access_token() # Uses cache now
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         password = base64.b64encode(f"{MPESA_SHORTCODE}{MPESA_PASSKEY}{timestamp}".encode()).decode()
 
@@ -130,12 +144,19 @@ def query_stk_push(checkout_request_id: str):
         }
 
         url = f"{MPESA_BASE_URL}/mpesa/stkpushquery/v1/query"
-        print(f"[MPESA] Querying status for CheckoutRequestID: {checkout_request_id}")
-
+        # Removed print statement here to reduce console noise during polling
+        
         response = requests.post(url, json=payload, headers=headers, timeout=20)
-        print(f"[MPESA] Query response: {response.status_code} - {response.text}")
-
-        return response.json()
+        
+        # Only print if it's NOT a processing (4999) response to keep logs clean
+        try:
+            resp_json = response.json()
+            if resp_json.get("ResultCode") != "4999": 
+                 print(f"[MPESA] Query Result: {resp_json}")
+            return resp_json
+        except:
+             print(f"[MPESA] Query Raw Response: {response.text}")
+             return response.json()
 
     except Exception as e:
         print(f"[MPESA ERROR] Query failed: {str(e)}")

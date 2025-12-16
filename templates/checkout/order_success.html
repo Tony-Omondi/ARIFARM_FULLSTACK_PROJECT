@@ -1,16 +1,162 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt #{{ order.id }} - Arifarm</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E98C81',
+                        'background-light': '#f8f9fa',
+                        'background-dark': '#1a1a1a',
+                        'text-main': '#212529',
+                        'text-muted': '#6c757d',
+                    },
+                    fontFamily: {
+                        display: ['"Spline Sans"', 'sans-serif']
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        .receipt-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .jagged-bottom {
+            position: relative;
+            overflow: hidden;
+        }
+        .jagged-bottom::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: 
+                radial-gradient(circle at 10px 0, transparent 10px, white 10.5px) repeat-x bottom left / 20px 20px;
+        }
+        @media print {
+            body { background: white; }
+            .no-print { display: none; }
+            .receipt-card { box-shadow: none; margin: 0; max-width: none; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-2xl">
+        <!-- Receipt Card -->
+        <div class="receipt-card overflow-hidden jagged-bottom">
+            <!-- Header -->
+            <div class="bg-primary/10 text-center py-8 px-6 border-b-2 border-dashed border-gray-300">
+                <div class="w-24 h-24 bg-primary rounded-full mx-auto flex items-center justify-center shadow-lg mb-4">
+                    <span class="material-symbols-outlined text-white text-5xl">check</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-main mb-2">Payment Successful</h1>
+                <p class="text-text-muted">Thank you for shopping with Arifarm!</p>
+                <span class="inline-block mt-4 px-6 py-2 bg-primary/20 text-primary font-bold rounded-full text-sm uppercase tracking-wide">
+                    Paid
+                </span>
+            </div>
 
-{% block title %}Order Successful - Arifarm{% endblock %}
+            <!-- Order Info -->
+            <div class="p-6 space-y-4 border-b-2 border-dashed border-gray-300">
+                <div class="flex justify-between">
+                    <span class="text-text-muted">Order ID</span>
+                    <span class="font-bold">#{{ order.id }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-text-muted">M-Pesa Receipt</span>
+                    <span class="font-bold">{{ order.mpesa_receipt_number|default:"Pending" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-text-muted">Date & Time</span>
+                    <span class="font-bold">{{ order.created_at|date:"M d, Y, h:i A" }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-text-muted">Delivery Zone</span>
+                    <span class="font-bold">{{ order.zone }}</span>
+                </div>
+            </div>
 
-{% block content %}
-<div class="container my-5 text-center">
-    <h1 class="text-success mb-4">Payment Successful! 🎉</h1>
-    <div class="card p-5 shadow">
-        <h4>Order #{{ order.id }}</h4>
-        <p><strong>Total Paid:</strong> KSh {{ order.total_amount }}</p>
-        <p><strong>M-Pesa Receipt:</strong> {{ order.mpesa_receipt_number }}</p>
-        <p>Thank you for shopping with Arifarm!</p>
-        <a href="{% url 'products:home' %}" class="btn btn-primary btn-lg">Continue Shopping</a>
+            <!-- Customer Info -->
+            <div class="p-6 border-b-2 border-dashed border-gray-300">
+                <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Customer Details</h3>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-text-muted">person</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-text-main">{{ order.user.get_full_name|default:order.user.username }}</p>
+                        <p class="text-text-muted text-sm">{{ order.email }}</p>
+                        <p class="text-text-muted text-sm">{{ order.phone_number }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items List -->
+            <div class="p-6 bg-gray-50">
+                <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Items Purchased</h3>
+                <div class="space-y-4">
+                    {% for item in order.order_items.all %}
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-bold text-text-main">
+                                {% if item.product %}
+                                    {{ item.product.name }}
+                                {% else %}
+                                    {{ item.basket.name }} (Combo Basket)
+                                {% endif %}
+                            </p>
+                            <p class="text-text-muted text-sm">Quantity: {{ item.quantity }}</p>
+                        </div>
+                        <p class="font-bold text-text-main">KSh {{ item.total_price|floatformat:2 }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-text-muted text-center py-4">No items in this order.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Totals -->
+            <div class="p-6 bg-gray-100">
+                <div class="flex justify-between text-lg font-bold mb-2">
+                    <span>Total Amount</span>
+                    <span>KSh {{ order.total_amount|floatformat:2 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-8 no-print">
+            <button onclick="window.print()" class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg transition">
+                <span class="material-symbols-outlined align-middle mr-2">download</span>
+                Download / Print Receipt
+            </button>
+            <div class="mt-6">
+                <a href="{% url 'products:home' %}" class="text-primary hover:underline font-medium">
+                    ← Continue Shopping
+                </a>
+            </div>
+        </div>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>
