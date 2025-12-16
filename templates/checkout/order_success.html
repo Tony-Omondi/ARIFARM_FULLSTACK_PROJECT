@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Successful - Arifarm{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <h1 class="text-success mb-4">Payment Successful! 🎉</h1>
+    <div class="card p-5 shadow">
+        <h4>Order #{{ order.id }}</h4>
+        <p><strong>Total Paid:</strong> KSh {{ order.total_amount }}</p>
+        <p><strong>M-Pesa Receipt:</strong> {{ order.mpesa_receipt_number }}</p>
+        <p>Thank you for shopping with Arifarm!</p>
+        <a href="{% url 'products:home' %}" class="btn btn-primary btn-lg">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

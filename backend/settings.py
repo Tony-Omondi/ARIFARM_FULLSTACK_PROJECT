@@ -20,8 +20,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-*90*(^c#qj2k2o_pf41
 
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://ffdb44928f8d.ngrok-free.app', '.ngrok-free.app', '.ngrok.io']
 
 # ==================== APPLICATION DEFINITION ====================
 INSTALLED_APPS = [
@@ -40,7 +39,8 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'products',
-    'cart',  # ← Add this
+    'cart',
+    'checkout',
 ]
 
 MIDDLEWARE = [

@@ -11,7 +11,7 @@
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endif %}
@@ -96,7 +96,9 @@
                    onclick="return confirm('Clear entire cart?')">
                     Clear Cart
                 </a>
-                <a href="#" class="btn btn-success btn-lg px-5">
+                <!-- FIXED: Now links to actual checkout page -->
+                <a href="{% url 'checkout:checkout' %}"
+                   class="btn btn-success btn-lg px-5 shadow">
                     Proceed to Checkout →
                 </a>
             </div>

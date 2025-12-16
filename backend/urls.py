@@ -12,6 +12,7 @@ urlpatterns = [
     path('products/', include('products.urls')),  # Your core app
     # backend/urls.py (add this line)
     path('cart/', include('cart.urls')),
+    path('checkout/', include('checkout.urls')),
 ]
 
 if settings.DEBUG:

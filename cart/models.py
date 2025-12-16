@@ -72,9 +72,15 @@ class CartItem(models.Model):
         return f"{self.quantity} × {self.basket.name} (Basket)"
 
     @property
-    def total_price(self):
+    def unit_price(self):
+        """Price of one unit (used in cart display and checkout snapshot)"""
         if self.product:
-            return self.product.price * self.quantity
-        if self.basket:
-            return self.basket.price * self.quantity
+            return self.product.price
+        elif self.basket:
+            return self.basket.price
         return 0
+
+    @property
+    def total_price(self):
+        """Total price for this cart line item"""
+        return self.unit_price * self.quantity
