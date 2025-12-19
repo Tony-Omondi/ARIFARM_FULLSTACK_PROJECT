@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Remos Admin Dashboard{% endblock %}</title>
+
+    <meta name="author" content="themesflat.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="shortcut icon" href="{% static 'assets2/images/favicon.png' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'assets2/images/favicon.png' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'assets2/css/animate.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets2/css/animation.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets2/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets2/css/bootstrap-select.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets2/css/style.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'assets2/font/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'assets2/icon/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="body">
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="{% static 'assets2/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets2/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets2/js/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'assets2/js/zoom.js' %}"></script>
+    <script src="{% static 'assets2/js/theme-settings.js' %}"></script>
+    <script src="{% static 'assets2/js/main.js' %}"></script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

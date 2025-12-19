@@ -5784,3 +5784,121 @@ button,
     padding: 50px 0px;
   }
 }
+
+
+
+/* =============================================
+   NEW BRAND COLOR PALETTE - Oreg Organic Farm Fresh
+   ============================================= */
+
+/* Primary Yellow Accent */
+a:hover,
+.obrien-button.primary-btn,
+.product-rating i,
+.tags li a:hover,
+.sidebar-list > li > a:hover,
+.main-nav > ul > li > a.active,
+.header-right-area .cart-item-wrapper .single-cart-item .cart-text .cart-text-btn .cart-price,
+.scroll-to-top:hover,
+.pagination li:hover a,
+.pagination li:active a,
+.label-product .label-sale,
+.contact-info-item .con-info-icon {
+    color: #f9f506 !important;
+}
+
+.obrien-button.primary-btn,
+.obrien-button.black-btn:hover,
+.order-button-payment input:hover,
+.header-top-area .header-top-wrapper .header-top-button a {
+    background-color: #f9f506 !important;
+    border-color: #f9f506 !important;
+    color: #333333 !important; /* Dark text for readability on bright yellow */
+}
+
+.obrien-button.primary-btn:hover {
+    background-color: #e0dc00 !important; /* Slightly darker yellow on hover */
+    color: #333333 !important;
+}
+
+/* Active menu item */
+.main-nav > ul > li > a.active {
+    color: #f9f506 !important;
+}
+
+/* Secondary Green for headings, links, prices */
+h1, h2, h3, h4, h5, h6,
+.breadcrumb-title,
+.product-content .price-box .regular-price,
+.cart-price-total h5,
+.your-order .your-order-table table .order-total td span,
+.review_details .review_info h5 {
+    color: #9ACD32 !important;
+}
+
+/* Links */
+a {
+    color: #9ACD32;
+}
+a:hover {
+    color: #f9f506;
+}
+
+/* Optional: Background accents (e.g., feature sections, cards) */
+.feature-area.feature-area-boxed-home,
+.reg-area.bg,
+.your-order,
+.cart-calculator-wrapper {
+    background-color: #f8fdf5 !important; /* Very light green tint for fresh feel */
+}
+
+
+/* =============================================
+   BIG TRANSPARENT WATERMARK (BODY ONLY)
+   ============================================= */
+
+/* 1. First, ensure the 'body' itself has no logo 
+      so it doesn't bleed into header/footer */
+body {
+    background-image: none !important;
+}
+
+/* 2. Target ONLY the main container. 
+   Apply this class to the div strictly BETWEEN your header and footer. 
+   (e.g., <div class="page-wrapper main-watermark">) */
+.page-wrapper {
+    position: relative; /* Establishes boundaries for the watermark */
+    z-index: 1;         /* Ensures content sits properly */
+    overflow: hidden;   /* Prevents scrollbars if logo is huge */
+}
+
+/* 3. The Watermark Layer */
+.page-wrapper::before {
+    content: "";
+    position: absolute;
+    
+    /* Center it perfectly */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Size adjustments */
+    width: 100%;       /* Spans full width of container */
+    height: 100%;      /* Spans full height of container */
+    
+    /* The Logo */
+    background-image: url('../images//logo/logo.png'); /* Check your path! */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 80%;    /* BIG: Adjust between 60% - 90% */
+    
+    /* Transparency & Interaction */
+    opacity: 0.05;           /* TRANSPARENT: Very subtle (0.03 to 0.1) */
+    pointer-events: none;    /* CRITICAL: Allows you to click text/buttons 'through' the logo */
+    
+    /* Layering */
+    z-index: -999;             /* Puts it BEHIND the text but in front of background color */
+}
+
+/* OPTIONAL: If the logo disappears behind a white background, 
+   change z-index above to 999 and keep opacity very low. */

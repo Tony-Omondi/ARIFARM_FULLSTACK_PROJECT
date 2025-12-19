@@ -1,0 +1,402 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block content %}
+    <div id="wrapper">
+        <div id="page" class="">
+            <div class="layout-wrap">
+                
+                <div class="section-menu-left">
+                    <div class="box-logo">
+                        <a href="index.html" id="site-logo-inner">
+                            <img class="" id="logo_header" alt="" src="{% static 'assets2/images/logo/logo.png' %}" data-light="{% static 'assets2/images/logo/logo.png' %}" data-dark="{% static 'assets2/images/logo/logo-dark.png' %}" >
+                        </a>
+                        <div class="button-show-hide">
+                            <i class="icon-menu-left"></i>
+                        </div>
+                    </div>
+                    <div class="section-menu-left-wrap">
+                        <div class="center">
+                            <div class="center-item">
+                                <div class="center-heading">All page</div>
+                                <ul class="menu-list">
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-shopping-cart"></i></div>
+                                            <div class="text">Ecommerce</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="add-product.html"><div class="text">Add Product</div></a></li>
+                                            <li class="sub-menu-item"><a href="product-list.html"><div class="text">Product List</div></a></li>
+                                            <li class="sub-menu-item"><a href="product-detail-1.html"><div class="text">Product Detail 1</div></a></li>
+                                            <li class="sub-menu-item"><a href="product-detail-2.html"><div class="text">Product Detail 2</div></a></li>
+                                            <li class="sub-menu-item"><a href="product-detail-3.html"><div class="text">Product Detail 3</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-layers"></i></div>
+                                            <div class="text">Category</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="category-list.html"><div class="text">Category list</div></a></li>
+                                            <li class="sub-menu-item"><a href="new-category.html"><div class="text">New category</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-box"></i></div>
+                                            <div class="text">Attributes</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="attributes.html"><div class="text">Attributes</div></a></li>
+                                            <li class="sub-menu-item"><a href="add-attributes.html"><div class="text">Add attributes</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-file-plus"></i></div>
+                                            <div class="text">Order</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="oder-list.html"><div class="text">Order list</div></a></li>
+                                            <li class="sub-menu-item"><a href="oder-detail.html"><div class="text">Order detail</div></a></li>
+                                            <li class="sub-menu-item"><a href="oder-tracking.html"><div class="text">Order tracking</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-user"></i></div>
+                                            <div class="text">User</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="all-user.html"><div class="text">All user</div></a></li>
+                                            <li class="sub-menu-item"><a href="add-new-user.html"><div class="text">Add new user</div></a></li>
+                                            <li class="sub-menu-item"><a href="login.html"><div class="text">Login</div></a></li>
+                                            <li class="sub-menu-item"><a href="sign-up.html"><div class="text">Sign up</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item has-children">
+                                        <a href="javascript:void(0);" class="menu-item-button">
+                                            <div class="icon"><i class="icon-user-plus"></i></div>
+                                            <div class="text">Roles</div>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li class="sub-menu-item"><a href="all-roles.html"><div class="text">All roles</div></a></li>
+                                            <li class="sub-menu-item"><a href="create-role.html"><div class="text">Create role</div></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="gallery.html" class="">
+                                            <div class="icon"><i class="icon-image"></i></div>
+                                            <div class="text">Gallery</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="report.html" class="">
+                                            <div class="icon"><i class="icon-pie-chart"></i></div>
+                                            <div class="text">Report</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="center-item">
+                                <div class="center-heading">Setting</div>
+                                <ul class="menu-list">
+                                    <li class="menu-item">
+                                        <a href="setting.html" class="">
+                                            <div class="icon"><i class="icon-settings"></i></div>
+                                            <div class="text">Setting</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-content-right">
+                    
+                    <div class="header-dashboard">
+                        <div class="wrap">
+                            <div class="header-left">
+                                <a href="index.html">
+                                    <img class="" id="logo_header_mobile" alt="" src="{% static 'assets2/images/logo/logo.png' %}" data-light="{% static 'assets2/images/logo/logo.png' %}" data-dark="{% static 'assets2/images/logo/logo-dark.png' %}" data-width="154px" data-height="52px" data-retina="{% static 'assets2/images/logo/logo@2x.png' %}">
+                                </a>
+                                <div class="button-show-hide">
+                                    <i class="icon-menu-left"></i>
+                                </div>
+                                <form class="form-search flex-grow">
+                                    <fieldset class="name">
+                                        <input type="text" placeholder="Search here..." class="show-search" name="name" tabindex="2" value="" aria-required="true" required="">
+                                    </fieldset>
+                                    <div class="button-submit">
+                                        <button class="" type="submit"><i class="icon-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="header-grid">
+                                <div class="header-item button-dark-light">
+                                    <i class="icon-moon"></i>
+                                </div>
+                                <div class="header-item button-zoom-maximize">
+                                    <div class="">
+                                        <i class="icon-maximize"></i>
+                                    </div>
+                                </div>
+                                <div class="popup-wrap user type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-user wg-user">
+                                                <span class="image">
+                                                    <img src="{% static 'assets2/images/avatar/user-1.png' %}" alt="">
+                                                </span>
+                                                <span class="flex flex-column">
+                                                    <span class="body-title mb-2">Kristin Watson</span>
+                                                    <span class="text-tiny">Admin</span>
+                                                </span>
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end has-content" aria-labelledby="dropdownMenuButton3" >
+                                            <li><a href="#" class="user-item"><div class="icon"><i class="icon-user"></i></div><div class="body-title-2">Account</div></a></li>
+                                            <li><a href="setting.html" class="user-item"><div class="icon"><i class="icon-settings"></i></div><div class="body-title-2">Setting</div></a></li>
+                                            <li><a href="login.html" class="user-item"><div class="icon"><i class="icon-log-out"></i></div><div class="body-title-2">Log out</div></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-content">
+                        <div class="main-content-inner">
+                            <div class="main-content-wrap">
+                                
+                                <div class="tf-section-4 mb-30">
+                                    <div class="wg-chart-default">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap14">
+                                                <div class="image type-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                                        <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#22C55E"/>
+                                                    </svg>
+                                                    <i class="icon-shopping-bag"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="body-text mb-2">Total Sales</div>
+                                                    <h4>34,945</h4>
+                                                </div>
+                                            </div>
+                                            <div class="box-icon-trending up">
+                                                <i class="icon-trending-up"></i>
+                                                <div class="body-title number">1.56%</div>
+                                            </div>
+                                        </div>
+                                        <div class="wrap-chart">
+                                            <div id="line-chart-1"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="wg-chart-default">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap14">
+                                                <div class="image type-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                                        <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#FF5200"/>
+                                                    </svg>
+                                                    <i class="icon-dollar-sign"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="body-text mb-2">Total Income</div>
+                                                    <h4>$37,802</h4>
+                                                </div>
+                                            </div>
+                                            <div class="box-icon-trending down">
+                                                <i class="icon-trending-down"></i>
+                                                <div class="body-title number">1.56%</div>
+                                            </div>
+                                        </div>
+                                        <div class="wrap-chart">
+                                            <div id="line-chart-2"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="wg-chart-default">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap14">
+                                                <div class="image type-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                                        <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#CBD5E1"/>
+                                                    </svg>
+                                                    <i class="icon-file"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="body-text mb-2">Orders Paid</div>
+                                                    <h4>34,945</h4>
+                                                </div>
+                                            </div>
+                                            <div class="box-icon-trending">
+                                                <i class="icon-trending-up"></i>
+                                                <div class="body-title number">0.00%</div>
+                                            </div>
+                                        </div>
+                                        <div class="wrap-chart">
+                                            <div id="line-chart-3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tf-section-3">
+                                    <div class="wg-box">
+                                        <div class="flex items-center justify-between">
+                                            <h5>Orders</h5>
+                                            <div class="dropdown default">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="icon-more"><i class="icon-more-horizontal"></i></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a href="javascript:void(0);">This Week</a></li>
+                                                    <li><a href="javascript:void(0);">Last Week</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="wg-table table-orders">
+                                            <ul class="table-title flex gap10 mb-14">
+                                                <li><div class="body-title">Product</div></li>  
+                                                <li><div class="body-title">Price</div></li>
+                                                <li><div class="body-title">Delivery date</div></li>
+                                            </ul>
+                                            <ul class="flex flex-column gap18">
+                                                <li class="product-item gap14">
+                                                    <div class="image small">
+                                                        <img src="{% static 'assets2/images/products/11.png' %}" alt="">
+                                                    </div>
+                                                    <div class="flex items-center justify-between flex-grow gap10">
+                                                        <div class="name">
+                                                            <a href="product-list.html" class="body-text">Prodotti per il tuo cane...</a>
+                                                        </div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                    </div>
+                                                </li>
+                                                <li class="product-item gap14">
+                                                    <div class="image small">
+                                                        <img src="{% static 'assets2/images/products/12.png' %}" alt="">
+                                                    </div>
+                                                    <div class="flex items-center justify-between flex-grow gap10">
+                                                        <div class="name">
+                                                            <a href="product-list.html" class="body-text">Wholesome Pride...</a>
+                                                        </div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                    </div>
+                                                </li>
+                                                <li class="product-item gap14">
+                                                    <div class="image small">
+                                                        <img src="{% static 'assets2/images/products/13.png' %}" alt="">
+                                                    </div>
+                                                    <div class="flex items-center justify-between flex-grow gap10">
+                                                        <div class="name">
+                                                            <a href="product-list.html" class="body-text">Beneful Baked Delights...</a>
+                                                        </div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                    </div>
+                                                </li>
+                                                <li class="product-item gap14">
+                                                    <div class="image small">
+                                                        <img src="{% static 'assets2/images/products/14.png' %}" alt="">
+                                                    </div>
+                                                    <div class="flex items-center justify-between flex-grow gap10">
+                                                        <div class="name">
+                                                            <a href="product-list.html" class="body-text">Taste of the Wild...</a>
+                                                        </div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                    </div>
+                                                </li>
+                                                <li class="product-item gap14">
+                                                    <div class="image small">
+                                                        <img src="{% static 'assets2/images/products/15.png' %}" alt="">
+                                                    </div>
+                                                    <div class="flex items-center justify-between flex-grow gap10">
+                                                        <div class="name">
+                                                            <a href="product-list.html" class="body-text">Canagan - Britain's...</a>
+                                                        </div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                        <div class="body-text">20 Nov 2023</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="wg-box">
+                                        <div class="flex items-center justify-between">
+                                            <h5>Earnings</h5>
+                                            <div class="dropdown default">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                   <span class="icon-more"><i class="icon-more-horizontal"></i></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a href="javascript:void(0);">This Week</a></li>
+                                                    <li><a href="javascript:void(0);">Last Week</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap gap40">
+                                            <div>
+                                                <div class="mb-2">
+                                                    <div class="block-legend">
+                                                        <div class="dot t1"></div>
+                                                        <div class="text-tiny">Revenue</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap10">
+                                                    <h4>$37,802</h4>
+                                                    <div class="box-icon-trending up">
+                                                        <i class="icon-trending-up"></i>
+                                                        <div class="body-title number">0.56%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="mb-2">
+                                                    <div class="block-legend">
+                                                        <div class="dot t2"></div>
+                                                        <div class="text-tiny">Profit</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap10">
+                                                    <h4>$28,305</h4>
+                                                    <div class="box-icon-trending up">
+                                                        <i class="icon-trending-up"></i>
+                                                        <div class="body-title number">0.56%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="line-chart-6"></div>
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                        
+                        <div class="bottom-page">
+                            <div class="body-text">Copyright © 2024 Remos. Design with</div>
+                            <i class="icon-heart"></i>
+                            <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
+                        </div>
+                        
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets2/js/apexcharts/apexcharts.js' %}"></script>
+    <script src="{% static 'assets2/js/apexcharts/line-chart-1.js' %}"></script>
+    <script src="{% static 'assets2/js/apexcharts/line-chart-2.js' %}"></script>
+    <script src="{% static 'assets2/js/apexcharts/line-chart-3.js' %}"></script>
+    <script src="{% static 'assets2/js/apexcharts/line-chart-6.js' %}"></script>
+{% endblock %}

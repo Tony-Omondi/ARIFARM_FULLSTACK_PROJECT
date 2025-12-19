@@ -2,20 +2,61 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render
 
-
 # ============================
 # MAIN PAGES
 # ============================
 class HomeView(TemplateView):
     template_name = 'core/home.html'
 
-
 class AboutView(TemplateView):
     template_name = 'core/about.html'
 
-
 class ContactView(TemplateView):
     template_name = 'core/contact.html'
+
+# ============================
+# ADMIN PAGES
+# ============================
+class AdminDashboardView(TemplateView):
+    # This matches the file we created at templates/admin/admin_dashboard.html
+    template_name = 'admin/admin_dashboard.html'
+
+class AdminAddProductView(TemplateView):
+    # This matches the file we created at templates/admin/products/add_product.html
+    template_name = 'admin/products/add_product.html'
+
+class AdminProductListView(TemplateView):
+    template_name = 'admin/products/product_list.html'
+
+class AdminProductDetailView(TemplateView):
+    template_name = 'admin/products/product_detail.html'
+
+class AdminCategoryListView(TemplateView):
+    template_name = 'admin/categories/category_list.html'
+
+class AdminAddCategoryView(TemplateView):
+    template_name = 'admin/categories/add_category.html'
+
+class AdminOrderListView(TemplateView):
+    template_name = 'admin/orders/order_list.html'
+
+class AdminOrderDetailView(TemplateView):
+    template_name = 'admin/orders/order_detail.html'
+
+class AdminOrderTrackingView(TemplateView):
+    template_name = 'admin/orders/order_tracking.html'
+
+class AdminUserListView(TemplateView):
+    template_name = 'admin/users/user_list.html'
+
+class AdminLoginView(TemplateView):
+    template_name = 'admin/users/login.html'
+
+class AdminGalleryView(TemplateView):
+    template_name = 'admin/gallery.html'
+
+class AdminReportView(TemplateView):
+    template_name = 'admin/report.html'
 
 
 # class ServicesView(TemplateView):

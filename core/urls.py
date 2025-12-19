@@ -2,7 +2,10 @@
 from django.urls import path
 from .views import (
     # Main
-    HomeView, AboutView, ContactView
+    HomeView, AboutView, ContactView,
+    # Admin
+    AdminDashboardView, AdminAddProductView , AdminProductListView,AdminProductDetailView,AdminCategoryListView,
+    AdminAddCategoryView, AdminOrderListView, AdminOrderDetailView, AdminOrderTrackingView, AdminUserListView,AdminLoginView, AdminGalleryView,AdminReportView
 )
 
 urlpatterns = [
@@ -10,6 +13,24 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('about/', AboutView.as_view(), name='about'),
     path('contact/', ContactView.as_view(), name='contact'),
+
+    # Admin Pages
+    path('admin-dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('admin-dashboard/add-product/', AdminAddProductView.as_view(), name='admin_add_product'),
+    path('admin-dashboard/products/', AdminProductListView.as_view(), name='admin_product_list'),
+    path('admin-dashboard/product-detail/', AdminProductDetailView.as_view(), name='admin_product_detail'),
+    path('admin-dashboard/categories/', AdminCategoryListView.as_view(), name='admin_category_list'),
+    path('admin-dashboard/categories/add/', AdminAddCategoryView.as_view(), name='admin_add_category'),
+    path('admin-dashboard/orders/', AdminOrderListView.as_view(), name='admin_order_list'),
+    path('admin-dashboard/orders/detail/', AdminOrderDetailView.as_view(), name='admin_order_detail'),
+    path('admin-dashboard/orders/track/', AdminOrderTrackingView.as_view(), name='admin_order_tracking'),
+    path('admin-dashboard/users/', AdminUserListView.as_view(), name='admin_user_list'),
+    path('admin-dashboard/login/', AdminLoginView.as_view(), name='admin_login'),
+    path('admin-dashboard/gallery/', AdminGalleryView.as_view(), name='admin_gallery'),
+    path('admin-dashboard/report/', AdminReportView.as_view(), name='admin_report'),
+    
+]
+
 
     # Services
     # path('services/', ServicesView.as_view(), name='services'),
@@ -48,4 +69,3 @@ urlpatterns = [
     # path('news-sidebar/', NewsSidebarView.as_view(), name='news_sidebar'),
     # path('news-details/', NewsDetailsView.as_view(), name='news_details'),
     # path('search/', search_view, name='search'),
-]
