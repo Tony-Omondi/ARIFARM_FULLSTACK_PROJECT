@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery - Ari Farm{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="breadcumb-wrapper" data-bg-src="{% static 'assets/img/bg/breadcumb-bg.jpg' %}">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Our Gallery</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li>Gallery</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Gallery Section -->
+<section class="space">
+    <div class="container">
+        <div class="title-area text-center mb-50">
+            <span class="sub-title">
+                <img src="{% static 'assets/img/theme-img/title_icon.svg' %}" alt="icon"> Farm Moments
+            </span>
+            <h2 class="sec-title">Life at Ari Farm</h2>
+            <p class="sec-text">Fresh harvests, farm activities, and real moments – captured and shared</p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="gallery-filter mb-50">
+            <div class="filter-nav d-flex justify-content-center flex-wrap gap-3">
+                <button class="filter-btn active" data-filter="*">All</button>
+                {% for category in categories %}
+                <button class="filter-btn" data-filter=".cat-{{ category.slug }}">{{ category.name }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="row gy-30 gallery-grid">
+            {% for item in gallery_items %}
+            <div class="col-xl-4 col-md-6 gallery-item cat-{{ item.category.slug }}">
+                <div class="gallery-card style-hover">
+                    <div class="box-img position-relative">
+                        {% if item.get_thumbnail_url %}
+                            <img src="{{ item.get_thumbnail_url }}" alt="{{ item.title }}" class="w-100" style="height: 400px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                                <span class="text-muted">No Preview</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Media Type Badge -->
+                        <div class="content-type-badge {{ item.media_type }}">
+                            {% if item.media_type == 'image' %}
+                                <i class="fas fa-camera"></i> Photo
+                            {% elif item.media_type == 'youtube' %}
+                                <i class="fab fa-youtube"></i> YouTube
+                            {% elif item.media_type == 'instagram' %}
+                                <i class="fab fa-instagram"></i> Instagram
+                            {% elif item.media_type == 'tiktok' %}
+                                <i class="fab fa-tiktok"></i> TikTok
+                            {% endif %}
+                        </div>
+
+                        <!-- External Link (for social media) -->
+                        {% if item.social_url %}
+                        <a href="{{ item.social_url }}" target="_blank" class="icon-btn style2">
+                            <i class="fab fa-{{ item.media_type }}"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="box-content">
+                        <h3 class="box-title">{{ item.title }}</h3>
+                        {% if item.description %}
+                            <p class="mb-0">{{ item.description }}</p>
+                        {% endif %}
+                        <div class="gallery-category mt-3">
+                            <span class="category-tag">{{ item.category.name }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lightbox Modal -->
+                <div class="modal fade" id="modal-{{ item.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ item.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-0">
+                                {% if item.media_type == 'image' and item.image %}
+                                    <img src="{{ item.image.url }}" class="img-fluid w-100" alt="{{ item.title }}">
+
+                                {% elif item.media_type == 'youtube' and item.get_youtube_embed_url %}
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="{{ item.get_youtube_embed_url }}?autoplay=1" allowfullscreen></iframe>
+                                    </div>
+
+                                {% elif item.media_type == 'instagram' and item.get_instagram_embed_url %}
+                                    <iframe src="{{ item.get_instagram_embed_url }}" width="100%" height="600" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+
+                                {% elif item.media_type == 'tiktok' and item.get_tiktok_embed_code %}
+                                    {{ item.get_tiktok_embed_code|safe }}
+
+                                {% endif %}
+                            </div>
+                            {% if item.description %}
+                            <div class="modal-footer">
+                                <p class="mb-0">{{ item.description }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="far fa-images fa-4x text-muted mb-4"></i>
+                <h3>No items in gallery yet</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+/* Reuse your existing beautiful styles */
+.gallery-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:all .3s; height:100%; }
+.gallery-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
+.box-img { position:relative; overflow:hidden; background:#f8f9fa; }
+.content-type-badge { position:absolute; top:15px; left:15px; padding:6px 14px; border-radius:30px; font-size:13px; font-weight:600; color:white; z-index:2; }
+.content-type-badge.image { background:#7BB564; }
+.content-type-badge.youtube { background:#FF0000; }
+.content-type-badge.instagram { background:#E4405F; }
+.content-type-badge.tiktok { background:#000000; }
+.icon-btn.style2 { position:absolute; bottom:15px; right:15px; background:rgba(255,255,255,0.9); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#333; font-size:18px; }
+.icon-btn.style2:hover { background:#7BB564; color:white; }
+.box-content { padding:25px; }
+.box-title { font-size:20px; margin-bottom:10px; }
+.category-tag { background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:13px; }
+.filter-btn { padding:10px 24px; border-radius:30px; border:2px solid #e9ecef; background:#f8f9fa; font-weight:600; }
+.filter-btn.active, .filter-btn:hover { background:#7BB564; border-color:#7BB564; color:white; }
+</style>
+
+<script>
+// Simple filter
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.gallery-item');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+            items.forEach(item => {
+                if (filter === '*' || item.classList.contains(filter.substring(1))) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Trigger click on modal (lightbox)
+    document.querySelectorAll('.gallery-card .box-img img').forEach(img => {
+        img.closest('.gallery-card').querySelector('.box-img').addEventListener('click', () => {
+            const modalId = img.closest('.gallery-item').querySelector('.modal').id;
+            new bootstrap.Modal(document.getElementById(modalId)).show();
+        });
+    });
+});
+</script>
+
+{% endblock %}

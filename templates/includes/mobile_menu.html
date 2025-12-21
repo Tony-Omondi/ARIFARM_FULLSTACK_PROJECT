@@ -1,135 +1,92 @@
 {% load static %}
-<!-- off-canvas menu start -->
+
 <aside class="off-canvas-wrapper" id="mobileMenu">
-    <div class="off-canvas-overlay"></div>
+    
+    <div class="off-canvas-overlay" onclick="toggleMenu()"></div>
+    
     <div class="off-canvas-inner-content">
-        <div class="btn-close-off-canvas">
-            <i class="fa fa-times"></i>
+        <div class="off-canvas-header">
+            <div class="logo-area">
+                <span class="menu-title">Menu</span>
+            </div>
+            <div class="btn-close-off-canvas" onclick="toggleMenu()">
+                <i class="fa fa-times"></i>
+            </div>
         </div>
-        <div class="off-canvas-inner">
+
+        <div class="off-canvas-scrollable">
+            
             <div class="search-box-offcanvas">
-                <form>
-                    <input type="text" placeholder="Search product...">
-                    <button class="search-btn"><i class="fa fa-search"></i></button>
+                <form action="{% url 'products:search' %}" method="get">
+                    <input type="text" name="q" placeholder="Search product..." required>
+                    <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
                 </form>
             </div>
-            <!-- mobile menu start -->
-            <div class="mobile-navigation">
-                <!-- mobile menu navigation start -->
-                <nav>
-                    <ul class="mobile-menu">
-                        <li class="menu-item-has-children"><a href="#">Home</a>
-                            <ul class="dropdown">
-                                <li><a href="{% url 'home' %}">Home Page 1</a></li>
-                                <li><a href="/">Home Page 2</a></li>
-                                <li><a href="/">Home Page 3</a></li>
-                                <li><a href="/">Home Page 4</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children"><a href="#">Shop</a>
-                            <ul class="megamenu dropdown">
-                                <li class="mega-title has-children"><a href="#">Shop Layouts</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{% url 'products:product_list' %}">Shop Left Sidebar</a></li>
-                                        <li><a href="/">Shop Right Sidebar</a></li>
-                                        <li><a href="/">Shop List Left Sidebar</a></li>
-                                        <li><a href="/}">Shop List Right Sidebar</a></li>
-                                        <li><a href="/">Shop Full Width</a></li>
-                                    </ul>
-                                </li>
-                                <li class="mega-title has-children"><a href="#">Product Details</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{% url 'products:product_list' %}">Single Product Details</a></li>
 
-                                    </ul>
-                                </li>
-                                <li class="mega-title has-children"><a href="#">Others</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{% url 'products:product_list' %}">Error 404</a></li>
-                                        <li><a href="/">Compare Page</a></li>
-                                        <li><a href="{% url 'products:product_list' %}">Cart Page</a></li>
-                                        <li><a href="{% url 'products:product_list' %}">Checkout Page</a></li>
-                                        <li><a href="{% url 'products:product_list' %}">Wish List Page</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children "><a href="#">Blog</a>
-                            <ul class="dropdown">
-                                <li><a href="/">Blog Left Sidebar</a></li>
-                                <li><a href="/">Blog List Right Sidebar</a></li>
-                                <li><a href="/">Blog List Fullwidth</a></li>
-                                <li><a href="/">Blog Grid Page</a></li>
-                                <li><a href="/">Blog Grid Right Sidebar</a></li>
-                                <li><a href="/">Blog Grid Fullwidth</a></li>
-                                <li><a href="/">Blog Details Sidebar Page</a></li>
-                                <li><a href="/">Blog Details Fullwidth Page</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children "><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="/">FAQ</a></li>
-                                <li><a href="/">My Account</a></li>
-                                <li><a href="{% url 'login' %}">login &amp; register</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/">About Us</a></li>
-                        <li><a href="/">Contact</a></li>
-                    </ul>
-                </nav>
-                <!-- mobile menu navigation end -->
-            </div>
-            <!-- mobile menu end -->
-            <div class="header-top-settings offcanvas-curreny-lang-support">
-                <!-- mobile menu navigation start -->
+            <div class="mobile-navigation">
                 <nav>
                     <ul class="mobile-menu">
-                        <li class="menu-item-has-children"><a href="#">My Account</a>
-                            <ul class="dropdown">
-                                <li><a href="{% url 'login' %}">Login</a></li>
-                                <li><a href="/">Register</a></li>
-                            </ul>
+                        {% with request.resolver_match.url_name as url_name %}
+
+                        <li class="{% if url_name == 'home' %}active-menu{% endif %}">
+                            <a href="{% url 'home' %}">Home</a>
                         </li>
-                        <li class="menu-item-has-children"><a href="#">Currency:USD</a>
-                            <ul class="dropdown">
-                                <li><a href="#">USD - US Dollar</a></li>
-                                <li><a href="#">EUR - Euro</a></li>
-                                <li><a href="#">GBP - British Pound</a></li>
-                                <li><a href="#">INR - Indian Rupee</a></li>
-                                <li><a href="#">BDT - Bangladesh Taka</a></li>
-                                <li><a href="#">JPY - Japan Yen</a></li>
-                                <li><a href="#">CAD - Canada Dollar</a></li>
-                                <li><a href="#">AUD - Australian Dollar</a></li>
-                            </ul>
+                        <li class="{% if url_name == 'product_list' or url_name == 'product_detail' %}active-menu{% endif %}">
+                            <a href="{% url 'products:product_list' %}">Shop All Products</a>
                         </li>
+                        <li class="{% if url_name == 'basket_list' %}active-menu{% endif %}">
+                            <a href="{% url 'products:basket_list' %}">Combo Offers</a>
+                        </li>
+                        <li class="{% if url_name == 'recipe_list' %}active-menu{% endif %}">
+                            <a href="{% url 'products:recipe_list' %}">Recipes</a>
+                        </li>
+                        <li class="{% if url_name == 'category_list' %}active-menu{% endif %}">
+                            <a href="{% url 'products:category_list' %}">Categories</a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li class="{% if url_name == 'about' %}active-menu{% endif %}">
+                            <a href="{% url 'about' %}">About Us</a>
+                        </li>
+                        <li class="{% if url_name == 'contact' %}active-menu{% endif %}">
+                            <a href="{% url 'contact' %}">Contact</a>
+                        </li>
+
+                        <li class="user-section">
+                            {% if user.is_authenticated %}
+                                <div class="user-info">
+                                    <i class="fa fa-user-circle"></i> Hello, {{ user.first_name|default:user.username }}
+                                </div>
+                                {% if user.is_staff %}
+                                    <a href="{% url 'products:admin_dashboard' %}" class="admin-link">Admin Dashboard</a>
+                                {% endif %}
+                                <a href="/admin/logout/" class="logout-link">Logout</a>
+                            {% else %}
+                                <div class="auth-buttons">
+                                    <a href="{% url 'admin_login' %}" class="btn-login">Login</a>
+                                    <a href="#" class="btn-register">Register</a>
+                                </div>
+                            {% endif %}
+                        </li>
+
+                        {% endwith %}
                     </ul>
                 </nav>
-                <!-- mobile menu navigation end -->
             </div>
-            <!-- offcanvas widget area start -->
+
             <div class="offcanvas-widget-area">
-                <div class="top-info-wrap text-left text-black">
-                    <ul>
-                        <li>
-                            <i class="fa fa-phone"></i>
-                            <a href="info@yourdomain.com">(1245) 2456 012</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope"></i>
-                            <a href="info@yourdomain.com">info@yourdomain.com</a>
-                        </li>
-                    </ul>
+                <div class="contact-info">
+                    <p><i class="fa fa-phone"></i> <a href="tel:123456789">(123) 456-7890</a></p>
+                    <p><i class="fa fa-envelope"></i> <a href="mailto:info@obrien.com">info@obrien.com</a></p>
                 </div>
-                <div class="off-canvas-widget-social">
-                    <a title="Facebook-f" href="#"><i class="fa fa-facebook-f"></i></a>
-                    <a title="Twitter" href="#"><i class="fa fa-twitter"></i></a>
-                    <a title="Linkedin" href="#"><i class="fa fa-linkedin"></i></a>
-                    <a title="Youtube" href="#"><i class="fa fa-youtube"></i></a>
-                    <a title="Vimeo" href="#"><i class="fa fa-vimeo"></i></a>
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-youtube"></i></a>
                 </div>
             </div>
-            <!-- offcanvas widget area end -->
         </div>
     </div>
 </aside>
-<!-- off-canvas menu end -->

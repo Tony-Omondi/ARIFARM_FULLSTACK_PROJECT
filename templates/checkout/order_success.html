@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Receipt #{{ order.id }} - Arifarm</title>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,82 +16,60 @@
                     colors: {
                         primary: '#E98C81',
                         'background-light': '#f8f9fa',
-                        'background-dark': '#1a1a1a',
                         'text-main': '#212529',
                         'text-muted': '#6c757d',
                     },
-                    fontFamily: {
-                        display: ['"Spline Sans"', 'sans-serif']
-                    },
+                    fontFamily: { display: ['"Spline Sans"', 'sans-serif'] },
                 }
             }
         }
     </script>
     <style>
-        body {
-            font-family: 'Spline Sans', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-        }
-        .receipt-card {
-            background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        .jagged-bottom {
-            position: relative;
-            overflow: hidden;
-        }
+        body { font-family: 'Spline Sans', sans-serif; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; }
+        .receipt-card { background: white; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .jagged-bottom::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: 
-                radial-gradient(circle at 10px 0, transparent 10px, white 10.5px) repeat-x bottom left / 20px 20px;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 20px;
+            background: radial-gradient(circle at 10px 0, transparent 10px, white 10.5px) repeat-x bottom left / 20px 20px;
         }
-        @media print {
-            body { background: white; }
-            .no-print { display: none; }
-            .receipt-card { box-shadow: none; margin: 0; max-width: none; }
-        }
+        @media print { body { background: white; } .no-print { display: none; } .receipt-card { box-shadow: none; margin: 0; max-width: none; } }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="w-full max-w-2xl">
-        <!-- Receipt Card -->
         <div class="receipt-card overflow-hidden jagged-bottom">
             <!-- Header -->
             <div class="bg-primary/10 text-center py-8 px-6 border-b-2 border-dashed border-gray-300">
                 <div class="w-24 h-24 bg-primary rounded-full mx-auto flex items-center justify-center shadow-lg mb-4">
                     <span class="material-symbols-outlined text-white text-5xl">check</span>
                 </div>
-                <h1 class="text-3xl font-bold text-text-main mb-2">Payment Successful</h1>
+                <h1 class="text-3xl font-bold text-text-main mb-2">Payment Successful!</h1>
                 <p class="text-text-muted">Thank you for shopping with Arifarm!</p>
-                <span class="inline-block mt-4 px-6 py-2 bg-primary/20 text-primary font-bold rounded-full text-sm uppercase tracking-wide">
-                    Paid
-                </span>
+                <span class="inline-block mt-4 px-6 py-2 bg-primary/20 text-primary font-bold rounded-full text-sm uppercase tracking-wide">Paid</span>
             </div>
 
             <!-- Order Info -->
             <div class="p-6 space-y-4 border-b-2 border-dashed border-gray-300">
-                <div class="flex justify-between">
-                    <span class="text-text-muted">Order ID</span>
-                    <span class="font-bold">#{{ order.id }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-text-muted">M-Pesa Receipt</span>
-                    <span class="font-bold">{{ order.mpesa_receipt_number|default:"Pending" }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-text-muted">Date & Time</span>
-                    <span class="font-bold">{{ order.created_at|date:"M d, Y, h:i A" }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-text-muted">Delivery Zone</span>
-                    <span class="font-bold">{{ order.zone }}</span>
+                <div class="flex justify-between"><span class="text-text-muted">Order ID</span><span class="font-bold">#{{ order.id }}</span></div>
+                <div class="flex justify-between"><span class="text-text-muted">M-Pesa Receipt</span><span class="font-bold">{{ order.mpesa_receipt_number|default:"Processing" }}</span></div>
+                <div class="flex justify-between"><span class="text-text-muted">Order Date</span><span class="font-bold">{{ order.created_at|date:"M d, Y, h:i A" }}</span></div>
+                <div class="flex justify-between"><span class="text-text-muted">Delivery Zone</span><span class="font-bold">{{ order.zone.name }}</span></div>
+
+                <!-- Delivery Preferences -->
+                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                    <h4 class="font-bold text-green-800 mb-2 flex items-center">
+                        <span class="material-symbols-outlined mr-2">local_shipping</span>
+                        Preferred Delivery Details
+                    </h4>
+                    <p class="text-green-900"><strong>Date:</strong> {{ order.preferred_delivery_date|date:"l, F j, Y" }}</p>
+                    <p class="text-green-900">
+                        <strong>Time Window:</strong>
+                        {% if order.preferred_delivery_time_start %}
+                            {{ order.preferred_delivery_time_start|time:"g:i A" }} – {{ order.preferred_delivery_time_end|time:"g:i A" }}
+                        {% else %}
+                            Any time
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-green-700 mt-2">We'll do our best to deliver within your preferred window!</p>
                 </div>
             </div>
 
@@ -112,47 +88,51 @@
                 </div>
             </div>
 
-            <!-- Items List -->
+            <!-- Items -->
             <div class="p-6 bg-gray-50">
                 <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Items Purchased</h3>
                 <div class="space-y-4">
                     {% for item in order.order_items.all %}
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="font-bold text-text-main">
-                                {% if item.product %}
-                                    {{ item.product.name }}
-                                {% else %}
-                                    {{ item.basket.name }} (Combo Basket)
-                                {% endif %}
-                            </p>
-                            <p class="text-text-muted text-sm">Quantity: {{ item.quantity }}</p>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-text-main">
+                                    {% if item.product %}{{ item.product.name }}{% else %}{{ item.basket.name }} (Combo){% endif %}
+                                </p>
+                                <p class="text-text-muted text-sm">Quantity: {{ item.quantity }}</p>
+                            </div>
+                            <p class="font-bold text-text-main">KSh {{ item.total_price|floatformat:2 }}</p>
                         </div>
-                        <p class="font-bold text-text-main">KSh {{ item.total_price|floatformat:2 }}</p>
-                    </div>
                     {% empty %}
-                    <p class="text-text-muted text-center py-4">No items in this order.</p>
+                        <p class="text-center text-gray-500 py-4">No items</p>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Totals -->
-            <div class="p-6 bg-gray-100">
-                <div class="flex justify-between text-lg font-bold mb-2">
-                    <span>Total Amount</span>
+            <div class="p-6 bg-gray-100 space-y-3">
+                <div class="flex justify-between text-lg">
+                    <span>Subtotal</span>
+                    <span>KSh {{ order.subtotal_amount|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between text-lg">
+                    <span>Delivery Fee ({{ order.zone.name }})</span>
+                    <span>KSh {{ order.delivery_fee|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between text-2xl font-bold text-primary pt-3 border-t-2 border-primary">
+                    <span>Total Paid</span>
                     <span>KSh {{ order.total_amount|floatformat:2 }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="text-center mt-8 no-print">
-            <button onclick="window.print()" class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg transition">
-                <span class="material-symbols-outlined align-middle mr-2">download</span>
-                Download / Print Receipt
+        <!-- Buttons -->
+        <div class="text-center mt-8 no-print space-y-4">
+            <button onclick="window.print()" class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg transition inline-flex items-center">
+                <span class="material-symbols-outlined mr-2">print</span>
+                Print / Download Receipt
             </button>
-            <div class="mt-6">
-                <a href="{% url 'products:home' %}" class="text-primary hover:underline font-medium">
+            <div>
+                <a href="{% url 'products:home' %}" class="text-primary hover:underline font-medium text-lg">
                     ← Continue Shopping
                 </a>
             </div>

@@ -4865,12 +4865,12 @@ button,
 }
 
 .slide-1 {
-  background-image: url("../images/slider/1-1.jpg");
+  background-image: url("../images/slider/background.jpeg");
   background-color: rgba(215, 177, 190, 0.9);
 }
 
 .slide-2 {
-  background-image: url("../images/slider/1-2.png");
+  background-image: url("../images/slider/bacground2.jpeg");
   background-color: rgba(215, 177, 190, 0.9);
 }
 

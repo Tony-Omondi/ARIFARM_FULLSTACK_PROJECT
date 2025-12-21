@@ -1,69 +1,139 @@
 {% extends 'products/base.html' %}
+{% load static %}
 
 {% block products_content %}
-<h1>Welcome to Our Store</h1>
 
-<h2>Featured Products</h2>
-{% if featured_products %}
-<div>
-    {% for product in featured_products %}
-    <div>
-        <img src="{{ product.image.url }}" width="100">
-        <h3>{{ product.name }}</h3>
-        <p>Price: ${{ product.price }}</p>
-        <p>{{ product.description|truncatewords:10 }}</p>
-        <a href="{% url 'products:product_detail' product.slug %}">View</a>
-    </div>
-    {% endfor %}
-</div>
-{% else %}
-<p>No featured products</p>
-{% endif %}
+<style>
+    /* Clean Product Card Styles */
+    .product-card {
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+        background: #fff;
+    }
+    
+    .product-card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
 
-<h2>Combo Offers</h2>
-{% if product_baskets %}
-<div>
-    {% for basket in product_baskets %}
-    <div>
-        <img src="{{ basket.image.url }}" width="100">
-        <h3>{{ basket.name }}</h3>
-        <p>Price: ${{ basket.price }}</p>
-        <a href="{% url 'products:basket_detail' basket.slug %}">View Combo</a>
-    </div>
-    {% endfor %}
-</div>
-{% else %}
-<p>No combo offers</p>
-{% endif %}
+    .img-wrapper {
+        height: 220px; /* Fixed height for consistency */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f9f9f9;
+        overflow: hidden;
+    }
 
-<h2>Recipes</h2>
-{% if featured_recipes %}
-<div>
-    {% for recipe in featured_recipes %}
-    <div>
-        <img src="{{ recipe.image.url }}" width="100">
-        <h3>{{ recipe.title }}</h3>
-        <p>{{ recipe.description|truncatewords:10 }}</p>
-        <a href="{% url 'products:recipe_detail' recipe.slug %}">View Recipe</a>
-    </div>
-    {% endfor %}
-</div>
-{% else %}
-<p>No recipes</p>
-{% endif %}
+    .img-wrapper img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.3s;
+    }
 
-<h2>Categories</h2>
-{% if categories %}
-<div>
-    {% for category in categories %}
-    <div>
-        <h3>{{ category.name }}</h3>
-        <p>{{ category.products.count }} products</p>
-        <a href="{% url 'products:category_products' category.slug %}">Browse</a>
+    .product-card:hover .img-wrapper img {
+        transform: scale(1.05); /* Slight zoom on hover */
+    }
+
+    .card-body {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .price {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .btn-view {
+        width: 100%;
+        border-radius: 20px;
+    }
+</style>
+
+<div class="container py-5">
+    
+    <div class="text-center mb-5">
+        <h1>Welcome to Our Store</h1>
+        <p class="text-muted">Fresh, Organic, and Natural products.</p>
     </div>
-    {% endfor %}
+
+    <h2 class="mb-4">Featured Products</h2>
+    
+    {% if featured_products %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-5">
+        {% for product in featured_products %}
+        <div class="col">
+            <div class="product-card h-100">
+                <div class="img-wrapper">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <span>No Image</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'products:product_detail' product.slug %}" class="text-dark text-decoration-none">{{ product.name }}</a></h5>
+                    <p class="price">${{ product.price }}</p>
+                    <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm btn-view">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No featured products available.</p>
+    {% endif %}
+
+    <h2 class="mb-4">Combo Offers</h2>
+    
+    {% if product_baskets %}
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        {% for basket in product_baskets %}
+        <div class="col">
+            <div class="product-card h-100">
+                <div class="img-wrapper">
+                    <img src="{{ basket.image.url }}" alt="{{ basket.name }}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ basket.name }}</h5>
+                    <p class="price">${{ basket.price }}</p>
+                    <a href="{% url 'products:basket_detail' basket.slug %}" class="btn btn-outline-success btn-sm btn-view">View Combo</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2 class="mb-4">Categories</h2>
+    {% if categories %}
+    <div class="row row-cols-2 row-cols-md-6 g-3 mb-5">
+        {% for category in categories %}
+        <div class="col">
+            <div class="card text-center h-100 bg-light border-0">
+                <div class="card-body">
+                    <h6 class="mb-2">{{ category.name }}</h6>
+                    <a href="{% url 'products:category_products' category.slug %}" class="stretched-link text-decoration-none text-muted small">Browse</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
 </div>
-{% else %}
-<p>No categories</p>
-{% endif %}
+
 {% endblock %}

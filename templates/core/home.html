@@ -2,11 +2,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Obrien - Organic Food | Home{% endblock %}
-{% block description %}Welcome to Obrien - Your trusted source for organic food and healthy lifestyle products. Fresh, natural, and sustainable organic products delivered to your doorstep.{% endblock %}
+{% block title %}Arifarm{% endblock %}
+{% block description %}Welcome to Arifarm - Your trusted source for organic food and healthy lifestyle products. Fresh, natural, and sustainable organic products delivered to your doorstep.{% endblock %}
 
 {% block content %}
-<!-- Begin Slider Area One -->
 <div class="slider-area">
     <div class="obrien-slider arrow-style" data-slick-options='{
     "slidesToShow": 1,
@@ -28,8 +27,8 @@
     ]'>
         <div class="slide-item slide-1 bg-position slide-bg-1 animation-style-01">
             <div class="slider-content">
-                <h4 class="slider-small-title">Cold processed organic fruit</h4>
-                <h2 class="slider-large-title">Fresh Avocado</h2>
+                <h4 class="slider-small-title text-white">Fuel your body naturally</h4>
+                <h2 class="slider-large-title text-white">Eat Clean, Live Green</h2>
                 <div class="slider-btn">
                     <a class="obrien-button black-btn" href="{% url 'products:product_list' %}">Shop Now</a>
                 </div>
@@ -37,8 +36,8 @@
         </div>
         <div class="slide-item slide-2 bg-position slide-bg-1 animation-style-01">
             <div class="slider-content">
-                <h4 class="slider-small-title">Healthy life with</h4>
-                <h2 class="slider-large-title">Natural Organic</h2>
+                <h4 class="slider-small-title text-white">Healthy life with</h4>
+                <h2 class="slider-large-title text-white">Pure Organic Living</h2>
                 <div class="slider-btn">
                     <a class="obrien-button black-btn" href="{% url 'products:product_list' %}">Shop Now</a>
                 </div>
@@ -46,9 +45,6 @@
         </div>
     </div>
 </div>
-<!-- Slider Area One End Here -->
-
-<!-- Feature Area Start Here -->
 <div class="feature-area">
     <div class="container container-default custom-wrapper">
         <div class="row">
@@ -68,11 +64,6 @@
         </div>
     </div>
 </div>
-<!-- Feature Area End Here -->
-
-{# Replace this section in home.html #}
-
-<!-- Latest Products Area Start Here -->
 <div class="product-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -136,7 +127,6 @@
                                 <div class="price-box">
                                     <span class="regular-price">₵{{ product.price }}</span>
                                 </div>
-                                <!-- Added Date -->
                                 <div class="added-date mt-1">
                                     <small class="text-muted">
                                         <i class="fa fa-calendar"></i> Added {{ product.created_at|timesince }} ago
@@ -175,9 +165,6 @@
         </div>
     </div>
 </div>
-<!-- Latest Products Area End Here -->
-
-<!-- Mission Area Start Here -->
 <div class="feature-area feature-area-boxed-home mb-text">
     <div class="container container-default custom-area">
         <div class="row align-items-center">
@@ -202,9 +189,6 @@
         </div>
     </div>
 </div>
-<!-- Mission Area End Here -->
-
-<!-- Banner Area Start Here -->
 <div class="banner-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -232,9 +216,6 @@
         </div>
     </div>
 </div>
-<!-- Banner Area End Here -->
-
-<!-- Combo Offers Area Start Here -->
 {% if product_baskets %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -327,9 +308,6 @@
     </div>
 </div>
 {% endif %}
-<!-- Combo Offers Area End Here -->
-
-<!-- Featured Recipes Area Start Here -->
 {% if featured_recipes %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -426,9 +404,6 @@
     </div>
 </div>
 {% endif %}
-<!-- Featured Recipes Area End Here -->
-
-<!-- Merchandise Area Start Here -->
 {% if merchandise %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -520,9 +495,6 @@
     </div>
 </div>
 {% endif %}
-<!-- Merchandise Area End Here -->
-
-<!-- Categories Area Start Here -->
 {% if categories %}
 <div class="feature-area mb-text">
     <div class="container container-default custom-area">
@@ -567,9 +539,6 @@
     </div>
 </div>
 {% endif %}
-<!-- Categories Area End Here -->
-
-<!-- Newsletter Area Start Here -->
 <div class="newsletter-area">
     <div class="container container-default h-100 custom-area">
         <div class="row h-100">
@@ -585,22 +554,14 @@
                             <input type="email" id="mc-email" class="form-control email-box" placeholder="email@example.com" name="EMAIL">
                             <button id="mc-submit" class="btn primary-btn obrien-button newsletter-btn position-absolute" type="submit">Subscribe</button>
                         </form>
-                        <!-- mailchimp-alerts Start -->
                         <div class="mailchimp-alerts text-centre">
-                            <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
-                            <div class="mailchimp-success text-success"></div><!-- mailchimp-success end -->
-                            <div class="mailchimp-error text-danger"></div><!-- mailchimp-error end -->
+                            <div class="mailchimp-submitting"></div><div class="mailchimp-success text-success"></div><div class="mailchimp-error text-danger"></div></div>
                         </div>
-                        <!-- mailchimp-alerts end -->
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Newsletter Area End Here -->
-
-<!-- Support Area Start Here -->
 <div class="support-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -618,7 +579,6 @@
         </div>
     </div>
 </div>
-<!-- Support Area End Here -->
 {% endblock %}
 
 {% block extra_js %}

@@ -20,7 +20,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-*90*(^c#qj2k2o_pf41
 
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://97cdaf17bd7d.ngrok-free.app', '.ngrok-free.app', '.ngrok.io']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+]
+
 
 # ==================== APPLICATION DEFINITION ====================
 INSTALLED_APPS = [

@@ -1,12 +1,62 @@
-# core/views.py
 from django.views.generic import TemplateView
 from django.shortcuts import render
+# IMPORT MODELS to fix the missing products issue
+from products.models import Product, ProductBasket, Recipe, Category, Merchandise
+
+from django.views.generic import ListView
+from .models import GalleryItem, GalleryCategory
+
+# core/views.py (only GalleryView part shown)
+from django.views.generic import ListView
+from .models import GalleryItem, GalleryCategory
+
+class GalleryView(ListView):
+    model = GalleryItem
+    template_name = 'core/gallery.html'
+    context_object_name = 'gallery_items'
+    paginate_by = 12  # Increased for better display
+
+    def get_queryset(self):
+        return GalleryItem.objects.filter(is_active=True).select_related('category').order_by('order', '-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = GalleryCategory.objects.all().order_by('order', 'name')
+        return context
 
 # ============================
 # MAIN PAGES
 # ============================
+
 class HomeView(TemplateView):
     template_name = 'core/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # 1. Fetch Latest Products (Ordered by creation date so new ones show up)
+        context['featured_products'] = Product.objects.filter(
+            is_active=True
+        ).order_by('-created_at')[:8]
+
+        # 2. Fetch Combo Offers (Baskets)
+        context['product_baskets'] = ProductBasket.objects.filter(
+            is_active=True
+        ).prefetch_related('included_products__product')[:4]
+
+        # 3. Fetch Featured Recipes
+        context['featured_recipes'] = Recipe.objects.filter(
+            is_active=True, 
+            is_featured=True
+        ).prefetch_related('ingredients__product')[:4]
+
+        # 4. Fetch Categories
+        context['categories'] = Category.objects.filter(is_active=True)[:8]
+        
+        # 5. Fetch Merchandise
+        context['merchandise'] = Merchandise.objects.filter(is_active=True)[:4]
+        
+        return context
 
 class AboutView(TemplateView):
     template_name = 'core/about.html'
@@ -17,12 +67,11 @@ class ContactView(TemplateView):
 # ============================
 # ADMIN PAGES
 # ============================
+
 class AdminDashboardView(TemplateView):
-    # This matches the file we created at templates/admin/admin_dashboard.html
     template_name = 'admin/admin_dashboard.html'
 
 class AdminAddProductView(TemplateView):
-    # This matches the file we created at templates/admin/products/add_product.html
     template_name = 'admin/products/add_product.html'
 
 class AdminProductListView(TemplateView):
@@ -57,127 +106,3 @@ class AdminGalleryView(TemplateView):
 
 class AdminReportView(TemplateView):
     template_name = 'admin/report.html'
-
-
-# class ServicesView(TemplateView):
-#     template_name = 'core/services.html'
-
-
-# class TeamView(TemplateView):
-#     template_name = 'core/team.html'
-
-
-# class TeamCarouselView(TemplateView):
-#     template_name = 'core/team_carousel.html'
-
-
-# class PortfolioView(TemplateView):
-#     template_name = 'core/portfolio.html'
-
-
-# class PortfolioCarouselView(TemplateView):
-#     template_name = 'core/portfolio_carousel.html'
-
-
-# class PortfolioDetailsView(TemplateView):
-#     template_name = 'core/portfolio_details.html'
-
-
-# class TestimonialsView(TemplateView):
-#     template_name = 'core/testimonials.html'
-
-
-# class TestimonialsCarouselView(TemplateView):
-#     template_name = 'core/testimonials_carousel.html'
-
-
-# class PricingView(TemplateView):
-#     template_name = 'core/pricing.html'
-
-
-# class PricingCarouselView(TemplateView):
-#     template_name = 'core/pricing_carousel.html'
-
-
-# class FAQView(TemplateView):
-#     template_name = 'core/faq.html'
-
-
-# class Error404View(TemplateView):
-#     template_name = 'core/404.html'
-
-
-# # ============================
-# # SHOP PAGES
-# # ============================
-
-
-
-# class ProductListView(TemplateView):
-#     template_name = 'shop/product_list.html'
-
-
-# class ProductDetailsView(TemplateView):
-#     template_name = 'shop/product_details.html'
-
-
-# class CartView(TemplateView):
-#     template_name = 'shop/cart.html'
-
-
-# class CheckoutView(TemplateView):
-#     template_name = 'shop/checkout.html'
-
-
-# class WishlistView(TemplateView):
-#     template_name = 'shop/wishlist.html'
-
-
-# class MyAccountView(TemplateView):
-#     template_name = 'shop/my_account.html'
-
-
-# # ============================
-# # NEWS / BLOG PAGES
-# # ============================
-# class NewsView(TemplateView):
-#     template_name = 'news/news.html'
-
-
-# class NewsCarouselView(TemplateView):
-#     template_name = 'news/news_carousel.html'
-
-
-# class NewsSidebarView(TemplateView):
-#     template_name = 'news/news_sidebar.html'
-
-
-# class NewsDetailsView(TemplateView):
-#     template_name = 'news/news_details.html'
-
-
-# # ============================
-# # SERVICE PAGES
-# # ============================
-# class AgricultureServicesView(TemplateView):
-#     template_name = 'services/agriculture_services.html'
-
-
-# class OrganicServicesView(TemplateView):
-#     template_name = 'services/organic_services.html'
-
-
-# class DeliveryServicesView(TemplateView):
-#     template_name = 'services/delivery_services.html'
-
-
-# class FarmingProductsView(TemplateView):
-#     template_name = 'services/farming_products.html'
-
-
-
-# def search_view(request):
-#     query = request.GET.get('q', '').strip()
-#     # Later you can search products here
-#     context = {'query': query}
-#     return render(request, 'core/search_results.html', context)
