@@ -5,7 +5,6 @@
 
 {% block content %}
 
-<!-- Breadcrumb -->
 <div class="breadcumb-wrapper" data-bg-src="{% static 'assets/img/bg/breadcumb-bg.jpg' %}">
     <div class="container">
         <div class="breadcumb-content">
@@ -18,7 +17,6 @@
     </div>
 </div>
 
-<!-- Gallery Section -->
 <section class="space">
     <div class="container">
         <div class="title-area text-center mb-50">
@@ -29,7 +27,6 @@
             <p class="sec-text">Fresh harvests, farm activities, and real moments – captured and shared</p>
         </div>
 
-        <!-- Category Filter -->
         <div class="gallery-filter mb-50">
             <div class="filter-nav d-flex justify-content-center flex-wrap gap-3">
                 <button class="filter-btn active" data-filter="*">All</button>
@@ -39,21 +36,42 @@
             </div>
         </div>
 
-        <!-- Gallery Grid -->
         <div class="row gy-30 gallery-grid">
             {% for item in gallery_items %}
             <div class="col-xl-4 col-md-6 gallery-item cat-{{ item.category.slug }}">
                 <div class="gallery-card style-hover">
-                    <div class="box-img position-relative">
+                    
+                    <div class="box-img position-relative" style="cursor: pointer;">
+                        
                         {% if item.get_thumbnail_url %}
-                            <img src="{{ item.get_thumbnail_url }}" alt="{{ item.title }}" class="w-100" style="height: 400px; object-fit: cover;">
+                            <img 
+                                src="{{ item.get_thumbnail_url }}" 
+                                alt="{{ item.title }}" 
+                                class="w-100" 
+                                style="height: 400px; object-fit: cover;"
+                                onerror="this.style.display='none'; document.getElementById('fallback-{{ item.id }}').style.display='flex';"
+                            >
+                            
+                            <div id="fallback-{{ item.id }}" class="social-placeholder {{ item.media_type }}" style="display: none;">
+                                <span>
+                                    {% if item.media_type == 'tiktok' %} <i class="fab fa-tiktok fa-3x"></i>
+                                    {% elif item.media_type == 'instagram' %} <i class="fab fa-instagram fa-3x"></i>
+                                    {% else %} <i class="fas fa-play fa-3x"></i> {% endif %}
+                                </span>
+                                <span class="mt-3 fs-6">Click to Watch</span>
+                            </div>
+
                         {% else %}
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
-                                <span class="text-muted">No Preview</span>
+                            <div class="social-placeholder {{ item.media_type }}">
+                                <span>
+                                    {% if item.media_type == 'tiktok' %} <i class="fab fa-tiktok fa-3x"></i>
+                                    {% elif item.media_type == 'instagram' %} <i class="fab fa-instagram fa-3x"></i>
+                                    {% else %} <i class="fas fa-image fa-3x"></i> {% endif %}
+                                </span>
+                                <span class="mt-3 fs-6">Click to Watch</span>
                             </div>
                         {% endif %}
 
-                        <!-- Media Type Badge -->
                         <div class="content-type-badge {{ item.media_type }}">
                             {% if item.media_type == 'image' %}
                                 <i class="fas fa-camera"></i> Photo
@@ -66,18 +84,14 @@
                             {% endif %}
                         </div>
 
-                        <!-- External Link (for social media) -->
-                        {% if item.social_url %}
-                        <a href="{{ item.social_url }}" target="_blank" class="icon-btn style2">
-                            <i class="fab fa-{{ item.media_type }}"></i>
-                        </a>
-                        {% endif %}
+                        <div class="play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
                     </div>
-
                     <div class="box-content">
                         <h3 class="box-title">{{ item.title }}</h3>
                         {% if item.description %}
-                            <p class="mb-0">{{ item.description }}</p>
+                            <p class="mb-0 text-truncate">{{ item.description }}</p>
                         {% endif %}
                         <div class="gallery-category mt-3">
                             <span class="category-tag">{{ item.category.name }}</span>
@@ -85,34 +99,45 @@
                     </div>
                 </div>
 
-                <!-- Lightbox Modal -->
-                <div class="modal fade" id="modal-{{ item.id }}" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal fade" id="modal-{{ item.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered {% if item.media_type == 'tiktok' or item.media_type == 'instagram' %}vertical-media-modal{% else %}modal-xl{% endif %}">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">{{ item.title }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title ps-2">{{ item.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body p-0">
+                            <div class="modal-body p-3">
+                                
                                 {% if item.media_type == 'image' and item.image %}
-                                    <img src="{{ item.image.url }}" class="img-fluid w-100" alt="{{ item.title }}">
+                                    <img src="{{ item.image.url }}" class="img-fluid w-100 rounded" alt="{{ item.title }}">
 
                                 {% elif item.media_type == 'youtube' and item.get_youtube_embed_url %}
                                     <div class="ratio ratio-16x9">
-                                        <iframe src="{{ item.get_youtube_embed_url }}?autoplay=1" allowfullscreen></iframe>
+                                        <iframe 
+                                            src="{{ item.get_youtube_embed_url }}" 
+                                            title="YouTube video player" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            referrerpolicy="strict-origin-when-cross-origin" 
+                                            allowfullscreen>
+                                        </iframe>
                                     </div>
 
                                 {% elif item.media_type == 'instagram' and item.get_instagram_embed_url %}
-                                    <iframe src="{{ item.get_instagram_embed_url }}" width="100%" height="600" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                                    <div class="d-flex justify-content-center">
+                                        <iframe src="{{ item.get_instagram_embed_url }}" class="instagram-frame" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                                    </div>
 
                                 {% elif item.media_type == 'tiktok' and item.get_tiktok_embed_code %}
-                                    {{ item.get_tiktok_embed_code|safe }}
+                                    <div class="tiktok-container d-flex justify-content-center">
+                                        {{ item.get_tiktok_embed_code|safe }}
+                                    </div>
 
                                 {% endif %}
                             </div>
                             {% if item.description %}
-                            <div class="modal-footer">
-                                <p class="mb-0">{{ item.description }}</p>
+                            <div class="modal-footer justify-content-start border-0 pt-0">
+                                <p class="text-muted">{{ item.description }}</p>
                             </div>
                             {% endif %}
                         </div>
@@ -130,27 +155,59 @@
 </section>
 
 <style>
-/* Reuse your existing beautiful styles */
-.gallery-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:all .3s; height:100%; }
-.gallery-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
-.box-img { position:relative; overflow:hidden; background:#f8f9fa; }
-.content-type-badge { position:absolute; top:15px; left:15px; padding:6px 14px; border-radius:30px; font-size:13px; font-weight:600; color:white; z-index:2; }
-.content-type-badge.image { background:#7BB564; }
-.content-type-badge.youtube { background:#FF0000; }
-.content-type-badge.instagram { background:#E4405F; }
-.content-type-badge.tiktok { background:#000000; }
-.icon-btn.style2 { position:absolute; bottom:15px; right:15px; background:rgba(255,255,255,0.9); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#333; font-size:18px; }
-.icon-btn.style2:hover { background:#7BB564; color:white; }
-.box-content { padding:25px; }
-.box-title { font-size:20px; margin-bottom:10px; }
-.category-tag { background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:13px; }
-.filter-btn { padding:10px 24px; border-radius:30px; border:2px solid #e9ecef; background:#f8f9fa; font-weight:600; }
-.filter-btn.active, .filter-btn:hover { background:#7BB564; border-color:#7BB564; color:white; }
+    /* --- Card Styles --- */
+    .gallery-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,0.08); transition:all .3s; height:100%; display: flex; flex-direction: column; }
+    .gallery-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
+    .box-img { position:relative; overflow:hidden; background:#f8f9fa; }
+    
+    /* Play Overlay */
+    .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; z-index: 1; pointer-events: none; }
+    .play-overlay i { color: white; font-size: 3rem; }
+    .box-img:hover .play-overlay { opacity: 1; }
+
+    /* --- Social Placeholders (The fix for broken images) --- */
+    .social-placeholder { height: 400px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: bold; transition: all 0.3s ease; }
+    .social-placeholder.tiktok { background-color: #000000; }
+    .social-placeholder.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+    .social-placeholder.youtube { background-color: #000; }
+    .social-placeholder.image { background-color: #f0f0f0; color: #999; }
+
+    /* --- Badges --- */
+    .content-type-badge { position:absolute; top:15px; left:15px; padding:6px 14px; border-radius:30px; font-size:13px; font-weight:600; color:white; z-index:2; }
+    .content-type-badge.image { background:#7BB564; }
+    .content-type-badge.youtube { background:#FF0000; }
+    .content-type-badge.instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+    .content-type-badge.tiktok { background:#000000; }
+
+    .box-content { padding:25px; flex-grow: 1; display: flex; flex-direction: column; }
+    .box-title { font-size:20px; margin-bottom:10px; }
+    .gallery-category { margin-top: auto; }
+    .category-tag { background:#f0f0f0; padding:5px 12px; border-radius:20px; font-size:13px; }
+    
+    /* --- Filter Buttons --- */
+    .filter-btn { padding:10px 24px; border-radius:30px; border:2px solid #e9ecef; background:#f8f9fa; font-weight:600; transition: 0.3s; }
+    .filter-btn.active, .filter-btn:hover { background:#7BB564; border-color:#7BB564; color:white; }
+
+    /* --- RESPONSIVE MODAL FIXES --- */
+    /* Desktop: Force Instagram/TikTok modals to be narrow (phone-like) */
+    @media (min-width: 992px) {
+        .vertical-media-modal { max-width: 450px; margin: 1.75rem auto; }
+        .instagram-frame { height: 650px; width: 100%; }
+    }
+    
+    /* Mobile: Let them be full width */
+    @media (max-width: 991px) {
+        .vertical-media-modal { max-width: 95%; margin: 1rem auto; }
+        .instagram-frame { height: 500px; width: 100%; }
+    }
+
+    /* TikTok Embed Fixes */
+    .tiktok-container blockquote { margin: 0 !important; min-width: unset !important; width: 100% !important; }
 </style>
 
 <script>
-// Simple filter
 document.addEventListener('DOMContentLoaded', () => {
+    // Filter Logic
     const buttons = document.querySelectorAll('.filter-btn');
     const items = document.querySelectorAll('.gallery-item');
 
@@ -170,11 +227,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Trigger click on modal (lightbox)
-    document.querySelectorAll('.gallery-card .box-img img').forEach(img => {
-        img.closest('.gallery-card').querySelector('.box-img').addEventListener('click', () => {
-            const modalId = img.closest('.gallery-item').querySelector('.modal').id;
-            new bootstrap.Modal(document.getElementById(modalId)).show();
+    // Modal Trigger Logic
+    document.querySelectorAll('.gallery-card .box-img').forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            // Find the modal ID associated with this item
+            const cardItem = this.closest('.gallery-item');
+            const modalEl = cardItem.querySelector('.modal');
+            
+            // Feature: Stop Youtube/Video Audio when closing modal
+            modalEl.addEventListener('hidden.bs.modal', function () {
+                const iframe = modalEl.querySelector('iframe');
+                if (iframe) {
+                    const iframeSrc = iframe.src;
+                    iframe.src = iframeSrc; // Reset src to force stop
+                }
+            });
+
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
         });
     });
 });
