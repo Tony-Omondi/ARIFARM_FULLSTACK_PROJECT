@@ -13,24 +13,14 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.png' %}">
 
     <!-- CSS -->
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="{% static 'assets/css/vendor/font.awesome.min.css' %}">
-    <!-- Ionicons -->
     <link rel="stylesheet" href="{% static 'assets/css/vendor/ionicons.min.css' %}">
-    <!-- Slick CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/slick.min.css' %}">
-    <!-- Animation -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}">
-    <!-- jQuery Ui -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/jquery-ui.min.css' %}">
-    <!-- Nice Select -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/nice-select.min.css' %}">
-    <!-- Magnific Popup -->
     <link rel="stylesheet" href="{% static 'assets/css/plugins/magnific-popup.css' %}">
-
-    <!-- Main Style CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     
     {% block extra_css %}{% endblock %}
@@ -54,6 +44,107 @@
     <!-- Modal Area -->
     {% include 'includes/modal.html' %}
 
+    <!-- Promotional Popup -->
+    {% if promotional_popup %}
+    <div class="promotional-popup-overlay" id="promoPopupOverlay">
+        <div class="promotional-popup-content">
+            <button class="promo-close-btn" id="promoCloseBtn" aria-label="Close">&times;</button>
+            
+            {% if promotional_popup.link_url %}
+            <a href="{{ promotional_popup.link_url }}" target="_blank" rel="noopener">
+                <img src="{{ promotional_popup.flyer_image.url }}" alt="{{ promotional_popup.title }}" class="img-fluid">
+            </a>
+            {% else %}
+            <img src="{{ promotional_popup.flyer_image.url }}" alt="{{ promotional_popup.title }}" class="img-fluid">
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .promotional-popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .promotional-popup-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 95vh;
+        }
+        .promotional-popup-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .promo-close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: white;
+            color: #333;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 30px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .promo-close-btn {
+                top: -10px;
+                right: -10px;
+                width: 38px;
+                height: 38px;
+                font-size: 26px;
+            }
+        }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.getElementById('promoPopupOverlay');
+        const closeBtn = document.getElementById('promoCloseBtn');
+        if (!overlay) return;
+
+        function closePopup() {
+            overlay.style.display = 'none';
+            {% if promotional_popup.show_once_per_session %}
+            sessionStorage.setItem('promoPopupSeen_{{ promotional_popup.id }}', 'true');
+            {% endif %}
+        }
+
+        closeBtn.addEventListener('click', closePopup);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) closePopup();
+        });
+
+        // Check if already seen
+        const seenKey = 'promoPopupSeen_{{ promotional_popup.id }}';
+        const alreadySeen = {% if promotional_popup.show_once_per_session %}sessionStorage.getItem(seenKey) === 'true'{% else %}false{% endif %};
+
+        if (!alreadySeen) {
+            setTimeout(function() {
+                overlay.style.display = 'flex';
+            }, {{ promotional_popup.delay_seconds|default:3 }} * 1000);
+        }
+    });
+    </script>
+    {% endif %}
+    <!-- End Promotional Popup -->
+
     <!-- Scroll to Top Start -->
     <a class="scroll-to-top" href="#">
         <i class="ion-chevron-up"></i>
@@ -61,28 +152,16 @@
     <!-- Scroll to Top End -->
 
     <!-- JS -->
-    <!-- jQuery JS -->
     <script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>
-    <!-- jQuery Migrate JS -->
     <script src="{% static 'assets/js/vendor/jquery-migrate-3.3.2.min.js' %}"></script>
-    <!-- Modernizer JS -->
     <script src="{% static 'assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
-    <!-- Bootstrap JS -->
     <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
-    <!-- Slick Slider JS -->
     <script src="{% static 'assets/js/plugins/slick.min.js' %}"></script>
-    <!-- Countdown JS -->
     <script src="{% static 'assets/js/plugins/jquery.countdown.min.js' %}"></script>
-    <!-- Ajax JS -->
     <script src="{% static 'assets/js/plugins/jquery.ajaxchimp.min.js' %}"></script>
-    <!-- Jquery Nice Select JS -->
     <script src="{% static 'assets/js/plugins/jquery.nice-select.min.js' %}"></script>
-    <!-- Jquery Ui JS -->
     <script src="{% static 'assets/js/plugins/jquery-ui.min.js' %}"></script>
-    <!-- jquery magnific popup js -->
     <script src="{% static 'assets/js/plugins/jquery.magnific-popup.min.js' %}"></script>
-
-    <!-- Main JS -->
     <script src="{% static 'assets/js/main.js' %}"></script>
     
     {% block extra_js %}{% endblock %}

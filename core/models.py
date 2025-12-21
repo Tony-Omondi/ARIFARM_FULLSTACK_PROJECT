@@ -107,3 +107,30 @@ class GalleryItem(models.Model):
             return self.social_url.split('/video/')[-1].split('?')[0]
         except:
             return None
+
+
+
+
+class PromotionalPopup(models.Model):
+    title = models.CharField(max_length=200, help_text="Internal name (for admin only)")
+    flyer_image = models.ImageField(upload_to='promotions/', help_text="The promotional flyer/banner image")
+    link_url = models.URLField(blank=True, null=True, help_text="Optional: Where to go when flyer is clicked (e.g., referral page or WhatsApp)")
+    is_active = models.BooleanField(default=False, help_text="Check to show popup site-wide")
+    show_once_per_session = models.BooleanField(default=True, help_text="If checked, popup shows only once per browser session")
+    delay_seconds = models.PositiveIntegerField(default=3, help_text="Seconds to wait before showing popup")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Promotional Popup"
+        verbose_name_plural = "Promotional Popups"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+    @staticmethod
+    def get_active_popup():
+        """Return the first active popup (supports only one active at a time)"""
+        return PromotionalPopup.objects.filter(is_active=True).first()
