@@ -1,0 +1,65 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Order #{{ order.id }}</h3>
+    <a href="{% url 'dashboard:order_list' %}" class="btn btn-outline-secondary">Back to List</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white">Items Ordered</div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead><tr><th>Item</th><th>Qty</th><th class="text-end">Price</th></tr></thead>
+                    <tbody>
+                        {% for item in order.items %}
+                        <tr>
+                            <td>
+                                {% if item.product %}
+                                    {{ item.product.name }}
+                                {% else %}
+                                    <span class="badge bg-info text-dark">Basket</span> {{ item.basket.name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td class="text-end">{{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr><td colspan="2" class="text-end">Subtotal:</td><td class="text-end">{{ order.subtotal_amount }}</td></tr>
+                        <tr><td colspan="2" class="text-end">Delivery:</td><td class="text-end">{{ order.delivery_fee }}</td></tr>
+                        <tr><td colspan="2" class="text-end fw-bold">TOTAL:</td><td class="text-end fw-bold">KES {{ order.total_amount }}</td></tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-white">Customer Details</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6"><p><strong>Name:</strong> {{ order.user.get_full_name }}</p></div>
+                    <div class="col-md-6"><p><strong>Phone:</strong> {{ order.phone_number }}</p></div>
+                    <div class="col-md-6"><p><strong>Email:</strong> {{ order.email }}</p></div>
+                    <div class="col-md-6"><p><strong>Zone:</strong> {{ order.zone.name }}</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-primary">
+            <div class="card-header bg-primary text-white">Update Status</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.status }}
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Update Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

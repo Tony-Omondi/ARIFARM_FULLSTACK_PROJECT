@@ -1,0 +1,38 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<h3>Active Customer Carts</h3>
+<p class="text-muted">Showing carts with items that haven't been checked out.</p>
+
+<div class="row mt-3">
+    {% for cart in carts %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light d-flex justify-content-between">
+                <span class="fw-bold">{{ cart.user.username }}</span>
+                <span class="badge bg-secondary">{{ cart.item_count }} Items</span>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-3">
+                    {% for item in cart.items.all|slice:":3" %}
+                    <li class="small mb-1 border-bottom pb-1">
+                        {{ item.quantity }}x {% if item.product %}{{ item.product.name }}{% else %}{{ item.basket.name }}{% endif %}
+                    </li>
+                    {% endfor %}
+                    {% if cart.item_count > 3 %}
+                        <li class="small text-muted text-center mt-2">+ {{ cart.item_count|add:"-3" }} more...</li>
+                    {% endif %}
+                </ul>
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                    <span class="text-muted small">Potential Value:</span>
+                    <span class="fw-bold text-success">KES {{ cart.total_price }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No active carts found right now.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
