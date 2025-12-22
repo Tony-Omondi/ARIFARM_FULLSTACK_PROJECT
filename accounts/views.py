@@ -1,10 +1,11 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string  # <--- NEW IMPORT
+from django.utils.html import strip_tags             # <--- NEW IMPORT
 from django.contrib.auth.views import (
     PasswordResetView,
     PasswordResetDoneView,
@@ -36,13 +37,28 @@ def email_register(request):
             token = str(uuid.uuid4())
             EmailVerification.objects.create(user=user, token=token)
 
-            # Send verification email (same as before)
+            # Prepare Email Data
             verification_url = f"{settings.SITE_URL}/accounts/verify-email/{token}/"
+            
+            # Context for the HTML template
+            context = {
+                'user': user,
+                'verification_url': verification_url,
+            }
+
+            # Render HTML content
+            html_message = render_to_string('accounts/verification_email.html', context)
+            
+            # Create Plain Text fallback (strips HTML tags)
+            plain_message = strip_tags(html_message)
+
+            # Send Email (Both HTML and Plain Text)
             send_mail(
-                subject='Verify Your Email - Oreg Organic Shop',
-                message=f'Hi {user.email},\n\nClick the link below to verify your account:\n\n{verification_url}\n\nThank you!',
+                subject='Verify Your Email - AriFarm Shop',
+                message=plain_message,            # Fallback for old email clients
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
+                html_message=html_message,        # The beautiful HTML version
                 fail_silently=False,
             )
 
@@ -71,27 +87,43 @@ def admin_login(request):
             return redirect('/admin/')  # Redirect to Django admin dashboard
         else:
             messages.error(request, 'Invalid admin credentials')
+    
+    return render(request, 'accounts/admin_login.html')
 
 
 def verify_email(request, token):
     try:
         verification = EmailVerification.objects.get(token=token, is_used=False)
         user = verification.user
+        
+        # Activate and verify the user
         user.is_verified = True
+        user.is_active = True  # Ensure user is active
         user.save()
+        
+        # Mark verification as used
         verification.is_used = True
         verification.save()
 
-        messages.success(request, 'Email verified successfully! You can now login.')
-        login(request, user)  # Auto-login after verification
+        # FIX: Set the backend explicitly before login to avoid "multiple authentication backends" error
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        
+        # Auto-login after verification
+        login(request, user)
+        
+        messages.success(request, 'Email verified successfully! You are now logged in.')
         return redirect('email_verified')
+    
     except EmailVerification.DoesNotExist:
         messages.error(request, 'Invalid or expired verification link.')
         return render(request, 'accounts/verification_invalid.html')
 
 
 def email_verification_sent(request):
-    return render(request, 'accounts/email_verification_sent.html')
+    # Get email from session
+    email = request.session.get('registered_email', '')
+    return render(request, 'accounts/email_verification_sent.html', {'email': email})
+
 
 def email_verified(request):
     return render(request, 'accounts/email_verified.html')
@@ -144,7 +176,13 @@ def profile(request):
 # =============================== PASSWORD RESET (FIXED + WORKING) ===============================
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'accounts/password_reset.html'
-    email_template_name = 'accounts/password_reset_email.html'
+    
+    # 1. Used for plain text version (Optional if you only care about HTML clients)
+    email_template_name = 'accounts/password_reset_email.html' 
+    
+    # 2. ADD THIS: Django uses this attribute to send the HTML version
+    html_email_template_name = 'accounts/password_reset_email.html' 
+    
     subject_template_name = 'accounts/password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
 
@@ -166,7 +204,6 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         user = form.save()
         
         # Manual login with explicit backend → FIXES THE MULTIPLE BACKENDS ERROR
-        from django.contrib.auth import login
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         
         messages.success(self.request, 'Password changed successfully! You are now logged in.')
@@ -175,7 +212,3 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
-
-
-# Optional: Remove admin_login if you don't want separate admin page
-# def admin_login(request): ... → you can delete this entirely if not needed

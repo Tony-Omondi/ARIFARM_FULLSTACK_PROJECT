@@ -5,6 +5,21 @@
     {% if view.extra_context.title == 'Promotional Popups' %}
         <a href="{% url 'dashboard:popup_create' %}" class="btn btn-success">+ Add Popup</a>
     {% endif %}
+    {% if view.extra_context.title == 'Delivery Zones' %}
+        <a href="{% url 'dashboard:zone_create' %}" class="btn btn-success">+ Add Zone</a>
+    {% endif %}
+    {% if view.extra_context.title == 'Gallery Categories' %}
+        <a href="{% url 'dashboard:gallery_cat_create' %}" class="btn btn-success">+ Add Category</a>
+    {% endif %}
+    {% if view.extra_context.title == 'Gallery Items' %}
+        <a href="{% url 'dashboard:gallery_item_create' %}" class="btn btn-success">+ Add Item</a>
+    {% endif %}
+    {% if view.extra_context.title == 'Merchandise' %}
+        <a href="{% url 'dashboard:merch_create' %}" class="btn btn-success">+ Add Merch</a>
+    {% endif %}
+    {% if view.extra_context.title == 'Recipes' %}
+        <a href="{% url 'dashboard:recipe_create' %}" class="btn btn-success">+ Add Recipe</a>
+    {% endif %}
 </div>
 <div class="card">
     <table class="table table-hover mb-0">
@@ -19,7 +34,8 @@
                     {% endif %}
                 </td>
                 <td class="text-end">
-                    <a href="{{ request.path }}{{ item.pk }}/edit/" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a href="{{ request.path }}{{ item.pk }}/edit/" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a href="{{ request.path }}{{ item.pk }}/delete/" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
                 </td>
             </tr>
             {% empty %}

@@ -4,57 +4,81 @@
 {% block title %}Check Your Email - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<section class="page-wrapper de-padding">
-    <div class="container">
-        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
-            <div class="container">
-                <h2 class="breadcrumb-title">Check Your Email</h2>
-                <ul class="breadcrumb-menu clearfix">
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li class="active">Verification</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="reg-area bg de-padding">
-            <div class="container">
-                <div class="reg-wpr grid-center">
-                    <div class="login-form text-center" style="max-width: 520px;">
-
-                        <i class="header-icon mb-30">
-                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
-                        </i>
-
-                        <div class="mb-40">
-                            <i class="icofont-email" style="font-size: 90px; color: #37582D;"></i>
-                        </div>
-
-                        <h3 style="color: #37582D;">We've Sent You an Email!</h3>
-                        <p class="text-muted mb-30" style="font-size: 18px;">
-                            A verification link has been sent to:<br>
-                            <strong>{{ request.session.registered_email|default:"your email" }}</strong>
-                        </p>
-
-                        <div class="p-30 mb-40" style="background: rgba(55,88,45,0.08); border-radius: 16px;">
-                            <h5 class="mb-20" style="color: #37582D;">Next Steps:</h5>
-                            <ol class="text-start" style="font-size: 15px; line-height: 2;">
-                                <li>Open your email inbox</li>
-                                <li>Find the email from Oreg Organic Shop</li>
-                                <li>Click the verification button</li>
-                            </ol>
-                        </div>
-
-                        <p class="text-muted mb-40">
-                            <strong>Tip:</strong> Check your <strong>Spam/Junk</strong> folder if you don't see it.
-                        </p>
-
-                        <a href="{% url 'home' %}" class="btn-6" style="padding: 14px 40px;">
-                            <i class="icofont-home mr-2"></i> Back to Home
-                        </a>
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">Verification</h3>
+                        <ul>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li>Check Email</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-{% endblock %}
+    <div class="login-register-area mt-no-text mb-no-text">
+        <div class="container container-default-2 custom-area">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-custom">
+                    <div class="login-register-wrapper">
+                        
+                        <div class="text-center mb-4">
+                            <a href="{% url 'home' %}">
+                                <img src="{% static 'assets/images/logo/logo.png' %}" alt="AriFarm Logo" style="height: 60px;">
+                            </a>
+                        </div>
+
+                        <div class="section-content text-center mb-4">
+                            <div class="mb-4">
+                                <i class="icofont-email" style="font-size: 80px; color: #5a9d3e;"></i> 
+                                </div>
+
+                            <h2 class="title-4 mb-2">Check Your Inbox!</h2>
+                            
+                            <p class="desc-content mb-4">
+                                We've sent a verification link to:<br>
+                                <span style="color: #333; font-weight: 600; font-size: 18px;">
+                                    {{ request.session.registered_email|default:"your email address" }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="single-input-item mb-4">
+                            <div class="alert" style="background-color: #f4f9f2; border: 1px solid #e0ebd9; border-radius: 8px; text-align: left; padding: 20px;">
+                                <h6 class="mb-2" style="color: #333; font-weight: 600;">Next Steps:</h6>
+                                <ol class="mb-0 pl-3" style="line-height: 1.8; color: #555;">
+                                    <li>Open your email inbox.</li>
+                                    <li>Find the email from <strong>AriFarm</strong>.</li>
+                                    <li>Click the verification button inside.</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="single-input-item text-center mb-4">
+                            <p class="mb-0" style="font-size: 14px; color: #666;">
+                                <i class="icofont-info-circle"></i> 
+                                Don't see it? Check your <strong>Spam</strong> or <strong>Junk</strong> folder.
+                            </p>
+                        </div>
+
+                        <div class="single-input-item mb-3">
+                            <a href="{% url 'home' %}" class="btn obrien-button-2 primary-color w-100">
+                                <i class="icofont-home mr-2"></i> Back to Home
+                            </a>
+                        </div>
+                        
+                        <div class="single-input-item text-center mt-3">
+                            <p class="mb-0" style="font-size: 14px;">
+                                Wrong email? <a href="{% url 'email_register' %}" style="text-decoration: underline;">Register again</a>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

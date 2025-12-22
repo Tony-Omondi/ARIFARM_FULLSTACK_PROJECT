@@ -7,9 +7,12 @@
     {% for cart in carts %}
     <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm">
-            <div class="card-header bg-light d-flex justify-content-between">
-                <span class="fw-bold">{{ cart.user.username }}</span>
-                <span class="badge bg-secondary">{{ cart.item_count }} Items</span>
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold">{{ cart.user.username }}</span>
+                    <span class="badge bg-secondary ms-2">{{ cart.item_count }} Items</span>
+                </div>
+                <a href="{% url 'dashboard:cart_delete' cart.pk %}" class="text-danger" title="Delete Cart"><i class="bi bi-trash"></i></a>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-3">

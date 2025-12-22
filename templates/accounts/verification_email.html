@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #5a9d3e; padding-bottom: 20px; }
+        .logo { font-size: 26px; font-weight: bold; color: #5a9d3e; text-decoration: none; }
+        .content { margin-bottom: 30px; }
+        .btn-wrapper { text-align: center; margin: 35px 0; }
+        .btn { display: inline-block; padding: 15px 35px; background-color: #5a9d3e; color: #ffffff !important; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; transition: background 0.3s; }
+        .btn:hover { background-color: #4a8c2e; }
+        .footer { font-size: 12px; color: #888; margin-top: 40px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+        .link-text { color: #5a9d3e; word-break: break-all; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="logo">AriFarm Organic Shop</span>
+        </div>
+        
+        <div class="content">
+            <p>Hi {{ user.first_name|default:"there" }},</p>
+            
+            <p>Welcome to <strong>AriFarm</strong>! We are excited to help you get started with the best organic products.</p>
+            <p>To activate your account and start shopping, please verify your email address by clicking the button below:</p>
+            
+            <div class="btn-wrapper">
+                <a href="{{ verification_url }}" class="btn">Verify Account</a>
+            </div>
+            
+            <p style="font-size: 14px; color: #666;">
+                Or copy and paste this link into your browser:<br>
+                <a href="{{ verification_url }}" class="link-text">{{ verification_url }}</a>
+            </p>
+        </div>
+        
+        <div class="footer">
+            &copy; {% now "Y" %} AriFarm Organic Shop. All rights reserved.<br>
+            If you did not create this account, please ignore this email.
+        </div>
+    </div>
+</body>
+</html>

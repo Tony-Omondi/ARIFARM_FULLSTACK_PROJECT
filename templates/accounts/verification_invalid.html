@@ -4,67 +4,66 @@
 {% block title %}Verification Failed - Oreg Organic Shop{% endblock %}
 
 {% block content %}
-<section class="page-wrapper de-padding">
-    <div class="container">
-        <div class="site-breadcrumb" style="background: url({% static 'assets/img/breadcrumb/breadcrumb.jpg' %})">
-            <div class="container">
-                <h2 class="breadcrumb-title">Verification Failed</h2>
-                <ul class="breadcrumb-menu clearfix">
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li class="active">Verification Error</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="reg-area bg de-padding">
-            <div class="container">
-                <div class="reg-wpr grid-center">
-                    <div class="login-form text-center" style="max-width: 520px; margin: 0 auto;">
-
-                        <i class="header-icon mb-30">
-                            <img src="{% static 'assets/img/logo/logo.png' %}" alt="Oreg" style="height: 60px;">
-                        </i>
-
-                        <div class="mb-40">
-                            <div style="width: 110px; height: 110px; background: #e74c3c; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin: 0 auto; border: 6px solid #ffeaea;">
-                                <i class="icofont-close-circled" style="font-size: 56px; color: white;"></i>
-                            </div>
-                        </div>
-
-                        <h3 style="color: #e74c3c; font-weight: 600;">Verification Link Invalid</h3>
-                        <p class="text-muted mb-40" style="font-size: 18px;">
-                            The verification link is either expired, already used, or invalid.
-                        </p>
-
-                        <br><strong>Don't worry — we can fix this!</strong>
-                        </p>
-
-                        <div class="p-30 mb-40" style="background: #fff5f5; border-radius: 16px; border: 1px solid #fab1a0;">
-                            <h5 class="mb-20" style="color: #c0392b;">Possible Reasons:</h5>
-                            <ul class="text-start mb-0" style="font-size: 15px; line-height: 2;">
-                                <li><i class="icofont-close-circled text-danger mr-2"></i> The link was already used</li>
-                                <li><i class="icofont-close-circled text-danger mr-2"></i> The link expired after 24 hours</li>
-                                <li><i class="icofont-close-circled text-danger mr-2"></i> Your account is already verified</li>
-                            </ul>
-                        </div>
-
-                        <div class="action-buttons">
-                            <a href="{% url 'login' %}" class="btn-6 mr-15 mb-10">
-                                <i class="icofont-login mr-2"></i> Login to Account
-                            </a>
-                            <a href="{% url 'email_register' %}" class="btn-6 mb-10" style="background: #f8f9fa; color: #e74c3c; border: 1px solid #fab1a0;">
-                                <i class="icofont-user-plus mr-2"></i> Register Again
-                            </a>
-                            <div class="mt-20">
-                                <a href="{% url 'home' %}" class="btn-6" style="background: #f1f8e9; color: #37582D;">
-                                    <i class="icofont-home mr-2"></i> Back to Homepage
-                                </a>
-                            </div>
-                        </div>
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">Verification Error</h3>
+                        <ul>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li>Failed</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-{% endblock %}
+    <div class="login-register-area mt-no-text mb-no-text">
+        <div class="container container-default-2 custom-area">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-custom">
+                    <div class="login-register-wrapper">
+                        
+                        <div class="text-center mb-4">
+                            <a href="{% url 'home' %}">
+                                <img src="{% static 'assets/images/logo/logo.png' %}" alt="AriFarm Logo" style="height: 60px;">
+                            </a>
+                        </div>
+
+                        <div class="section-content text-center mb-4">
+                            <div class="mb-4">
+                                <i class="icofont-close-circled" style="font-size: 80px; color: #dc3545;"></i>
+                            </div>
+
+                            <h2 class="title-4 mb-2" style="color: #dc3545;">Link Invalid or Expired</h2>
+                            
+                            <p class="desc-content mb-4">
+                                We couldn't verify your account. The link you clicked is either invalid, expired, or has already been used.
+                            </p>
+                        </div>
+
+                        <div class="single-input-item mb-4">
+                            <div class="alert" style="background-color: #fff5f5; border: 1px solid #fcc; border-radius: 8px; text-align: left; padding: 20px;">
+                                <h6 class="mb-2" style="color: #c0392b; font-weight: 600;">Possible Reasons:</h6>
+                                <ul class="mb-0 pl-3" style="line-height: 1.8; color: #884444; list-style-type: disc;">
+                                    <li>The link has expired (links last 24 hours).</li>
+                                    <li>Your account is already verified.</li>
+                                    <li>The URL was incomplete or modified.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="single-input-item">
+                            <a href="{% url 'login' %}" class="btn obrien-button-2 primary-color w-100">
+                                <i class="icofont-login mr-2"></i> Try Logging In
+                            </a>
+                            <p class="text-center mt-2 text-muted" style="font-size: 13px;">(If you believe you are already verified)</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
