@@ -1,7 +1,6 @@
-{# templates/profile/profile.html #}
 {% extends 'base.html' %}
 {% load static %}
-{% load humanize %} {# Make sure to add this to 'INSTALLED_APPS' as 'django.contrib.humanize' for comma formatting #}
+{% load humanize %}
 
 {% block title %}My Profile - AriFarm Organic Shop{% endblock %}
 
@@ -22,6 +21,7 @@
             </div>
         </div>
     </div>
+    
     <div class="my-account-wrapper mt-no-text mb-no-text">
         <div class="container container-default-2 custom-area">
             <div class="row">
@@ -44,8 +44,10 @@
                                     </a>
                                 </div>
                             </div>
+
                             <div class="col-lg-9 col-md-8 col-custom">
                                 <div class="tab-content" id="myaccountContent">
+                                    
                                     <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
                                         <div class="myaccount-content">
                                             <div class="profile-header mb-4">
@@ -99,40 +101,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="alert alert-info">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-info-circle fa-2x mr-3"></i>
-                                                    <div>
-                                                        <h5 class="mb-1">Quick Actions</h5>
-                                                        <p class="mb-0">From your account dashboard, you can easily manage your orders and account details.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="recent-activity mt-4">
-                                                <h5 class="mb-3"><i class="fa fa-history mr-2"></i> Recent Activity</h5>
-                                                <div class="list-group">
-                                                    <div class="list-group-item">
-                                                        <div class="d-flex w-100 justify-content-between">
-                                                            <small>Account Created</small>
-                                                            <small>{{ user.date_joined|timesince }} ago</small>
-                                                        </div>
-                                                        <p class="mb-1">Welcome to Arifarm Organic Shop!</p>
-                                                    </div>
-                                                    {% if user.last_login %}
-                                                    <div class="list-group-item">
-                                                        <div class="d-flex w-100 justify-content-between">
-                                                            <small>Last Login</small>
-                                                            <small>{{ user.last_login|timesince }} ago</small>
-                                                        </div>
-                                                        <p class="mb-1">You last logged in from this device</p>
-                                                    </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="tab-pane fade" id="orders" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3><i class="fa fa-shopping-cart mr-2"></i> My Orders</h3>
@@ -165,11 +136,7 @@
                                                             </td>
                                                             <td>KES {{ order.total_amount|intcomma }}</td>
                                                             <td>
-                                                                {% if order.status == 'paid' or order.status == 'delivered' or order.status == 'out_for_delivery' or order.status == 'confirmed' %}
-                                                                    <a href="{% url 'checkout:order_success' order.id %}" class="btn obrien-button-2 small-btn">View</a>
-                                                                {% else %}
-                                                                    <a href="{% url 'checkout:order_success' order.id %}" class="btn obrien-button-2 small-btn">View</a>
-                                                                {% endif %}
+                                                                <a href="{% url 'checkout:order_success' order.id %}" class="btn obrien-button-2 small-btn">View</a>
                                                             </td>
                                                         </tr>
                                                         {% empty %}
@@ -189,17 +156,13 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="tab-pane fade" id="account-info" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3><i class="fa fa-user mr-2"></i> Account Details</h3>
                                             {% if messages %}
                                                 {% for message in messages %}
                                                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4">
-                                                    {% if message.tags == 'success' %}
-                                                    <i class="fa fa-check-circle mr-2"></i>
-                                                    {% else %}
-                                                    <i class="fa fa-exclamation-circle mr-2"></i>
-                                                    {% endif %}
                                                     {{ message }}
                                                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                                 </div>
@@ -247,30 +210,73 @@
                                                                 {% endif %}
                                                             </div>
                                                         </div>
+                                                        
                                                         <div class="col-lg-6 col-custom">
                                                             <div class="single-input-item mb-3">
-                                                                <label for="zone" class="mb-1">Zone</label>
-                                                                {{ form.zone }}
-                                                                {% if form.zone.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.zone.errors }}</div>
+                                                                <label for="county" class="mb-1">County</label>
+                                                                <select name="county" id="id_county">
+                                                                    <option value="">Select your County</option>
+                                                                    <option value="Mombasa" {% if form.county.value == "Mombasa" %}selected{% endif %}>Mombasa</option>
+                                                                    <option value="Kwale" {% if form.county.value == "Kwale" %}selected{% endif %}>Kwale</option>
+                                                                    <option value="Kilifi" {% if form.county.value == "Kilifi" %}selected{% endif %}>Kilifi</option>
+                                                                    <option value="Tana River" {% if form.county.value == "Tana River" %}selected{% endif %}>Tana River</option>
+                                                                    <option value="Lamu" {% if form.county.value == "Lamu" %}selected{% endif %}>Lamu</option>
+                                                                    <option value="Taita Taveta" {% if form.county.value == "Taita Taveta" %}selected{% endif %}>Taita Taveta</option>
+                                                                    <option value="Garissa" {% if form.county.value == "Garissa" %}selected{% endif %}>Garissa</option>
+                                                                    <option value="Wajir" {% if form.county.value == "Wajir" %}selected{% endif %}>Wajir</option>
+                                                                    <option value="Mandera" {% if form.county.value == "Mandera" %}selected{% endif %}>Mandera</option>
+                                                                    <option value="Marsabit" {% if form.county.value == "Marsabit" %}selected{% endif %}>Marsabit</option>
+                                                                    <option value="Isiolo" {% if form.county.value == "Isiolo" %}selected{% endif %}>Isiolo</option>
+                                                                    <option value="Meru" {% if form.county.value == "Meru" %}selected{% endif %}>Meru</option>
+                                                                    <option value="Tharaka-Nithi" {% if form.county.value == "Tharaka-Nithi" %}selected{% endif %}>Tharaka-Nithi</option>
+                                                                    <option value="Embu" {% if form.county.value == "Embu" %}selected{% endif %}>Embu</option>
+                                                                    <option value="Kitui" {% if form.county.value == "Kitui" %}selected{% endif %}>Kitui</option>
+                                                                    <option value="Machakos" {% if form.county.value == "Machakos" %}selected{% endif %}>Machakos</option>
+                                                                    <option value="Makueni" {% if form.county.value == "Makueni" %}selected{% endif %}>Makueni</option>
+                                                                    <option value="Nyandarua" {% if form.county.value == "Nyandarua" %}selected{% endif %}>Nyandarua</option>
+                                                                    <option value="Nyeri" {% if form.county.value == "Nyeri" %}selected{% endif %}>Nyeri</option>
+                                                                    <option value="Kirinyaga" {% if form.county.value == "Kirinyaga" %}selected{% endif %}>Kirinyaga</option>
+                                                                    <option value="Murang'a" {% if form.county.value == "Murang'a" %}selected{% endif %}>Murang'a</option>
+                                                                    <option value="Kiambu" {% if form.county.value == "Kiambu" %}selected{% endif %}>Kiambu</option>
+                                                                    <option value="Turkana" {% if form.county.value == "Turkana" %}selected{% endif %}>Turkana</option>
+                                                                    <option value="West Pokot" {% if form.county.value == "West Pokot" %}selected{% endif %}>West Pokot</option>
+                                                                    <option value="Samburu" {% if form.county.value == "Samburu" %}selected{% endif %}>Samburu</option>
+                                                                    <option value="Trans Nzoia" {% if form.county.value == "Trans Nzoia" %}selected{% endif %}>Trans Nzoia</option>
+                                                                    <option value="Uasin Gishu" {% if form.county.value == "Uasin Gishu" %}selected{% endif %}>Uasin Gishu</option>
+                                                                    <option value="Elgeyo Marakwet" {% if form.county.value == "Elgeyo Marakwet" %}selected{% endif %}>Elgeyo Marakwet</option>
+                                                                    <option value="Nandi" {% if form.county.value == "Nandi" %}selected{% endif %}>Nandi</option>
+                                                                    <option value="Baringo" {% if form.county.value == "Baringo" %}selected{% endif %}>Baringo</option>
+                                                                    <option value="Laikipia" {% if form.county.value == "Laikipia" %}selected{% endif %}>Laikipia</option>
+                                                                    <option value="Nakuru" {% if form.county.value == "Nakuru" %}selected{% endif %}>Nakuru</option>
+                                                                    <option value="Narok" {% if form.county.value == "Narok" %}selected{% endif %}>Narok</option>
+                                                                    <option value="Kajiado" {% if form.county.value == "Kajiado" %}selected{% endif %}>Kajiado</option>
+                                                                    <option value="Kericho" {% if form.county.value == "Kericho" %}selected{% endif %}>Kericho</option>
+                                                                    <option value="Bomet" {% if form.county.value == "Bomet" %}selected{% endif %}>Bomet</option>
+                                                                    <option value="Kakamega" {% if form.county.value == "Kakamega" %}selected{% endif %}>Kakamega</option>
+                                                                    <option value="Vihiga" {% if form.county.value == "Vihiga" %}selected{% endif %}>Vihiga</option>
+                                                                    <option value="Bungoma" {% if form.county.value == "Bungoma" %}selected{% endif %}>Bungoma</option>
+                                                                    <option value="Busia" {% if form.county.value == "Busia" %}selected{% endif %}>Busia</option>
+                                                                    <option value="Siaya" {% if form.county.value == "Siaya" %}selected{% endif %}>Siaya</option>
+                                                                    <option value="Kisumu" {% if form.county.value == "Kisumu" %}selected{% endif %}>Kisumu</option>
+                                                                    <option value="Homa Bay" {% if form.county.value == "Homa Bay" %}selected{% endif %}>Homa Bay</option>
+                                                                    <option value="Migori" {% if form.county.value == "Migori" %}selected{% endif %}>Migori</option>
+                                                                    <option value="Kisii" {% if form.county.value == "Kisii" %}selected{% endif %}>Kisii</option>
+                                                                    <option value="Nyamira" {% if form.county.value == "Nyamira" %}selected{% endif %}>Nyamira</option>
+                                                                    <option value="Nairobi City" {% if form.county.value == "Nairobi City" %}selected{% endif %}>Nairobi City</option>
+                                                                </select>
+                                                                {% if form.county.errors %}
+                                                                <div class="text-danger small mt-1">{{ form.county.errors }}</div>
                                                                 {% endif %}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="single-input-item mb-3">
-                                                        <label for="address" class="mb-1">Address</label>
-                                                        {{ form.address }}
-                                                        {% if form.address.errors %}
-                                                        <div class="text-danger small mt-1">{{ form.address.errors }}</div>
-                                                        {% endif %}
-                                                    </div>
-                                                    
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="county" class="mb-1">County</label>
-                                                        {{ form.county }}
-                                                        {% if form.county.errors %}
-                                                        <div class="text-danger small mt-1">{{ form.county.errors }}</div>
+                                                        <label for="zone" class="mb-1">Delivery Zone</label>
+                                                        {{ form.zone }}
+                                                        <small class="text-muted">Select your area for accurate delivery fees</small>
+                                                        {% if form.zone.errors %}
+                                                        <div class="text-danger small mt-1">{{ form.zone.errors }}</div>
                                                         {% endif %}
                                                     </div>
                                                     
@@ -279,13 +285,9 @@
                                                         <div class="d-flex align-items-center">
                                                             <div class="mr-4">
                                                                 {% if user.profile_picture %}
-                                                                    <img src="{{ user.profile_picture.url }}" 
-                                                                         alt="Current Profile" 
-                                                                         class="rounded-circle"
-                                                                         style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #dee2e6;">
+                                                                    <img src="{{ user.profile_picture.url }}" alt="Current Profile" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #dee2e6;">
                                                                 {% else %}
-                                                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                                         style="width: 80px; height: 80px; background: #f8f9fa; border: 3px solid #dee2e6;">
+                                                                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: #f8f9fa; border: 3px solid #dee2e6;">
                                                                         <i class="fa fa-user fa-2x text-muted"></i>
                                                                     </div>
                                                                 {% endif %}
@@ -312,14 +314,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
+                                    
+                                </div>
                             </div>
-                            </div>
+                        </div>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
     <div class="support-area">
         <div class="container container-default custom-area">
             <div class="row">
@@ -337,240 +341,68 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Profile picture preview
+    // Profile picture preview logic...
     const profilePictureInput = document.getElementById('id_profile_picture');
     if (profilePictureInput) {
         profilePictureInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                if (file.size > 5 * 1024 * 1024) {
                     alert('File size must be less than 5MB');
                     this.value = '';
                     return;
                 }
-                
                 const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
                 if (!validTypes.includes(file.type)) {
                     alert('Only JPG and PNG files are allowed');
                     this.value = '';
                     return;
                 }
-                
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // Update preview image if exists
                     const previewImg = document.querySelector('.profile-picture');
-                    if (previewImg) {
-                        previewImg.src = e.target.result;
-                    }
+                    if (previewImg) previewImg.src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }
         });
     }
 
-    // Tab switching with URL hash support
+    // URL Hash Tab Switching
     const urlHash = window.location.hash;
     if (urlHash) {
         const tab = document.querySelector(`.myaccount-tab-menu a[href="${urlHash}"]`);
-        if (tab) {
-            tab.click();
-        }
+        if (tab) tab.click();
     }
-
-    // Form validation
-    const form = document.querySelector('#account-info form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            // Add any custom validation here if needed
-            return true;
-        });
-    }
-
-    // Update profile picture on dashboard when changed
-    profilePictureInput?.addEventListener('change', function() {
-        // This will be reflected after form submission and page reload
-        console.log('Profile picture changed, will update on save');
-    });
 });
 </script>
 
 <style>
-/* Custom styles to match Obrien theme */
-.myaccount-tab-menu {
-    background: white;
-    border-radius: 10px;
-    padding: 0;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    overflow: hidden;
-}
+/* ... (Keep your existing styles) ... */
 
-.myaccount-tab-menu a {
-    display: block;
-    padding: 15px 20px;
-    border-bottom: 1px solid #f1f1f1;
-    color: #333;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-weight: 500;
-}
-
-.myaccount-tab-menu a:hover {
-    background: #f8f9fa;
-    color: #37582D;
-    padding-left: 25px;
-}
-
-.myaccount-tab-menu a.active {
-    background: #37582D;
-    color: white;
-    border-left: 4px solid #28a745;
-}
-
-.myaccount-tab-menu a:last-child {
-    border-bottom: none;
-    color: #e74c3c;
-}
-
-.myaccount-tab-menu a:last-child:hover {
-    background: #e74c3c;
-    color: white;
-}
-
-.myaccount-content {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
-
-.profile-header {
-    background: linear-gradient(135deg, #f8fff8 0%, #f1f8e9 100%);
-    border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 30px;
-    border: 1px solid #d4edda;
-}
-
-.stat-card {
-    transition: transform 0.3s;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-}
-
-.stat-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(55, 88, 45, 0.1);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.table thead th {
-    background: #37582D;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-weight: 600;
-}
-
-.table tbody td {
-    vertical-align: middle;
-    padding: 15px;
-}
-
-.form-control:focus {
-    border-color: #37582D;
-    box-shadow: 0 0 0 0.2rem rgba(55, 88, 45, 0.25);
-}
-
-.obrien-button {
-    background: #37582D;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 5px;
-    color: white;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.obrien-button:hover {
-    background: #2a4422;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.obrien-button-2 {
-    background: transparent;
-    border: 1px solid #37582D;
-    color: #37582D;
-    padding: 10px 25px;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.obrien-button-2:hover {
-    background: #37582D;
-    color: white;
-    text-decoration: none;
-}
-
-.alert {
-    border-radius: 10px;
-    border: none;
-    padding: 20px;
-}
-
-.address-card {
-    border-left: 4px solid #37582D !important;
-}
-
-.list-group-item {
-    border: 1px solid #f1f1f1;
-    border-left: 4px solid #37582D;
-    margin-bottom: 10px;
-    border-radius: 8px;
-}
-
-.list-group-item:last-child {
-    margin-bottom: 0;
-}
-
-/* Profile picture upload styling */
-#id_profile_picture {
-    padding: 10px;
-    border: 2px dashed #dee2e6;
-    border-radius: 8px;
+/* Style for the Zone and County Dropdown (Select) */
+select[name="zone"], select[name="county"] {
     width: 100%;
-    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;
+    line-height: 23px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #5d5d5d;
+    margin-bottom: 15px;
+    height: 50px; /* Match input height */
 }
 
-#id_profile_picture:hover {
+select[name="zone"]:focus, select[name="county"]:focus {
     border-color: #37582D;
-}
-
-.bg-light {
-    background-color: #f8f9fa !important;
-}
-
-.small-btn {
-    padding: 5px 15px;
-    font-size: 0.85rem;
+    outline: none;
 }
 </style>
 {% endblock %}
