@@ -127,7 +127,7 @@
                             {% endif %}
                         </h3>
                         <ul>
-                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
                             <li>
                                 {% if request.GET.q %}Search
                                 {% elif category %}{{ category.name }}

@@ -8,8 +8,128 @@
 {% endblock %}
 
 {% block content %}
+
+{# --- UNIFIED CARD CSS --- #}
+<style>
+    /* Card Styling */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Image Ratio */
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%;
+        display: block;
+        background-color: #f9f9f9;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    /* Hover Image Switch */
+    .product-image-2 {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease;
+    }
+    .single-product-card:hover .product-image-2 {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Action Overlay */
+    .action-overlay {
+        position: absolute;
+        bottom: 20px; left: 0; width: 100%;
+        z-index: 5;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .single-product-card:hover .action-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Action Buttons */
+    .action-btn {
+        background: white; color: #333;
+        width: 40px; height: 40px; line-height: 40px;
+        text-align: center; border-radius: 50%;
+        margin: 0 5px; display: inline-block;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .action-btn:hover {
+        background: #E98C81; color: white; transform: scale(1.1);
+    }
+    
+    /* Badges */
+    .discount-badge {
+        background: #dc3545; color: #fff;
+        padding: 5px 10px; border-radius: 3px;
+        font-size: 11px; font-weight: 600;
+        position: absolute; top: 10px; left: 10px; z-index: 10;
+    }
+    .out-of-stock-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255,255,255,0.7);
+        z-index: 4; display: flex; align-items: center; justify-content: center;
+    }
+    .out-of-stock-overlay span {
+        background: #333; color: #fff; padding: 5px 15px; font-size: 12px; text-transform: uppercase;
+    }
+
+    /* List View Specifics */
+    .shop_wrapper.grid_list .single-product-card {
+        display: flex;
+        flex-direction: row;
+        height: auto;
+    }
+    .shop_wrapper.grid_list .product-image {
+        width: 250px;
+        flex-shrink: 0;
+    }
+    .shop_wrapper.grid_list .product-content {
+        text-align: left !important;
+        padding: 20px 30px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .shop_wrapper.grid_list .action-overlay {
+        display: none; /* Hide hover actions in list view, use static buttons */
+    }
+    .shop_wrapper.grid_list .add-action-listview {
+        margin-top: 15px;
+    }
+    .shop_wrapper.grid_list .add-action-listview a {
+        display: inline-block;
+        width: 40px; height: 40px; line-height: 40px;
+        text-align: center; background: #f2f2f2;
+        color: #333; margin-right: 10px; border-radius: 50%;
+        transition: 0.3s;
+    }
+    .shop_wrapper.grid_list .add-action-listview a:hover {
+        background: #E98C81; color: #fff;
+    }
+</style>
+
 <div class="shop-wrapper">
-    <!-- Breadcrumb -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -23,7 +143,7 @@
                             {% endif %}
                         </h3>
                         <ul>
-                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
                             <li>Combo Offers</li>
                         </ul>
                     </div>
@@ -32,27 +152,26 @@
         </div>
     </div>
 
-    <!-- Shop Main Area -->
     <div class="shop-main-area">
         <div class="container container-default custom-area">
             <div class="row flex-row-reverse">
-                <!-- ==================== BASKETS GRID ==================== -->
+                
                 <div class="col-lg-9 col-12 col-custom widget-mt">
-                    <!-- Toolbar -->
-                    <div class="shop_toolbar_wrapper mb-4">
+                    
+                    <div class="shop_toolbar_wrapper d-flex justify-content-between align-items-center mb-4" style="background: #fff; padding: 10px 20px; border: 1px solid #eee; border-radius: 5px;">
                         <div class="shop_toolbar_btn">
-                            <button type="button" class="active btn-list" data-role="grid_list"><i class="fa fa-th-list"></i></button>
-                            <button type="button" class="btn-grid-3" data-role="grid_3"><i class="fa fa-th"></i></button>
+                            <button type="button" class="btn-grid-3 active" data-role="grid_3" title="Grid View"><i class="fa fa-th"></i></button>
+                            <button type="button" class="btn-list" data-role="grid_list" title="List View"><i class="fa fa-th-list"></i></button>
                         </div>
                         <div class="shop-select">
                             <form method="get">
                                 <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
                                     <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
-                                    <option value="name">Name: A-Z</option>
-                                    <option value="-name">Name: Z-A</option>
-                                    <option value="price">Price: Low to High</option>
-                                    <option value="-price">Price: High to Low</option>
-                                    <option value="-discount_percentage">Best Discount</option>
+                                    <option value="name" {% if request.GET.ordering == 'name' %}selected{% endif %}>Name: A-Z</option>
+                                    <option value="-name" {% if request.GET.ordering == '-name' %}selected{% endif %}>Name: Z-A</option>
+                                    <option value="price" {% if request.GET.ordering == 'price' %}selected{% endif %}>Price: Low to High</option>
+                                    <option value="-price" {% if request.GET.ordering == '-price' %}selected{% endif %}>Price: High to Low</option>
+                                    <option value="-discount_percentage" {% if request.GET.ordering == '-discount_percentage' %}selected{% endif %}>Best Discount</option>
                                 </select>
                                 {% if request.GET.q %}
                                     <input type="hidden" name="q" value="{{ request.GET.q }}">
@@ -61,140 +180,98 @@
                         </div>
                     </div>
 
-                    <!-- Basket Cards -->
-                    <div class="row shop_wrapper grid_list">
+                    <div class="row shop_wrapper grid_3">
                         {% for basket in baskets %}
-                        <div class="col-12 col-custom product-area">
-                            <div class="single-product position-relative">
-                                <!-- Image -->
-                                <div class="product-image">
-                                    <a class="d-block" href="{{ basket.get_absolute_url }}">
+                        <div class="col-md-4 col-sm-6 col-12 col-custom product-area">
+                            <div class="single-product-card position-relative">
+                                
+                                <div class="product-image position-relative">
+                                    <a class="d-block product-image-ratio" href="{{ basket.get_absolute_url }}">
                                         {% if basket.image %}
-                                            <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-1 w-100">
-                                            <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-2 position-absolute w-100">
+                                            <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-1">
+                                            <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                         {% else %}
-                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1 w-100">
-                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute w-100">
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1">
+                                            <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                         {% endif %}
                                     </a>
 
-                                    <!-- Discount Badge -->
                                     {% if basket.discount_percentage > 0 %}
-                                        <span class="badge badge-danger position-absolute" style="top:10px;left:10px;">
-                                            Save {{ basket.discount_percentage }}%
-                                        </span>
+                                        <span class="discount-badge">Save {{ basket.discount_percentage }}%</span>
                                     {% endif %}
 
-                                    {% if basket.stock <= 0 %}
+                                    {% if not basket.is_in_stock %}
                                         <div class="out-of-stock-overlay">
                                             <span>Out of Stock</span>
                                         </div>
                                     {% endif %}
+
+                                    <div class="action-overlay d-flex justify-content-center">
+                                        <a href="{{ basket.get_absolute_url }}" class="action-btn" title="View Bundle"><i class="ion-eye"></i></a>
+                                        <a href="#" class="action-btn" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
+                                    </div>
                                 </div>
 
-                                <!-- Main Content -->
-                                <div class="product-content">
+                                <div class="product-content text-center">
                                     <div class="product-title">
-                                        <h4 class="title-2">
-                                            <a href="{{ basket.get_absolute_url }}">{{ basket.name }}</a>
+                                        <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                            <a href="{{ basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ basket.name }}</a>
                                         </h4>
                                     </div>
 
                                     <div class="price-box">
-                                        <span class="regular-price text-success">₵{{ basket.price }}</span>
+                                        <span class="regular-price" style="color: #1B1B1C; font-weight: 700; font-size: 16px;">KSh {{ basket.price }}</span>
                                         {% if basket.total_original_price > basket.price %}
-                                            <span class="old-price text-muted ml-2" style="text-decoration: line-through;">₵{{ basket.total_original_price|floatformat:2 }}</span>
+                                            <span class="old-price" style="color: #999; text-decoration: line-through; font-size: 13px; margin-left: 5px;">KSh {{ basket.total_original_price|floatformat:2 }}</span>
                                         {% endif %}
                                     </div>
 
-                                    <!-- Savings Info -->
-                                    {% if basket.savings_per_basket > 0 %}
-                                        <div class="savings-info mt-2">
-                                            <small class="text-success">
-                                                <i class="fa fa-tag"></i> Save ₵{{ basket.savings_per_basket|floatformat:2 }}
-                                            </small>
+                                    <div class="list-view-content mt-2">
+                                        {% if basket.savings_per_basket > 0 %}
+                                            <p class="text-success mb-1 small d-none d-md-block">
+                                                <i class="fa fa-check-circle"></i> Save KSh {{ basket.savings_per_basket|floatformat:2 }}
+                                            </p>
+                                        {% endif %}
+                                        <p class="desc-content mb-2 text-muted small d-none d-sm-block">{{ basket.description|truncatewords:15 }}</p>
+                                        
+                                        <div class="add-action-listview d-none">
+                                            <a href="{{ basket.get_absolute_url }}" title="View Details"><i class="ion-eye"></i></a>
+                                            <a href="#" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
                                         </div>
-                                    {% endif %}
-
-                                    <!-- Products Count -->
-                                    <div class="basket-products-count mt-2">
-                                        <small class="text-muted">
-                                            <i class="fa fa-cube"></i> Contains {{ basket.included_products.count }} product{{ basket.included_products.count|pluralize }}
-                                        </small>
                                     </div>
-                                </div>
-
-                                <!-- Hover Buttons -->
-                                <div class="add-action d-flex position-absolute">
-                                    {% if basket.is_in_stock %}
-                                        <a href="{{ basket.get_absolute_url }}" title="View Details"><i class="ion-eye"></i></a>
-                                    {% endif %}
-                                    <a href="#" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
-                                </div>
-
-                                <!-- List View Extra -->
-                                <div class="product-content-listview">
-                                    <h4 class="title-2"><a href="{{ basket.get_absolute_url }}">{{ basket.name }}</a></h4>
                                     
-                                    <div class="price-box mb-2">
-                                        <span class="regular-price text-success">₵{{ basket.price }}</span>
-                                        {% if basket.total_original_price > basket.price %}
-                                            <span class="old-price text-muted ml-2" style="text-decoration: line-through;">₵{{ basket.total_original_price|floatformat:2 }}</span>
-                                        {% endif %}
-                                    </div>
-
-                                    {% if basket.savings_per_basket > 0 %}
-                                        <p class="text-success mb-2">
-                                            <strong>Save ₵{{ basket.savings_per_basket|floatformat:2 }} ({{ basket.discount_percentage }}% off)</strong>
-                                        </p>
-                                    {% endif %}
-
-                                    <p class="desc-content">{{ basket.description|truncatewords:20 }}</p>
-                                    
-                                    <!-- Products in Basket -->
-                                    <div class="basket-products-list mb-3">
-                                        <small class="text-muted d-block mb-1">
-                                            <strong>Includes:</strong>
-                                        </small>
-                                        {% for item in basket.included_products.all|slice:":3" %}
-                                            <span class="badge badge-light mr-1 mb-1">{{ item.product.name }} ({{ item.quantity }})</span>
-                                        {% endfor %}
-                                        {% if basket.included_products.count > 3 %}
-                                            <span class="badge badge-secondary">+{{ basket.included_products.count|add:"-3" }} more</span>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="add-action-listview d-flex">
-                                        <a href="{{ basket.get_absolute_url }}" title="View Details"><i class="ion-eye"></i></a>
-                                        <a href="#" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
+                                    <div class="grid-view-content mt-2">
+                                        <small class="text-muted"><i class="fa fa-cube"></i> {{ basket.included_products.count }} items included</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {% empty %}
                         <div class="col-12 text-center py-5">
-                            <h4>No combo offers found</h4>
-                            {% if request.GET.q %}
-                                <p class="text-muted">No combos found for "{{ request.GET.q }}"</p>
-                            {% else %}
-                                <p class="text-muted">Check back soon for special combo deals!</p>
-                            {% endif %}
+                            <div style="background: white; padding: 40px; border-radius: 8px; border: 1px solid #eee;">
+                                <i class="ion-sad-outline" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
+                                <h4 style="color: #666; font-weight: 600;">No combo offers found</h4>
+                                {% if request.GET.q %}
+                                    <p class="text-muted">No combos found matching "{{ request.GET.q }}"</p>
+                                {% else %}
+                                    <p class="text-muted">Check back soon for special combo deals!</p>
+                                {% endif %}
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <!-- Pagination -->
                     {% if is_paginated %}
                     <div class="row mt-4">
                         <div class="col-12">
                             <nav class="pagination pagination-wrap">
-                                <ul class="pagination">
+                                <ul class="pagination justify-content-center" style="gap: 5px;">
                                     {% if page_obj.has_previous %}
-                                        <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                        <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-left"></i></a></li>
                                     {% endif %}
-                                    <li class="active"><a>{{ page_obj.number }}</a></li>
+                                    <li class="active"><a class="page-link" style="background:#E98C81; border-color:#E98C81; color:white;">{{ page_obj.number }}</a></li>
                                     {% if page_obj.has_next %}
-                                        <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                        <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-right"></i></a></li>
                                     {% endif %}
                                 </ul>
                             </nav>
@@ -202,27 +279,16 @@
                     </div>
                     {% endif %}
                 </div>
-                <!-- ==================== END BASKETS GRID ==================== -->
-
-                <!-- ==================== SIDEBAR ==================== -->
                 <div class="col-lg-3 col-12 col-custom">
                     <aside class="sidebar_widget widget-mt">
-                        <div class="widget_inner">
-                            <!-- Basket Count -->
+                        <div class="widget_inner" style="background: #fff; padding: 25px; border-radius: 8px; border: 1px solid #eee;">
+                            
                             <div class="widget-list widget-mb-4">
-                                <div class="alert alert-info">
-                                    <h5 class="mb-1">Special Combos</h5>
-                                    <p class="mb-0 small">{{ page_obj.paginator.count }} combo{{ page_obj.paginator.count|pluralize }} available</p>
-                                </div>
-                            </div>
-
-                            <!-- Search -->
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title">Search Combos</h3>
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Search Combos</h3>
                                 <div class="search-box">
                                     <form action=".">
                                         <div class="input-group">
-                                            <input type="text" name="q" class="form-control" placeholder="Search combo offers..." value="{{ request.GET.q|default:'' }}">
+                                            <input type="text" name="q" class="form-control" placeholder="Search combos..." value="{{ request.GET.q|default:'' }}" style="height: 45px; font-size: 14px;">
                                             <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
                                             </div>
@@ -231,32 +297,30 @@
                                 </div>
                             </div>
 
-                            <!-- Shop By -->
                             <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title">Shop By</h3>
-                                <ul class="sidebar-list">
-                                    <li><a href="{% url 'products:product_list' %}">All Products</a></li>
-                                    <li><a href="{% url 'products:basket_list' %}" class="active">Combo Offers</a></li>
-                                    <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
-                                    <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shop By</h3>
+                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
+                                    <li class="mb-2"><a href="{% url 'products:product_list' %}" style="color: #666;">All Products</a></li>
+                                    <li class="mb-2"><a href="{% url 'products:basket_list' %}" style="color: #E98C81; font-weight: 600;">Combo Offers</a></li>
+                                    <li class="mb-2"><a href="{% url 'products:merchandise_list' %}" style="color: #666;">Merchandise</a></li>
+                                    <li class="mb-2"><a href="{% url 'products:recipe_list' %}" style="color: #666;">Recipes</a></li>
                                 </ul>
                             </div>
 
-                            <!-- Best Value Combos -->
                             <div class="widget-list">
-                                <h3 class="widget-title">Best Value Combos</h3>
+                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Best Value</h3>
                                 <div class="sidebar-body">
                                     {% for best_basket in baskets|slice:":3" %}
-                                    <div class="sidebar-product align-items-center mb-3">
-                                        <a href="{{ best_basket.get_absolute_url }}" class="image">
-                                            <img src="{{ best_basket.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ best_basket.name }}" width="80">
+                                    <div class="sidebar-product d-flex align-items-center mb-3" style="border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                                        <a href="{{ best_basket.get_absolute_url }}" class="image" style="flex-shrink:0; margin-right: 15px;">
+                                            <img src="{{ best_basket.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ best_basket.name }}" width="70" class="rounded">
                                         </a>
                                         <div class="product-content">
-                                            <h6 class="title-2 mb-1"><a href="{{ best_basket.get_absolute_url }}">{{ best_basket.name|truncatechars:25 }}</a></h6>
+                                            <h6 class="title-2 mb-1" style="font-size: 14px;"><a href="{{ best_basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ best_basket.name|truncatechars:20 }}</a></h6>
                                             <div class="price-box">
-                                                <span class="regular-price text-success">₵{{ best_basket.price }}</span>
+                                                <span class="regular-price text-success font-weight-bold">KSh {{ best_basket.price }}</span>
                                                 {% if best_basket.discount_percentage > 0 %}
-                                                    <small class="text-danger d-block">Save {{ best_basket.discount_percentage }}%</small>
+                                                    <small class="d-block text-danger">{{ best_basket.discount_percentage }}% Off</small>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -264,12 +328,42 @@
                                     {% endfor %}
                                 </div>
                             </div>
+
                         </div>
                     </aside>
                 </div>
-                <!-- ==================== END SIDEBAR ==================== -->
-            </div>
+                </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Simple View Switcher Script
+    document.addEventListener('DOMContentLoaded', function() {
+        const gridBtn = document.querySelector('.btn-grid-3');
+        const listBtn = document.querySelector('.btn-list');
+        const wrapper = document.querySelector('.shop_wrapper');
+        const addActionsList = document.querySelectorAll('.add-action-listview');
+
+        if(gridBtn && listBtn && wrapper) {
+            gridBtn.addEventListener('click', function() {
+                wrapper.classList.remove('grid_list');
+                wrapper.classList.add('grid_3');
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+                addActionsList.forEach(el => el.classList.add('d-none'));
+            });
+
+            listBtn.addEventListener('click', function() {
+                wrapper.classList.remove('grid_3');
+                wrapper.classList.add('grid_list');
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+                addActionsList.forEach(el => el.classList.remove('d-none'));
+            });
+        }
+    });
+</script>
 {% endblock %}

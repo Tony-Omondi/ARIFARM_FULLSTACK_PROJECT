@@ -5,8 +5,98 @@
 {% block title %}{{ merchandise.name }} - Merchandise - Shop{% endblock %}
 
 {% block content %}
+
+<style>
+    /* Unified Card Styling */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 10px;
+        height: 100%;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Image Ratio */
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%;
+        display: block;
+        background-color: #f9f9f9;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    /* Hover Image Switch */
+    .product-image-2 {
+        opacity: 0; visibility: hidden; transition: opacity 0.4s ease;
+    }
+    .single-product-card:hover .product-image-2 {
+        opacity: 1; visibility: visible;
+    }
+
+    /* Action Overlay */
+    .action-overlay {
+        position: absolute; bottom: 20px; left: 0; width: 100%; z-index: 5;
+        opacity: 0; transform: translateY(10px); transition: all 0.3s ease; text-align: center;
+    }
+    .single-product-card:hover .action-overlay {
+        opacity: 1; transform: translateY(0);
+    }
+    
+    /* Action Buttons */
+    .action-btn {
+        background: white; color: #333; width: 40px; height: 40px; line-height: 40px;
+        text-align: center; border-radius: 50%; margin: 0 5px; display: inline-block;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .action-btn:hover {
+        background: #E98C81; color: white; transform: scale(1.1);
+    }
+
+    /* Quantity Input Styling */
+    .cart-plus-minus {
+        position: relative;
+        width: 120px;
+    }
+    .cart-plus-minus-box {
+        height: 50px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        font-size: 18px;
+    }
+    .qtybutton {
+        position: absolute;
+        top: 0;
+        width: 40px;
+        height: 100%;
+        background: #f8f8f8;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+    .dec { left: 0; border-right: 1px solid #ddd; }
+    .inc { right: 0; border-left: 1px solid #ddd; }
+    .qtybutton:hover { background: #E98C81; color: white; }
+
+    /* Slider Fixes */
+    .slick-list { padding: 10px 0 20px 0 !important; margin: -10px 0 -20px 0; }
+    .single-item { padding: 0 10px; }
+</style>
+
 <div class="shop-wrapper">
-    <!-- Breadcrumb -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -14,7 +104,7 @@
                     <div class="breadcrumb-content position-relative section-content">
                         <h3 class="title-3">{{ merchandise.name }}</h3>
                         <ul>
-                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
                             <li><a href="{% url 'products:merchandise_list' %}">Merchandise</a></li>
                             <li>{{ merchandise.name|truncatechars:30 }}</li>
                         </ul>
@@ -24,106 +114,125 @@
         </div>
     </div>
 
-    <!-- Merchandise Main Area -->
     <div class="single-product-main-area">
         <div class="container container-default custom-area">
             <div class="row">
-                <!-- Merchandise Image -->
+                <!-- Product Image -->
                 <div class="col-lg-5 col-custom">
-                    <div class="product-details-img">
-                        <div class="single-image border">
-                            <img src="{{ merchandise.image.url }}" alt="{{ merchandise.name }}" class="img-fluid">
+                    <div class="product-details-img border">
+                        <div class="single-image">
+                            {% if merchandise.image %}
+                                <img src="{{ merchandise.image.url }}" alt="{{ merchandise.name }}" class="img-fluid w-100">
+                            {% else %}
+                                <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" class="img-fluid w-100">
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Merchandise Info -->
+                <!-- Product Summary -->
                 <div class="col-lg-7 col-custom">
                     <div class="product-summery position-relative">
                         <div class="product-head mb-3">
                             <h2 class="product-title">{{ merchandise.name }}</h2>
                         </div>
                         
-                        <!-- Price -->
                         <div class="price-box mb-2">
-                            <span class="regular-price">₵{{ merchandise.price }}</span>
+                            <span class="regular-price" style="font-size: 28px; font-weight: 700; color: #1B1B1C;">KSh {{ merchandise.price }}</span>
                         </div>
 
-                        <!-- Stock Status -->
                         <div class="stock-status mb-3">
                             {% if merchandise.stock > 0 %}
-                                <span class="text-success">
+                                <span class="text-success font-weight-bold">
                                     <i class="fa fa-check-circle"></i> In Stock
-                                    {% if merchandise.stock <= 5 %}
-                                        <span class="text-warning">(Only {{ merchandise.stock }} left!)</span>
-                                    {% endif %}
                                 </span>
+                                {% if merchandise.stock <= 5 %}
+                                    <span class="badge badge-warning ml-2" style="background:#ffc107; color:#212529;">Only {{ merchandise.stock }} left!</span>
+                                {% endif %}
                             {% else %}
-                                <span class="text-danger">
+                                <span class="text-danger font-weight-bold">
                                     <i class="fa fa-times-circle"></i> Out of Stock
                                 </span>
                             {% endif %}
                         </div>
 
-                        <!-- Product ID -->
                         <div class="sku mb-3">
-                            <span>Product ID: {{ merchandise.product_id }}</span>
+                            <span class="text-muted">Product ID: {{ merchandise.product_id }}</span>
                         </div>
 
-                        <!-- Description -->
                         <div class="desc-content mb-5">
-                            <h4 class="mb-3">Description</h4>
-                            <p>{{ merchandise.description }}</p>
+                            <p class="lead">{{ merchandise.description }}</p>
                         </div>
 
-                        <!-- Add to Cart Section -->
+                        <!-- Add to Cart Form -->
                         <div class="quantity-with_btn mb-4">
-                            <div class="quantity">
-                                <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" value="1" type="text" {% if merchandise.stock <= 0 %}disabled{% endif %}>
-                                    <div class="dec qtybutton">-</div>
-                                    <div class="inc qtybutton">+</div>
+                            <form action="{% url 'cart:add_to_cart' %}" method="post" class="d-flex flex-wrap align-items-center gap-3">
+                                {% csrf_token %}
+                                
+                                <!-- CRITICAL: Use merchandise_id -->
+                                <input type="hidden" name="merchandise_id" value="{{ merchandise.id }}">
+                                <input type="hidden" name="next" value="{{ request.path }}">
+
+                                <div class="quantity mr-3">
+                                    <div class="cart-plus-minus">
+                                        <input class="cart-plus-minus-box" name="quantity" value="1" type="text"
+                                               {% if merchandise.stock <= 0 %}disabled{% endif %}>
+                                        <div class="dec qtybutton">-</div>
+                                        <div class="inc qtybutton">+</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="add-to_cart">
-                                {% if merchandise.stock > 0 %}
-                                    <a class="btn obrien-button primary-btn" href="#" id="add-to-cart">Add to cart</a>
-                                    <a class="btn obrien-button-3 black-button" href="#" id="buy-now">Buy it now</a>
-                                {% else %}
-                                    <a class="btn obrien-button primary-btn disabled" href="#" style="opacity: 0.6; cursor: not-allowed;">Out of Stock</a>
-                                    <button class="btn obrien-button-2 treansparent-color pt-0 pb-0" id="notify-me">Notify when available</button>
-                                {% endif %}
-                            </div>
+
+                                <div class="add-to_cart">
+                                    {% if user.is_authenticated %}
+                                        {% if merchandise.stock > 0 %}
+                                            <button type="submit" class="btn obrien-button primary-btn rounded">
+                                                Add to Cart
+                                            </button>
+                                        {% else %}
+                                            <button type="button" class="btn obrien-button primary-btn rounded disabled" disabled>
+                                                Out of Stock
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn obrien-button primary-btn rounded">
+                                            Login to Buy
+                                        </a>
+                                    {% endif %}
+
+                                    {% if merchandise.stock <= 0 %}
+                                        <button type="button" class="btn obrien-button-2 transparent-color ml-3" id="notify-me">
+                                            Notify Me
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </form>
                         </div>
 
-                        <!-- Wishlist -->
                         <div class="wishlist-btn mb-5">
-                            <a href="#" class="btn obrien-button-2 treansparent-color">
+                            <a href="#" class="btn obrien-button-2 transparent-color">
                                 <i class="ion-ios-heart-outline"></i> Add to Wishlist
                             </a>
                         </div>
 
-                        <!-- Social Share -->
                         <div class="social-share mb-4">
-                            <span>Share :</span>
-                            <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
-                            <a href="#"><i class="fa fa-twitter-square twitter-color"></i></a>
-                            <a href="#"><i class="fa fa-pinterest-square pinterest-color"></i></a>
-                            <a href="#"><i class="fa fa-linkedin-square linkedin-color"></i></a>
+                            <span class="mr-2">Share:</span>
+                            <a href="#" class="mx-1"><i class="fa fa-facebook-square facebook-color"></i></a>
+                            <a href="#" class="mx-1"><i class="fa fa-twitter-square twitter-color"></i></a>
+                            <a href="#" class="mx-1"><i class="fa fa-pinterest-square pinterest-color"></i></a>
+                            <a href="#" class="mx-1"><i class="fa fa-linkedin-square linkedin-color"></i></a>
                         </div>
 
-                        <!-- Created Date -->
-                        <div class="created-date mb-3">
+                        <div class="created-date">
                             <small class="text-muted">
-                                <i class="fa fa-calendar"></i> Added: {{ merchandise.created_at|date:"F d, Y" }}
+                                <i class="fa fa-calendar"></i> Added on: {{ merchandise.created_at|date:"F d, Y" }}
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Merchandise Tabs -->
-            <div class="row mt-no-text">
+            <!-- Tabs: Details & Shipping -->
+            <div class="row mt-5">
                 <div class="col-lg-12">
                     <ul class="nav nav-tabs" id="merchTab" role="tablist">
                         <li class="nav-item">
@@ -134,111 +243,23 @@
                         </li>
                     </ul>
                     
-                    <div class="tab-content mb-text" id="merchTabContent">
-                        <!-- Details Tab -->
-                        <div class="tab-pane fade show active" id="details" role="tabpanel">
-                            <div class="p-4">
-                                <h4 class="mb-4">Product Details</h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <tr>
-                                                    <th width="40%">Product ID</th>
-                                                    <td>{{ merchandise.product_id }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Price</th>
-                                                    <td>₵{{ merchandise.price }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Stock Status</th>
-                                                    <td>
-                                                        {% if merchandise.stock > 0 %}
-                                                            <span class="text-success">In Stock ({{ merchandise.stock }} available)</span>
-                                                        {% else %}
-                                                            <span class="text-danger">Out of Stock</span>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <tr>
-                                                    <th width="40%">Added Date</th>
-                                                    <td>{{ merchandise.created_at|date:"F d, Y" }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Last Updated</th>
-                                                    <td>{{ merchandise.updated_at|date:"F d, Y" }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Status</th>
-                                                    <td>
-                                                        {% if merchandise.is_active %}
-                                                            <span class="text-success">Active</span>
-                                                        {% else %}
-                                                            <span class="text-danger">Inactive</span>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                
-                                <div class="full-description mt-4">
-                                    <h5>Full Description</h5>
-                                    <p>{{ merchandise.description }}</p>
-                                </div>
-                            </div>
+                    <div class="tab-content" id="merchTabContent">
+                        <div class="tab-pane fade show active p-4 border" id="details" role="tabpanel">
+                            <h4 class="mb-4">Product Details</h4>
+                            <p>{{ merchandise.description }}</p>
+                            <ul class="list-unstyled mt-3">
+                                <li><strong>SKU:</strong> {{ merchandise.product_id }}</li>
+                                <li><strong>Price:</strong> KSh {{ merchandise.price }}</li>
+                                <li><strong>Status:</strong> {% if merchandise.is_active %}Available{% else %}Inactive{% endif %}</li>
+                                <li><strong>Stock:</strong> {{ merchandise.stock }} unit{{ merchandise.stock|pluralize }}</li>
+                            </ul>
                         </div>
 
-                        <!-- Shipping Tab -->
-                        <div class="tab-pane fade" id="shipping" role="tabpanel">
-                            <div class="p-4">
-                                <h4 class="mb-4">Shipping & Returns Policy</h4>
-                                
-                                <div class="shipping-info mb-5">
-                                    <h5 class="mb-3"><i class="fa fa-truck"></i> Shipping Information</h5>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h6>Standard Shipping</h6>
-                                                    <p class="mb-1">Delivery in 3-5 business days</p>
-                                                    <p class="text-success mb-0">₵15.00</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h6>Express Shipping</h6>
-                                                    <p class="mb-1">Delivery in 1-2 business days</p>
-                                                    <p class="text-success mb-0">₵25.00</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="return-policy">
-                                    <h5 class="mb-3"><i class="fa fa-refresh"></i> Return Policy</h5>
-                                    <div class="alert alert-light">
-                                        <ul class="mb-0">
-                                            <li>30-day return policy from delivery date</li>
-                                            <li>Items must be unused and in original packaging</li>
-                                            <li>Return shipping fees are the responsibility of the customer</li>
-                                            <li>Refunds are processed within 5-7 business days</li>
-                                            <li>Contact customer service for return authorization</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="tab-pane fade p-4 border" id="shipping" role="tabpanel">
+                            <h4 class="mb-4">Shipping & Returns Policy</h4>
+                            <p><strong>Shipping:</strong> Standard delivery within 3–5 business days. Express shipping available at checkout.</p>
+                            <p><strong>Returns:</strong> 30-day return policy for unused items in original condition and packaging.</p>
+                            <p><strong>Contact:</strong> support@yoursite.com for any questions.</p>
                         </div>
                     </div>
                 </div>
@@ -248,57 +269,68 @@
 
     <!-- Related Merchandise -->
     {% if related_merchandise %}
-    <div class="product-area mb-text">
+    <div class="product-area section-pt section-pb">
         <div class="container container-default custom-area">
             <div class="row">
-                <div class="col-lg-5 m-auto text-center col-custom">
+                <div class="col-lg-5 m-auto text-center col-custom mb-5">
                     <div class="section-content">
-                        <h2 class="title-1 text-uppercase">Related Merchandise</h2>
-                        <div class="desc-content">
-                            <p>Check out these other great merchandise items.</p>
-                        </div>
+                        <h2 class="title-1 text-uppercase">You Might Also Like</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 product-wrapper col-custom">
-                    <div class="product-slider">
+                <div class="col-lg-12 col-custom">
+                    <div class="product-slider" data-slick-options='{
+                        "slidesToShow": 4,
+                        "slidesToScroll": 1,
+                        "infinite": true,
+                        "arrows": true,
+                        "dots": false
+                    }' data-slick-responsive='[
+                        {"breakpoint": 1200, "settings": {"slidesToShow": 3}},
+                        {"breakpoint": 992, "settings": {"slidesToShow": 2}},
+                        {"breakpoint": 576, "settings": {"slidesToShow": 1}}
+                    ]'>
                         {% for related in related_merchandise %}
                         <div class="single-item">
-                            <div class="single-product position-relative">
-                                <div class="product-image">
-                                    <a class="d-block" href="{{ related.get_absolute_url }}">
-                                        <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image-1 w-100">
+                            <div class="single-product-card position-relative">
+                                <div class="product-image position-relative">
+                                    <a class="d-block product-image-ratio" href="{{ related.get_absolute_url }}">
+                                        {% if related.image %}
+                                            <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image-1">
+                                            <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image-2 position-absolute" style="top:0;left:0;">
+                                        {% else %}
+                                            <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" class="product-image-1">
+                                            <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
+                                        {% endif %}
                                     </a>
+
                                     {% if related.stock <= 0 %}
-                                        <div class="label-product">
-                                            <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
+                                        <div class="out-of-stock-overlay">
+                                            <span>Out of Stock</span>
                                         </div>
                                     {% endif %}
-                                </div>
-                                <div class="product-content">
-                                    <div class="product-title">
-                                        <h4 class="title-2">
-                                            <a href="{{ related.get_absolute_url }}">{{ related.name|truncatechars:40 }}</a>
-                                        </h4>
-                                    </div>
-                                    <div class="price-box">
-                                        <span class="regular-price">₵{{ related.price }}</span>
-                                    </div>
-                                    <div class="stock-status-small">
-                                        {% if related.stock > 0 %}
-                                            <small class="text-success">In Stock</small>
-                                        {% else %}
-                                            <small class="text-danger">Out of Stock</small>
+
+                                    <div class="action-overlay">
+                                        {% if related.stock > 0 and user.is_authenticated %}
+                                            <form action="{% url 'cart:add_to_cart' %}" method="post" style="display:inline-block;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="merchandise_id" value="{{ related.id }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="action-btn" title="Add to Cart"><i class="ion-bag"></i></button>
+                                            </form>
                                         {% endif %}
+                                        <a href="{{ related.get_absolute_url }}" class="action-btn" title="Quick View"><i class="ion-eye"></i></a>
                                     </div>
                                 </div>
-                                <div class="add-action d-flex position-absolute">
-                                    {% if related.stock > 0 %}
-                                        <a href="#" title="Add To Cart"><i class="ion-bag"></i></a>
-                                    {% endif %}
-                                    <a href="{{ related.get_absolute_url }}" title="Quick View"><i class="ion-eye"></i></a>
-                                    <a href="#" title="Add To Wishlist"><i class="ion-ios-heart-outline"></i></a>
+
+                                <div class="product-content text-center py-3">
+                                    <h4 class="title-2 mb-2">
+                                        <a href="{{ related.get_absolute_url }}" style="color:#333;">{{ related.name|truncatechars:25 }}</a>
+                                    </h4>
+                                    <div class="price-box">
+                                        <span class="regular-price" style="font-weight:700;">KSh {{ related.price }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -315,61 +347,42 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Quantity controls
-    $('.qtybutton').on('click', function() {
-        var $button = $(this);
-        var oldValue = $button.parent().find('input').val();
-        if ($button.hasClass('inc')) {
-            var newVal = parseFloat(oldValue) + 1;
-            var maxStock = {{ merchandise.stock }};
-            if (newVal > maxStock) {
-                newVal = maxStock;
-                alert('Only ' + maxStock + ' items available in stock');
-            }
-        } else {
-            if (oldValue > 1) {
-                var newVal = parseFloat(oldValue) - 1;
+    const qtyInput = document.querySelector('.cart-plus-minus-box');
+    const decBtn = document.querySelector('.dec.qtybutton');
+    const incBtn = document.querySelector('.inc.qtybutton');
+    const maxStock = {{ merchandise.stock|default:0 }};
+
+    if (decBtn && incBtn && qtyInput) {
+        decBtn.addEventListener('click', function() {
+            let val = parseInt(qtyInput.value);
+            if (val > 1) qtyInput.value = val - 1;
+        });
+
+        incBtn.addEventListener('click', function() {
+            let val = parseInt(qtyInput.value);
+            if (val < maxStock) {
+                qtyInput.value = val + 1;
             } else {
-                newVal = 1;
+                alert(`Only ${maxStock} item${maxStock !== 1 ? 's' : ''} available in stock.`);
             }
+        });
+
+        // Allow only numbers
+        qtyInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value === '' || parseInt(this.value) < 1) this.value = 1;
+            if (parseInt(this.value) > maxStock) this.value = maxStock;
+        });
+    }
+
+    // Notify me button
+    document.getElementById('notify-me')?.addEventListener('click', function() {
+        const email = prompt("Enter your email to be notified when this item is back in stock:");
+        if (email && email.includes('@')) {
+            alert("Thank you! We'll notify " + email + " when it's available.");
+        } else if (email) {
+            alert("Please enter a valid email address.");
         }
-        $button.parent().find('input').val(newVal);
-    });
-
-    // Add to cart
-    $('#add-to-cart').on('click', function(e) {
-        e.preventDefault();
-        var quantity = $('.cart-plus-minus-box').val();
-        var productId = '{{ merchandise.id }}';
-        
-        alert('Added ' + quantity + ' item(s) to cart');
-        // AJAX call to add to cart
-    });
-
-    // Buy now
-    $('#buy-now').on('click', function(e) {
-        e.preventDefault();
-        var quantity = $('.cart-plus-minus-box').val();
-        
-        alert('Proceeding to checkout with ' + quantity + ' item(s)');
-        // Redirect to checkout
-    });
-
-    // Notify when available
-    $('#notify-me').on('click', function(e) {
-        e.preventDefault();
-        var email = prompt('Enter your email to get notified when this item is back in stock:');
-        if (email) {
-            alert('Thank you! We will notify you at ' + email + ' when this item is back in stock.');
-        }
-    });
-
-    // Add to wishlist
-    $('.wishlist-btn a').on('click', function(e) {
-        e.preventDefault();
-        alert('Added to your wishlist!');
-        $(this).html('<i class="ion-ios-heart"></i> In Wishlist');
-        $(this).addClass('text-danger');
     });
 });
 </script>

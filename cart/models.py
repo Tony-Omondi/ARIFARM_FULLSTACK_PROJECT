@@ -1,9 +1,10 @@
 # cart/models.py
 from django.db import models
 from django.contrib.auth import get_user_model
-from products.models import Product, ProductBasket
+from products.models import Product, ProductBasket, Merchandise  # Added Merchandise
 
 User = get_user_model()
+
 
 class Cart(models.Model):
     """One cart per registered user"""
@@ -50,6 +51,12 @@ class CartItem(models.Model):
         blank=True,
         on_delete=models.SET_NULL
     )
+    merchandise = models.ForeignKey(
+        Merchandise,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
@@ -58,29 +65,55 @@ class CartItem(models.Model):
         constraints = [
             models.CheckConstraint(
                 check=(
-                    models.Q(product__isnull=False, basket__isnull=True) |
-                    models.Q(product__isnull=True, basket__isnull=False)
+                    # Exactly one of product, basket, or merchandise must be set
+                    (models.Q(product__isnull=False, basket__isnull=True, merchandise__isnull=True)) |
+                    (models.Q(product__isnull=True, basket__isnull=False, merchandise__isnull=True)) |
+                    (models.Q(product__isnull=True, basket__isnull=True, merchandise__isnull=False))
                 ),
-                name='cartitem_either_product_or_basket'
+                name='cartitem_exactly_one_item_type'
             )
         ]
-        unique_together = ('cart', 'product', 'basket')
+        unique_together = ('cart', 'product', 'basket', 'merchandise')
 
     def __str__(self):
         if self.product:
             return f"{self.quantity} × {self.product.name}"
-        return f"{self.quantity} × {self.basket.name} (Basket)"
+        if self.basket:
+            return f"{self.quantity} × {self.basket.name} (Basket)"
+        if self.merchandise:
+            return f"{self.quantity} × {self.merchandise.name} (Merch)"
+        return "Empty cart item"
 
     @property
     def unit_price(self):
-        """Price of one unit (used in cart display and checkout snapshot)"""
         if self.product:
             return self.product.price
         elif self.basket:
             return self.basket.price
+        elif self.merchandise:
+            return self.merchandise.price
         return 0
 
     @property
     def total_price(self):
-        """Total price for this cart line item"""
         return self.unit_price * self.quantity
+
+    @property
+    def name(self):
+        if self.product:
+            return self.product.name
+        if self.basket:
+            return self.basket.name
+        if self.merchandise:
+            return self.merchandise.name
+        return "Unknown Item"
+
+    @property
+    def image(self):
+        if self.product and self.product.image:
+            return self.product.image.url
+        if self.basket and self.basket.image:
+            return self.basket.image.url
+        if self.merchandise and self.merchandise.image:
+            return self.merchandise.image.url
+        return None

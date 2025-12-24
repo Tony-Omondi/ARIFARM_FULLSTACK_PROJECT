@@ -1,47 +1,209 @@
-{% extends 'products/base.html' %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block products_content %}
-<h1>Search Results for "{{ query }}"</h1>
+{% block title %}Search Results for "{{ query }}"{% endblock %}
 
-{% if query %}
-    <h2>Products ({{ results.products.count }})</h2>
-    {% for product in results.products %}
-    <div>
-        <h3><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h3>
-        <p>${{ product.price }}</p>
+{% block content %}
+
+{# --- CSS For Card Styling (Same as Product List) --- #}
+<style>
+    .search-wrapper {
+        background-color: #f8f9fa;
+        padding-bottom: 50px;
+    }
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        color: #333;
+    }
+    /* Card Styling */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%;
+        display: block;
+        background-color: #f9f9f9;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    .product-content {
+        padding: 20px 15px;
+        text-align: center;
+    }
+    .product-title a {
+        color: #333;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .price-box {
+        margin-top: 10px;
+        font-weight: 700;
+        color: #1B1B1C;
+    }
+    /* Category Card specific */
+    .category-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: 0.3s;
+        height: 100%;
+    }
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="search-wrapper">
+    <div class="breadcrumbs-area position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-content position-relative section-content">
+                        <h3 class="title-3">Search Results</h3>
+                        <ul>
+                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
+                            <li>Search: "{{ query }}"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% empty %}
-    <p>No products found</p>
-    {% endfor %}
-    
-    <h2>Recipes ({{ results.recipes.count }})</h2>
-    {% for recipe in results.recipes %}
-    <div>
-        <h3><a href="{% url 'products:recipe_detail' recipe.slug %}">{{ recipe.title }}</a></h3>
+
+    <div class="container custom-area mt-5">
+        {% if query %}
+            
+            {% if results.products %}
+            <div class="row mb-5">
+                <div class="col-12"><h2 class="section-title">Products ({{ results.products.count }})</h2></div>
+                {% for product in results.products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="single-product-card">
+                        <div class="product-image position-relative">
+                            <a class="d-block product-image-ratio" href="{{ product.get_absolute_url }}">
+                                <img src="{{ product.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ product.name }}">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <h4 class="product-title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                            <div class="price-box">KSh {{ product.price }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if results.baskets %}
+            <div class="row mb-5">
+                <div class="col-12"><h2 class="section-title">Combos & Baskets ({{ results.baskets.count }})</h2></div>
+                {% for basket in results.baskets %}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="single-product-card">
+                        <div class="product-image position-relative">
+                            <a class="d-block product-image-ratio" href="{{ basket.get_absolute_url }}">
+                                <img src="{{ basket.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ basket.name }}">
+                            </a>
+                            {% if basket.discount_percentage > 0 %}
+                                <span class="badge position-absolute" style="top:10px;left:10px; background: #dc3545; color: white; padding: 5px 10px; border-radius: 4px;">Save {{ basket.discount_percentage }}%</span>
+                            {% endif %}
+                        </div>
+                        <div class="product-content">
+                            <h4 class="product-title"><a href="{{ basket.get_absolute_url }}">{{ basket.name }}</a></h4>
+                            <div class="price-box">KSh {{ basket.price }}</div>
+                            <small class="text-success">{{ basket.included_products.count }} items</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if results.recipes %}
+            <div class="row mb-5">
+                <div class="col-12"><h2 class="section-title">Recipes ({{ results.recipes.count }})</h2></div>
+                {% for recipe in results.recipes %}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="single-product-card">
+                        <div class="product-image position-relative">
+                            <a class="d-block product-image-ratio" href="{{ recipe.get_absolute_url }}">
+                                <img src="{{ recipe.image.url|default:'/static/assets/images/recipe/placeholder.jpg' }}" alt="{{ recipe.title }}">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <h4 class="product-title"><a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a></h4>
+                            <div class="text-muted small mt-2">
+                                <i class="fa fa-clock-o"></i> {{ recipe.total_time }} min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if results.categories %}
+            <div class="row mb-5">
+                <div class="col-12"><h2 class="section-title">Categories ({{ results.categories.count }})</h2></div>
+                {% for category in results.categories %}
+                <div class="col-lg-3 col-md-4 col-6">
+                    <div class="category-card text-center">
+                        <a href="{{ category.get_absolute_url }}" class="d-block text-decoration-none">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="mb-3 d-flex align-items-center justify-content-center mx-auto bg-light rounded-circle" style="width: 100px; height: 100px;">
+                                    <i class="fa fa-leaf fa-2x text-success"></i>
+                                </div>
+                            {% endif %}
+                            <h5 style="color: #333;">{{ category.name }}</h5>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if not results.products and not results.recipes and not results.baskets and not results.categories %}
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center py-5">
+                    <i class="ion-ios-search" style="font-size: 60px; color: #ccc;"></i>
+                    <h3 class="mt-3">No results found for "{{ query }}"</h3>
+                    <p class="text-muted">Try checking your spelling or use different keywords.</p>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-dark mt-3">Browse All Products</a>
+                </div>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center py-5">
+                    <i class="ion-ios-search-strong" style="font-size: 60px; color: #ccc;"></i>
+                    <h3 class="mt-3">Search our store</h3>
+                    <p class="text-muted">Enter a keyword to search for products, recipes, or categories.</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    {% empty %}
-    <p>No recipes found</p>
-    {% endfor %}
-    
-    <h2>Combos ({{ results.baskets.count }})</h2>
-    {% for basket in results.baskets %}
-    <div>
-        <h3><a href="{% url 'products:basket_detail' basket.slug %}">{{ basket.name }}</a></h3>
-        <p>${{ basket.price }}</p>
-    </div>
-    {% empty %}
-    <p>No combos found</p>
-    {% endfor %}
-    
-    <h2>Categories ({{ results.categories.count }})</h2>
-    {% for category in results.categories %}
-    <div>
-        <h3><a href="{% url 'products:category_products' category.slug %}">{{ category.name }}</a></h3>
-    </div>
-    {% empty %}
-    <p>No categories found</p>
-    {% endfor %}
-{% else %}
-<p>Enter a search term</p>
-{% endif %}
+</div>
 {% endblock %}

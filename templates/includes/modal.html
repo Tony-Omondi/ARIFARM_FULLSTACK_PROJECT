@@ -1,68 +1,112 @@
 {% load static %}
-<!-- Modal Area Start Here -->
 <div class="modal fade obrien-modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            
             <button type="button" class="close close-button" data-bs-dismiss="modal" aria-label="Close">
                 <span class="close-icon" aria-hidden="true">x</span>
             </button>
+            
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
+                        
                         <div class="col-lg-6 col-md-6 text-center">
                             <div class="product-image">
-                                <img src="{% static 'assets/images/product/1.jpg' %}" alt="Product Image">
+                                <img id="modal_product_image" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Product Image">
                             </div>
                         </div>
+                        
                         <div class="col-lg-6 col-md-6">
                             <div class="modal-product">
                                 <div class="product-content">
                                     <div class="product-title">
-                                        <h4 class="title">Product dummy name</h4>
+                                        <h4 class="title" id="modal_product_title">Loading Product...</h4>
                                     </div>
+                                    
                                     <div class="price-box">
-                                        <span class="regular-price ">$80.00</span>
-                                        <span class="old-price"><del>$90.00</del></span>
+                                        <span class="regular-price" id="modal_product_price"></span>
                                     </div>
+                                    
                                     <div class="product-rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
                                         <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <span>1 Review</span>
+                                        <span>(Review)</span>
                                     </div>
-                                    <p class="desc-content">we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame bel...</p>
-                                    <form class="d-flex flex-column w-100" action="#">
-                                        <div class="form-group">
-                                            <select class="form-control nice-select w-100">
-                                                <option>S</option>
-                                                <option>M</option>
-                                                <option>L</option>
-                                                <option>XL</option>
-                                                <option>XXL</option>
-                                            </select>
-                                        </div>
-                                    </form>
+                                    
+                                    <div class="product-desc">
+                                        <p class="desc-content" id="modal_product_description">
+                                            Product details will appear here.
+                                        </p>
+                                    </div>
+                                    
                                     <div class="quantity-with_btn">
                                         <div class="quantity">
                                             <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="0" type="text">
+                                                <input class="cart-plus-minus-box" value="1" type="text" id="modal_quantity">
                                                 <div class="dec qtybutton">-</div>
                                                 <div class="inc qtybutton">+</div>
                                             </div>
                                         </div>
                                         <div class="add-to_cart">
-                                            <a class="btn obrien-button primary-btn" href="/">Add to cart</a>
+                                            <a class="btn obrien-button primary-btn" href="#" id="modal_add_to_cart_btn" data-product-id="">
+                                                Add to cart
+                                            </a>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Modal Area End Here -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all Quick View buttons (Add class 'quick-view-btn' to your product links in home.html)
+        const quickViewButtons = document.querySelectorAll('.quick-view-btn');
+        
+        quickViewButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get data from data attributes
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const price = this.getAttribute('data-price');
+                const image = this.getAttribute('data-image');
+                const desc = this.getAttribute('data-desc');
+                
+                // Populate Modal Fields
+                document.getElementById('modal_product_title').textContent = name;
+                document.getElementById('modal_product_price').textContent = '₵' + price;
+                document.getElementById('modal_product_image').src = image;
+                document.getElementById('modal_product_description').textContent = desc;
+                
+                // Update Add to Cart Button ID
+                const addBtn = document.getElementById('modal_add_to_cart_btn');
+                addBtn.setAttribute('data-product-id', id);
+                
+                // Show Modal (Bootstrap 5)
+                const modal = new bootstrap.Modal(document.getElementById('exampleModalCenter'));
+                modal.show();
+            });
+        });
+        
+        // Modal Add to Cart Logic
+        document.getElementById('modal_add_to_cart_btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            const quantity = document.getElementById('modal_quantity').value;
+            alert(`Adding Product ID ${productId} with quantity ${quantity} to cart!`);
+            // You can replace this alert with your actual AJAX add-to-cart logic
+        });
+    });
+</script>

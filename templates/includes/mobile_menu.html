@@ -7,7 +7,9 @@
     <div class="off-canvas-inner-content">
         <div class="off-canvas-header">
             <div class="logo-area">
-                <span class="menu-title">Menu</span>
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'assets/images/logo/logo.png' %}" alt="AriFarm Logo" style="max-height: 40px;">
+                </a>
             </div>
             <div class="btn-close-off-canvas" onclick="toggleMenu()">
                 <i class="fa fa-times"></i>
@@ -16,13 +18,6 @@
 
         <div class="off-canvas-scrollable">
             
-            <div class="search-box-offcanvas">
-                <form action="{% url 'products:search' %}" method="get">
-                    <input type="text" name="q" placeholder="Search product..." required>
-                    <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
-                </form>
-            </div>
-
             <div class="mobile-navigation">
                 <nav>
                     <ul class="mobile-menu">
@@ -40,8 +35,8 @@
                         <li class="{% if url_name == 'recipe_list' %}active-menu{% endif %}">
                             <a href="{% url 'products:recipe_list' %}">Recipes</a>
                         </li>
-                        <li class="{% if url_name == 'category_list' %}active-menu{% endif %}">
-                            <a href="{% url 'products:category_list' %}">Categories</a>
+                        <li class="{% if url_name == 'gallery' %}active-menu{% endif %}">
+                            <a href="{% url 'gallery' %}">Gallery</a>
                         </li>
 
                         <li class="divider"></li>
@@ -58,14 +53,15 @@
                                 <div class="user-info">
                                     <i class="fa fa-user-circle"></i> Hello, {{ user.first_name|default:user.username }}
                                 </div>
+                                <a href="{% url 'profile' %}" class="btn-login" style="margin-top: 10px; display: inline-block;">My Account</a>
                                 {% if user.is_staff %}
                                     <a href="{% url 'products:admin_dashboard' %}" class="admin-link">Admin Dashboard</a>
                                 {% endif %}
-                                <a href="/admin/logout/" class="logout-link">Logout</a>
+                                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
                             {% else %}
                                 <div class="auth-buttons">
-                                    <a href="{% url 'admin_login' %}" class="btn-login">Login</a>
-                                    <a href="#" class="btn-register">Register</a>
+                                    <a href="{% url 'login' %}" class="btn-login">Login</a>
+                                    <a href="{% url 'email_register' %}" class="btn-register">Register</a>
                                 </div>
                             {% endif %}
                         </li>
@@ -77,14 +73,15 @@
 
             <div class="offcanvas-widget-area">
                 <div class="contact-info">
-                    <p><i class="fa fa-phone"></i> <a href="tel:123456789">(123) 456-7890</a></p>
-                    <p><i class="fa fa-envelope"></i> <a href="mailto:info@obrien.com">info@obrien.com</a></p>
+                    <p><i class="fa fa-map-marker"></i> Nairobi, Kenya</p>
+                    <p><i class="fa fa-phone"></i> <a href="tel:+254700000000">+254 700 000 000</a></p>
+                    <p><i class="fa fa-envelope"></i> <a href="mailto:info@arifarm.co.ke">info@arifarm.co.ke</a></p>
                 </div>
                 <div class="social-icons">
                     <a href="#"><i class="fa fa-facebook-f"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
                     <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-youtube"></i></a>
+                    <a href="#"><i class="fa fa-whatsapp"></i></a>
                 </div>
             </div>
         </div>

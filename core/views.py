@@ -106,3 +106,32 @@ class AdminGalleryView(TemplateView):
 
 class AdminReportView(TemplateView):
     template_name = 'admin/report.html'
+
+
+
+from django.views.generic import TemplateView
+from django.shortcuts import render
+from django.contrib import messages
+
+class AboutView(TemplateView):
+    template_name = 'core/about.html'
+
+class ContactView(TemplateView):
+    template_name = 'core/contact.html'
+
+    def post(self, request, *args, **kwargs):
+        # 1. Get data from the form
+        name = request.POST.get('con_name')
+        email = request.POST.get('con_email')
+        subject = request.POST.get('con_content')
+        message = request.POST.get('con_message')
+
+        # 2. (Optional) Add logic here to send an actual email using django.core.mail
+        # send_mail(subject, message, email, [settings.DEFAULT_FROM_EMAIL])
+
+        # 3. Show a success message to the user
+        messages.success(request, f"Thank you {name}! Your message has been received.")
+
+        # 4. Render the page again (or you could redirect)
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)

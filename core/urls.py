@@ -43,4 +43,6 @@ urlpatterns = [
     path('admin-dashboard/gallery/', AdminGalleryView.as_view(), name='admin_gallery'),
     path('admin-dashboard/report/', AdminReportView.as_view(), name='admin_report'),
     path('gallery/', GalleryView.as_view(), name='gallery'),
+    path('about/', AboutView.as_view(), name='about'),
+    path('contact/', ContactView.as_view(), name='contact'),
 ]

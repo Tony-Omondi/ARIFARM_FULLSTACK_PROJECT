@@ -13,7 +13,7 @@ urlpatterns = [
     # backend/urls.py (add this line)
     path('cart/', include('cart.urls')),
     path('checkout/', include('checkout.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    # path('dashboard/', include('dashboard.urls')),
 ]
 
 if settings.DEBUG:

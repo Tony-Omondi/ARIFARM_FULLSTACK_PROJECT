@@ -6,25 +6,129 @@
 {% block description %}Welcome to Arifarm - Your trusted source for organic food and healthy lifestyle products. Fresh, natural, and sustainable organic products delivered to your doorstep.{% endblock %}
 
 {% block content %}
+
+{# --- CSS FOR UNIFIED CARD STYLING --- #}
+<style>
+    /* Global Card Styling */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 10px; /* Spacing for slider */
+        height: 100%;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* 1:1 Aspect Ratio for Images */
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%; /* Creates 1:1 square */
+        display: block;
+        background-color: #f9f9f9;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Hover Image Switch Effect */
+    .product-image-2 {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease;
+    }
+    .single-product-card:hover .product-image-2 {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Action Buttons Overlay */
+    .action-overlay {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        z-index: 5;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .single-product-card:hover .action-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Action Button Styles */
+    .action-btn {
+        background: white;
+        color: #333;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0 5px;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+    }
+    .action-btn:hover {
+        background: #E98C81; /* Brand Accent Color */
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    /* Badges */
+    .out-of-stock-badge {
+        background: #dc3545;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: 500;
+        font-size: 11px;
+        position: absolute;
+        top: 10px; left: 10px; z-index: 10;
+    }
+
+    /* Slider Fixes */
+    .slick-list {
+        padding: 10px 0 20px 0 !important; 
+        margin: -10px 0 -20px 0; 
+    }
+    .single-item {
+        padding: 0 10px;
+    }
+    
+    /* Price Styling */
+    .regular-price {
+        color: #1B1B1C;
+        font-weight: 700;
+        font-size: 16px;
+    }
+    .old-price {
+        color: #999;
+        text-decoration: line-through;
+        font-size: 13px;
+        margin-left: 8px;
+    }
+</style>
+
 <div class="slider-area">
     <div class="obrien-slider arrow-style" data-slick-options='{
-    "slidesToShow": 1,
-    "slidesToScroll": 1,
-    "infinite": true,
-    "arrows": true,
-    "dots": true,
-    "autoplay" : true,
-    "fade" : true,
-    "autoplaySpeed" : 7000,
-    "pauseOnHover" : false,
-    "pauseOnFocus" : false
-    }' data-slick-responsive='[
-    {"breakpoint":992, "settings": {
-    "slidesToShow": 1,
-    "arrows": false,
-    "dots": true
-    }}
-    ]'>
+    "slidesToShow": 1, "autoplay": true, "fade": true, "autoplaySpeed": 7000, "arrows": true, "dots": true
+    }' data-slick-responsive='[{"breakpoint":992, "settings": {"arrows": false, "dots": true}}]'>
         <div class="slide-item slide-1 bg-position slide-bg-1 animation-style-01">
             <div class="slider-content">
                 <h4 class="slider-small-title text-white">Fuel your body naturally</h4>
@@ -45,15 +149,15 @@
         </div>
     </div>
 </div>
+
 <div class="feature-area">
     <div class="container container-default custom-wrapper">
         <div class="row">
             <div class="col-xl-6 col-lg-5 col-md-12 col-custom">
                 <div class="feature-content-wrapper">
                     <h2 class="title">Important to eat fruit</h2>
-                    <p class="desc-content">Eating fruit provides health benefits — people who eat more fruits and vegetables as part of an overall healthy diet are likely to have a reduced risk of some chronic diseases. Fruits provide nutrients vital for health and maintenance of your body.</p>
-                    <p class="desc-content"> Fruits are sources of many essential nutrients that are underconsumed, including potassium, dietary fiber, vitamin C, and folate (folic acid).</p>
-                    <p class="desc-content"> Most fruits are naturally low in fat, sodium, and calories. None have cholesterol.</p>
+                    <p class="desc-content">Eating fruit provides health benefits — people who eat more fruits and vegetables as part of an overall healthy diet are likely to have a reduced risk of some chronic diseases.</p>
+                    <p class="desc-content">Fruits provide nutrients vital for health and maintenance of your body. Most fruits are naturally low in fat, sodium, and calories.</p>
                 </div>
             </div>
             <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
@@ -64,6 +168,7 @@
         </div>
     </div>
 </div>
+
 <div class="product-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -78,93 +183,76 @@
         </div>
         <div class="row">
             <div class="col-lg-12 product-wrapper col-custom">
-                <div class="product-slider" data-slick-options='{
-                "slidesToShow": 4,
-                "slidesToScroll": 1,
-                "infinite": true,
-                "arrows": false,
-                "dots": false
-                }' data-slick-responsive='[
-                {"breakpoint": 1200, "settings": {"slidesToShow": 3}},
-                {"breakpoint": 992, "settings": {"slidesToShow": 2}},
-                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
-                ]'>
+                <div class="product-slider" data-slick-options='{"slidesToShow": 4, "slidesToScroll": 1, "infinite": true, "arrows": false, "dots": false}' data-slick-responsive='[{"breakpoint": 1200, "settings": {"slidesToShow": 3}}, {"breakpoint": 992, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 1}}]'>
                     {% for product in featured_products|slice:":5" %}
                     <div class="single-item">
-                        <div class="single-product position-relative">
-                            <div class="product-image">
-                                <a class="d-block" href="{{ product.get_absolute_url }}">
+                        <div class="single-product-card position-relative">
+                            <div class="product-image position-relative">
+                                <a class="d-block product-image-ratio" href="{{ product.get_absolute_url }}">
                                     {% if product.image %}
-                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1 w-100">
-                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-1">
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-2 position-absolute" style="top: 0; left: 0;">
                                     {% else %}
-                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ product.name }}" class="product-image-1 w-100">
-                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ product.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top: 0; left: 0;">
                                     {% endif %}
                                 </a>
+
                                 {% if product.is_new %}
-                                    <span class="badge badge-warning position-absolute" style="top:10px;left:10px;">New</span>
+                                    <span class="badge position-absolute" style="top:10px;left:10px; background: #E98C81; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; z-index: 10;">New</span>
                                 {% endif %}
+
                                 {% if product.stock <= 0 %}
-                                    <div class="label-product">
-                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
-                                    </div>
+                                    <div class="out-of-stock-badge">Out of Stock</div>
                                 {% endif %}
+
+                                <div class="action-overlay d-flex justify-content-center">
+                                    {% if product.stock > 0 %}
+                                        {% if user.is_authenticated %}
+                                            <form action="{% url 'cart:add_to_cart' %}" method="post" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <input type="hidden" name="next" value="{{ request.path }}">
+                                                <button type="submit" class="action-btn" title="Add to Cart"><i class="ion-bag"></i></button>
+                                            </form>
+                                        {% else %}
+                                            <a href="{% url 'login' %}?next={{ request.path }}" class="action-btn" title="Login to Add to Cart"><i class="ion-bag"></i></a>
+                                        {% endif %}
+                                    {% endif %}
+                                    <a href="{{ product.get_absolute_url }}" class="action-btn" title="Quick View"><i class="ion-eye"></i></a>
+                                </div>
                             </div>
-                            <div class="product-content">
+
+                            <div class="product-content text-center" style="padding: 20px 15px;">
                                 <div class="product-title">
-                                    <h4 class="title-2">
-                                        <a href="{{ product.get_absolute_url }}">{{ product.name|truncatechars:40 }}</a>
+                                    <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                        <a href="{{ product.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ product.name }}</a>
                                     </h4>
                                 </div>
-                                {% if product.category %}
-                                <div class="product-category mb-2">
-                                    <small class="text-muted">
-                                        <i class="fa fa-tag"></i> {{ product.category.name }}
-                                    </small>
-                                </div>
-                                {% endif %}
                                 <div class="price-box">
-                                    <span class="regular-price">₵{{ product.price }}</span>
+                                    <span class="regular-price">KSh {{ product.price }}</span>
                                 </div>
-                                <div class="added-date mt-1">
-                                    <small class="text-muted">
-                                        <i class="fa fa-calendar"></i> Added {{ product.created_at|timesince }} ago
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="add-action d-flex position-absolute">
-                                {% if product.stock > 0 %}
-                                    <a href="#" title="Add To cart" data-product-id="{{ product.id }}">
-                                        <i class="ion-bag"></i>
-                                    </a>
-                                {% endif %}
-                                <a href="{{ product.get_absolute_url }}" title="Quick View">
-                                    <i class="ion-eye"></i>
-                                </a>
-                                <a href="#" title="Add To Wishlist">
-                                    <i class="ion-ios-heart-outline"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="col-12 text-center">
-                        <p>No latest products available yet.</p>
-                    </div>
+                    <div class="col-12 text-center"><p>No latest products available yet.</p></div>
                     {% endfor %}
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="{% url 'products:product_list' %}?ordering=-created_at" class="btn obrien-button-2 treansparent-color">
-                    <i class="ion-ios-refresh"></i> View All Latest Products
+        
+        <div class="row mt-5 mb-5">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <a href="{% url 'products:product_list' %}?ordering=-created_at" class="btn obrien-button-2 treansparent-color" style="padding: 12px 40px;">
+                    <i class="ion-ios-refresh mr-2"></i> View All Latest Products
                 </a>
             </div>
         </div>
     </div>
 </div>
+
 <div class="feature-area feature-area-boxed-home mb-text">
     <div class="container container-default custom-area">
         <div class="row align-items-center">
@@ -172,15 +260,14 @@
                 <div class="feature-content-wrapper">
                     <h2 class="title">Our Mission</h2>
                     <p class="desc-content">At Obrien, we are dedicated to providing the highest quality organic products that nourish both your body and the planet. Our commitment to sustainability and health drives everything we do.</p>
-                    <p class="desc-content"> We source our products from certified organic farms that practice sustainable agriculture, ensuring that every item you purchase supports environmental stewardship and healthy communities.</p>
-                    <p class="desc-content"> Our mission is to make organic living accessible to everyone while maintaining the highest standards of quality and ethical practices.</p>
+                    <p class="desc-content">We source our products from certified organic farms that practice sustainable agriculture, ensuring that every item you purchase supports environmental stewardship and healthy communities.</p>
                 </div>
             </div>
             <div class="col-xl-6 col-lg-7 col-md-12 col-custom">
                 <div class="feature-image position-relative">
                     <img src="{% static 'assets/images/feature/feature-2.jpeg' %}" alt="AriFarm Mission">
                     <div class="popup-video position-absolute">
-                        <a class="popup-vimeo" href="https://www.youtube.com/watch?v=_9VUPq3SxOc">
+                        <a class="video-popup" href="https://www.youtube.com/watch?v=_9VUPq3SxOc">
                             <i class="ion-play"></i>
                         </a>
                     </div>
@@ -189,6 +276,7 @@
         </div>
     </div>
 </div>
+
 <div class="banner-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -216,6 +304,7 @@
         </div>
     </div>
 </div>
+
 {% if product_baskets %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -231,66 +320,46 @@
         </div>
         <div class="row">
             <div class="col-lg-12 product-wrapper col-custom">
-                <div class="product-slider" data-slick-options='{
-                "slidesToShow": 3,
-                "slidesToScroll": 1,
-                "infinite": true,
-                "arrows": false,
-                "dots": false
-                }' data-slick-responsive='[
-                {"breakpoint": 1200, "settings": {"slidesToShow": 2}},
-                {"breakpoint": 768, "settings": {"slidesToShow": 1}},
-                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
-                ]'>
+                <div class="product-slider" data-slick-options='{"slidesToShow": 3, "slidesToScroll": 1, "infinite": true, "arrows": false, "dots": false}' data-slick-responsive='[{"breakpoint": 1200, "settings": {"slidesToShow": 2}}, {"breakpoint": 768, "settings": {"slidesToShow": 1}}, {"breakpoint": 576, "settings": {"slidesToShow": 1}}]'>
                     {% for basket in product_baskets %}
                     <div class="single-item">
-                        <div class="single-product position-relative">
-                            <div class="product-image">
-                                <a class="d-block" href="{{ basket.get_absolute_url }}">
+                        <div class="single-product-card position-relative">
+                            <div class="product-image position-relative">
+                                <a class="d-block product-image-ratio" href="{{ basket.get_absolute_url }}">
                                     {% if basket.image %}
-                                        <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-1 w-100">
-                                        <img src="{{ basket.image.url }}" alt="{{ basket.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{{ basket.image.url }}" class="product-image-1">
+                                        <img src="{{ basket.image.url }}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% else %}
-                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ basket.name }}" class="product-image-1 w-100">
-                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="{{ basket.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-1">
+                                        <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% endif %}
                                 </a>
+
                                 {% if basket.discount_percentage > 0 %}
-                                    <span class="badge badge-danger position-absolute" style="top:10px;left:10px;">
+                                    <span class="badge position-absolute" style="top:10px;left:10px; background: #dc3545; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; z-index: 10;">
                                         Save {{ basket.discount_percentage }}%
                                     </span>
                                 {% endif %}
-                            </div>
-                            <div class="product-content">
-                                <div class="product-title">
-                                    <h4 class="title-2">
-                                        <a href="{{ basket.get_absolute_url }}">{{ basket.name|truncatechars:40 }}</a>
-                                    </h4>
+
+                                <div class="action-overlay d-flex justify-content-center">
+                                    <a href="{{ basket.get_absolute_url }}" class="action-btn" title="View Bundle"><i class="ion-eye"></i></a>
+                                    <a href="#" class="action-btn" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
                                 </div>
+                            </div>
+
+                            <div class="product-content text-center" style="padding: 20px 15px;">
+                                <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                    <a href="{{ basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ basket.name }}</a>
+                                </h4>
                                 <div class="price-box">
-                                    <span class="regular-price text-success">₵{{ basket.price }}</span>
+                                    <span class="regular-price">KSh {{ basket.price }}</span>
                                     {% if basket.total_original_price > basket.price %}
-                                        <span class="old-price text-muted ml-2" style="text-decoration: line-through; font-size: 0.9em;">₵{{ basket.total_original_price|floatformat:2 }}</span>
+                                        <span class="old-price">KSh {{ basket.total_original_price }}</span>
                                     {% endif %}
                                 </div>
-                                <div class="savings-info mt-2">
-                                    <small class="text-success">
-                                        <i class="fa fa-tag"></i> Save ₵{{ basket.savings_per_basket|floatformat:2 }}
-                                    </small>
+                                <div class="mt-2 text-success small">
+                                    <i class="fa fa-cube"></i> Contains {{ basket.included_products.count }} items
                                 </div>
-                                <div class="basket-products-count mt-2">
-                                    <small class="text-muted">
-                                        <i class="fa fa-cube"></i> Contains {{ basket.included_products.count }} items
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="add-action d-flex position-absolute">
-                                <a href="{{ basket.get_absolute_url }}" title="View Combo">
-                                    <i class="ion-eye"></i>
-                                </a>
-                                <a href="#" title="Save Combo">
-                                    <i class="ion-ios-heart-outline"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -298,9 +367,10 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="{% url 'products:basket_list' %}" class="btn obrien-button-3 black-button">
+        
+        <div class="row mt-5 mb-5">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <a href="{% url 'products:basket_list' %}" class="btn obrien-button-3 black-button" style="padding: 12px 40px;">
                     View All Combo Offers
                 </a>
             </div>
@@ -308,6 +378,7 @@
     </div>
 </div>
 {% endif %}
+
 {% if featured_recipes %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -316,77 +387,50 @@
                 <div class="section-content">
                     <h2 class="title-1 text-uppercase">Featured Recipes</h2>
                     <div class="desc-content">
-                        <p>Try these delicious recipes using our fresh organic ingredients. Free recipes to inspire healthy cooking!</p>
+                        <p>Try these delicious recipes using our fresh organic ingredients.</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12 product-wrapper col-custom">
-                <div class="product-slider" data-slick-options='{
-                "slidesToShow": 3,
-                "slidesToScroll": 1,
-                "infinite": true,
-                "arrows": false,
-                "dots": false
-                }' data-slick-responsive='[
-                {"breakpoint": 1200, "settings": {"slidesToShow": 2}},
-                {"breakpoint": 768, "settings": {"slidesToShow": 1}},
-                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
-                ]'>
+                <div class="product-slider" data-slick-options='{"slidesToShow": 3, "slidesToScroll": 1, "infinite": true, "arrows": false, "dots": false}' data-slick-responsive='[{"breakpoint": 1200, "settings": {"slidesToShow": 2}}, {"breakpoint": 768, "settings": {"slidesToShow": 1}}, {"breakpoint": 576, "settings": {"slidesToShow": 1}}]'>
                     {% for recipe in featured_recipes %}
                     <div class="single-item">
-                        <div class="single-product position-relative">
-                            <div class="product-image">
-                                <a class="d-block" href="{{ recipe.get_absolute_url }}">
+                        <div class="single-product-card position-relative">
+                            <div class="product-image position-relative">
+                                <a class="d-block product-image-ratio" href="{{ recipe.get_absolute_url }}">
                                     {% if recipe.image %}
-                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
-                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                        <img src="{{ recipe.image.url }}" class="product-image-1">
+                                        <img src="{{ recipe.image.url }}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% else %}
-                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" alt="{{ recipe.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
-                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" alt="{{ recipe.title }}" class="product-image-2 position-absolute w-100" style="height: 250px; object-fit: cover;">
+                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-1">
+                                        <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% endif %}
                                 </a>
+
                                 <span class="badge position-absolute" style="top:10px;left:10px; 
                                     {% if recipe.difficulty == 'easy' %}background-color:#28a745;
                                     {% elif recipe.difficulty == 'medium' %}background-color:#ffc107;color:#000;
                                     {% elif recipe.difficulty == 'hard' %}background-color:#dc3545;
                                     {% else %}background-color:#6c757d;
-                                    {% endif %}">
+                                    {% endif %} color:white; padding: 4px 8px; border-radius:4px; z-index: 10;">
                                     {{ recipe.get_difficulty_display }}
                                 </span>
-                                {% if recipe.is_featured %}
-                                    <span class="badge badge-warning position-absolute" style="top:10px;right:10px;">
-                                        <i class="fa fa-star"></i> Featured
-                                    </span>
-                                {% endif %}
-                            </div>
-                            <div class="product-content">
-                                <div class="product-title">
-                                    <h4 class="title-2">
-                                        <a href="{{ recipe.get_absolute_url }}">{{ recipe.title|truncatechars:40 }}</a>
-                                    </h4>
+
+                                <div class="action-overlay d-flex justify-content-center">
+                                    <a href="{{ recipe.get_absolute_url }}" class="action-btn" title="View Recipe"><i class="ion-eye"></i></a>
+                                    <a href="#" class="action-btn" title="Save Recipe"><i class="ion-ios-bookmark-outline"></i></a>
                                 </div>
-                                <div class="recipe-meta mb-2">
-                                    <small class="text-muted">
-                                        <i class="fa fa-clock-o"></i> {{ recipe.total_time }}min
-                                        <i class="fa fa-users ml-2"></i> {{ recipe.servings }} serves
-                                    </small>
-                                </div>
-                                <p class="desc-content text-muted small">
-                                    {{ recipe.description|truncatewords:15 }}
-                                </p>
                             </div>
-                            <div class="add-action d-flex position-absolute">
-                                <a href="{{ recipe.get_absolute_url }}" title="View Recipe">
-                                    <i class="ion-eye"></i>
-                                </a>
-                                <a href="#" title="Save Recipe">
-                                    <i class="ion-ios-bookmark-outline"></i>
-                                </a>
-                                <a href="#" title="Print Recipe">
-                                    <i class="ion-printer"></i>
-                                </a>
+
+                            <div class="product-content text-center" style="padding: 20px 15px;">
+                                <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                    <a href="{{ recipe.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ recipe.title|truncatechars:30 }}</a>
+                                </h4>
+                                <div class="small text-muted">
+                                    <i class="fa fa-clock-o"></i> {{ recipe.total_time }} min | <i class="fa fa-users"></i> {{ recipe.servings }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -394,9 +438,10 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="{% url 'products:recipe_list' %}" class="btn obrien-button primary-btn">
+        
+        <div class="row mt-5 mb-5">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <a href="{% url 'products:recipe_list' %}" class="btn obrien-button primary-btn" style="padding: 12px 40px;">
                     View All Recipes
                 </a>
             </div>
@@ -404,6 +449,7 @@
     </div>
 </div>
 {% endif %}
+
 {% if merchandise %}
 <div class="product-area">
     <div class="container container-default custom-area">
@@ -412,72 +458,57 @@
                 <div class="section-content">
                     <h2 class="title-1 text-uppercase">Merchandise & Gifts</h2>
                     <div class="desc-content">
-                        <p>Check out our exclusive merchandise collection - perfect gifts for organic food lovers!</p>
+                        <p>Check out our exclusive merchandise collection.</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12 product-wrapper col-custom">
-                <div class="product-slider" data-slick-options='{
-                "slidesToShow": 4,
-                "slidesToScroll": 1,
-                "infinite": true,
-                "arrows": false,
-                "dots": false
-                }' data-slick-responsive='[
-                {"breakpoint": 1200, "settings": {"slidesToShow": 3}},
-                {"breakpoint": 992, "settings": {"slidesToShow": 2}},
-                {"breakpoint": 576, "settings": {"slidesToShow": 1}}
-                ]'>
+                <div class="product-slider" data-slick-options='{"slidesToShow": 4, "slidesToScroll": 1, "infinite": true, "arrows": false, "dots": false}' data-slick-responsive='[{"breakpoint": 1200, "settings": {"slidesToShow": 3}}, {"breakpoint": 992, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 1}}]'>
                     {% for merch in merchandise %}
                     <div class="single-item">
-                        <div class="single-product position-relative">
-                            <div class="product-image">
-                                <a class="d-block" href="{{ merch.get_absolute_url }}">
+                        <div class="single-product-card position-relative">
+                            <div class="product-image position-relative">
+                                <a class="d-block product-image-ratio" href="{{ merch.get_absolute_url }}">
                                     {% if merch.image %}
-                                        <img src="{{ merch.image.url }}" alt="{{ merch.name }}" class="product-image-1 w-100">
-                                        <img src="{{ merch.image.url }}" alt="{{ merch.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{{ merch.image.url }}" class="product-image-1">
+                                        <img src="{{ merch.image.url }}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% else %}
-                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="{{ merch.name }}" class="product-image-1 w-100">
-                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="{{ merch.name }}" class="product-image-2 position-absolute w-100">
+                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" class="product-image-1">
+                                        <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
                                     {% endif %}
                                 </a>
+
                                 {% if merch.stock <= 0 %}
-                                    <div class="label-product">
-                                        <span class="label-sale position-absolute text-uppercase text-white text-center d-block">Soldout</span>
-                                    </div>
+                                    <div class="out-of-stock-badge">Soldout</div>
                                 {% endif %}
-                            </div>
-                            <div class="product-content">
-                                <div class="product-title">
-                                    <h4 class="title-2">
-                                        <a href="{{ merch.get_absolute_url }}">{{ merch.name|truncatechars:40 }}</a>
-                                    </h4>
-                                </div>
-                                <div class="price-box">
-                                    <span class="regular-price">₵{{ merch.price }}</span>
-                                </div>
-                                <div class="stock-status-small">
+
+                                <div class="action-overlay d-flex justify-content-center">
                                     {% if merch.stock > 0 %}
-                                        <small class="text-success">In Stock</small>
-                                    {% else %}
-                                        <small class="text-danger">Out of Stock</small>
+                                        {% if user.is_authenticated %}
+                                            <form action="{% url 'cart:add_to_cart' %}" method="post" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="product_id" value="{{ merch.id }}"> 
+                                                <input type="hidden" name="quantity" value="1">
+                                                <input type="hidden" name="next" value="{{ request.path }}">
+                                                <button type="submit" class="action-btn" title="Add to Cart"><i class="ion-bag"></i></button>
+                                            </form>
+                                        {% else %}
+                                            <a href="{% url 'login' %}?next={{ request.path }}" class="action-btn" title="Login to Add"><i class="ion-bag"></i></a>
+                                        {% endif %}
                                     {% endif %}
+                                    <a href="{{ merch.get_absolute_url }}" class="action-btn" title="Quick View"><i class="ion-eye"></i></a>
                                 </div>
                             </div>
-                            <div class="add-action d-flex position-absolute">
-                                {% if merch.stock > 0 %}
-                                    <a href="#" title="Add To cart" data-merch-id="{{ merch.id }}">
-                                        <i class="ion-bag"></i>
-                                    </a>
-                                {% endif %}
-                                <a href="{{ merch.get_absolute_url }}" title="Quick View">
-                                    <i class="ion-eye"></i>
-                                </a>
-                                <a href="#" title="Add To Wishlist">
-                                    <i class="ion-ios-heart-outline"></i>
-                                </a>
+
+                            <div class="product-content text-center" style="padding: 20px 15px;">
+                                <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                    <a href="{{ merch.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ merch.name|truncatechars:40 }}</a>
+                                </h4>
+                                <div class="price-box">
+                                    <span class="regular-price">KSh {{ merch.price }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -485,9 +516,10 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="{% url 'products:merchandise_list' %}" class="btn obrien-button-2 treansparent-color">
+        
+        <div class="row mt-5 mb-5">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <a href="{% url 'products:merchandise_list' %}" class="btn obrien-button-2 treansparent-color" style="padding: 12px 40px;">
                     View All Merchandise
                 </a>
             </div>
@@ -495,6 +527,7 @@
     </div>
 </div>
 {% endif %}
+
 {% if categories %}
 <div class="feature-area mb-text">
     <div class="container container-default custom-area">
@@ -529,9 +562,10 @@
             </div>
             {% endfor %}
         </div>
-        <div class="row mt-2">
-            <div class="col-12 text-center">
-                <a href="{% url 'products:category_list' %}" class="btn obrien-button-3 black-button">
+        
+        <div class="row mt-3 mb-5">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <a href="{% url 'products:category_list' %}" class="btn obrien-button-3 black-button" style="padding: 12px 40px;">
                     View All Categories
                 </a>
             </div>
@@ -539,6 +573,7 @@
     </div>
 </div>
 {% endif %}
+
 <div class="newsletter-area">
     <div class="container container-default h-100 custom-area">
         <div class="row h-100">
@@ -562,6 +597,7 @@
         </div>
     </div>
 </div>
+
 <div class="support-area">
     <div class="container container-default custom-area">
         <div class="row">
@@ -582,27 +618,22 @@
 {% endblock %}
 
 {% block extra_js %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add to cart functionality for products
-    document.querySelectorAll('a[data-product-id]').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const productId = this.getAttribute('data-product-id');
-            alert('Product added to cart!');
-            // Add your cart logic here
+    
+    // 1. Initialize Video Popup using jQuery (Magnific Popup requirement)
+    if ($.fn.magnificPopup) {
+        $('.video-popup').magnificPopup({
+            type: 'iframe',
+            mainClass: 'mfp-fade',
+            removalDelay: 160,
+            preloader: false,
+            fixedContentPos: false
         });
-    });
-
-    // Add to cart functionality for merchandise
-    document.querySelectorAll('a[data-merch-id]').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const merchId = this.getAttribute('data-merch-id');
-            alert('Merchandise added to cart!');
-            // Add your cart logic here
-        });
-    });
+    }
 
     // Save recipe/bookmark functionality
     document.querySelectorAll('a[title="Save Recipe"], a[title="Save Combo"]').forEach(function(link) {
@@ -615,6 +646,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (icon.classList.contains('ion-ios-heart-outline')) {
                 icon.classList.remove('ion-ios-heart-outline');
                 icon.classList.add('ion-ios-heart', 'text-danger');
+                this.setAttribute('title', title.replace('Save', 'Saved'));
+            } else if (icon.classList.contains('ion-ios-bookmark-outline')) {
+                icon.classList.remove('ion-ios-bookmark-outline');
+                icon.classList.add('ion-ios-bookmark', 'text-success');
                 this.setAttribute('title', title.replace('Save', 'Saved'));
             }
         });

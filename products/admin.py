@@ -1,83 +1,134 @@
-# products/admin.py
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.db.models import Count
+
+# --- UNFOLD IMPORTS ---
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.decorators import display
+from unfold.contrib.forms.widgets import WysiwygWidget
+# ----------------------
+
 from .models import (
     Category, Product, ProductBasket, BasketItem, 
     Recipe, RecipeIngredient, Merchandise, ProductReview
 )
 
-# Register your models here.
+# ================= HELPER FUNCTIONS =================
+def display_image(image_field):
+    """Helper to display small thumbnails in admin list"""
+    if image_field:
+        return format_html(
+            '<img src="{}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;" />',
+            image_field.url
+        )
+    return format_html('<span style="color: #ccc;">-</span>')
+
+# ================= ADMIN CLASSES =================
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'is_active', 'get_products_count', 'created_at']
+class CategoryAdmin(ModelAdmin):
+    list_display = ['image_preview', 'name', 'product_count', 'is_active', 'created_at']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['is_active']
     readonly_fields = ['created_at', 'updated_at']
 
+    @display(description="Image")
+    def image_preview(self, obj):
+        return display_image(obj.image)
+
+    @display(description="Products", ordering="_product_count")
+    def product_count(self, obj):
+        return obj._product_count
+
+    def get_queryset(self, request):
+        # Annotate count so we can sort by it
+        return super().get_queryset(request).prefetch_related('products').annotate(
+            _product_count=Count('products')
+        )
+
+
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
     list_display = [
-        'product_id', 'name', 'category', 'price', 'stock', 
-        'is_new', 'is_in_basket', 'is_active', 'created_at'
+        'image_preview', 'product_id', 'name', 'category', 
+        'price_display', 'stock_status', 'is_new', 'is_active'
     ]
     list_filter = ['category', 'is_new', 'is_in_basket', 'is_active', 'created_at']
     search_fields = ['name', 'product_id', 'description']
     prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['price', 'stock', 'is_new', 'is_active']
+    list_editable = ['is_new', 'is_active']
     readonly_fields = ['product_id', 'is_in_basket', 'created_at', 'updated_at']
-    
+    list_per_page = 20
+
     fieldsets = (
         ('Basic Information', {
-            'fields': ('product_id', 'name', 'slug', 'description')
+            'fields': (('product_id', 'is_active'), 'name', 'slug', 'description')
+        }),
+        ('Media', {
+            'fields': ('image', 'is_new')
         }),
         ('Pricing & Inventory', {
-            'fields': ('price', 'stock')
+            'classes': ('tab',),
+            'fields': ('price', 'stock', 'category')
         }),
-        ('Media & Display', {
-            'fields': ('image', 'is_new', 'is_active')
-        }),
-        ('Categorization', {
-            'fields': ('category',)
-        }),
-        ('Additional Info', {
-            'fields': ('is_in_basket',),
-            'classes': ('collapse',)
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('System Info', {
+            'classes': ('collapse',),
+            'fields': ('is_in_basket', 'created_at', 'updated_at')
         }),
     )
-    
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('baskets')
 
-class BasketItemInline(admin.TabularInline):
+    @display(description="Image")
+    def image_preview(self, obj):
+        return display_image(obj.image)
+
+    @display(description="Price")
+    def price_display(self, obj):
+        if obj.price is None:
+            return "-"
+        return f"KSh {obj.price:,.2f}"
+
+    @display(
+        description="Stock",
+        label={
+            "Out of Stock": "danger",  # Red
+            "Low Stock": "warning",    # Yellow
+            "In Stock": "success",     # Green
+        }
+    )
+    def stock_status(self, obj):
+        if obj.stock is None:
+            return "Out of Stock"
+        if obj.stock == 0:
+            return "Out of Stock"
+        if obj.stock < 10:
+            return "Low Stock"
+        return "In Stock"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('category')
+
+
+class BasketItemInline(TabularInline):
     model = BasketItem
     extra = 1
-    raw_id_fields = ['product']
     autocomplete_fields = ['product']
-    
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "product":
-            kwargs["queryset"] = Product.objects.filter(is_active=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    tab = True
+
 
 @admin.register(ProductBasket)
-class ProductBasketAdmin(admin.ModelAdmin):
+class ProductBasketAdmin(ModelAdmin):
     list_display = [
-        'basket_id', 'name', 'price', 'stock', 'discount_display', 
-        'savings_display', 'is_active', 'created_at'
+        'image_preview', 'basket_id', 'name', 'price_display', 
+        'savings_badge', 'stock_display', 'is_active'
     ]
     list_filter = ['is_active', 'created_at']
-    search_fields = ['name', 'basket_id', 'description']
+    search_fields = ['name', 'basket_id']
     prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['price', 'is_active']
+    list_editable = ['is_active']
     readonly_fields = [
         'basket_id', 'created_at', 'updated_at', 'stock', 
         'total_original_price', 'discount_percentage', 'discount_amount',
@@ -86,95 +137,117 @@ class ProductBasketAdmin(admin.ModelAdmin):
     inlines = [BasketItemInline]
     
     fieldsets = (
-        ('Basic Information', {
-            'fields': ('basket_id', 'name', 'slug', 'description')
+        ('Overview', {
+            'fields': (('basket_id', 'is_active'), 'name', 'slug', 'description', 'image')
         }),
-        ('Pricing', {
-            'fields': ('price',)
-        }),
-        ('Media', {
-            'fields': ('image',)
-        }),
-        ('Status', {
-            'fields': ('is_active',)
-        }),
-        ('Calculated Fields', {
-            'fields': ('stock', 'total_original_price', 'discount_percentage', 
-                      'discount_amount', 'savings_per_basket'),
-            'classes': ('collapse',)
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('Pricing Strategy', {
+            'fields': ('price', 'total_original_price', 'discount_percentage', 'savings_per_basket'),
+            'classes': ('bg-gray-50', 'border', 'border-gray-200', 'rounded-md', 'p-4')
         }),
     )
-    
-    def discount_display(self, obj):
-        if obj.discount_percentage > 0:
-            return f"{obj.discount_percentage}% OFF"
-        return "-"
-    discount_display.short_description = 'Discount'
-    
-    def savings_display(self, obj):
-        return f"₵{obj.savings_per_basket:.2f}"
-    savings_display.short_description = 'Savings'
-    
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('included_products')
 
-class RecipeIngredientInline(admin.TabularInline):
+    @display(description="Image")
+    def image_preview(self, obj):
+        return display_image(obj.image)
+
+    @display(description="Price")
+    def price_display(self, obj):
+        if obj.price is None: return "-"
+        return f"KSh {obj.price:,.2f}"
+    
+    @display(description="Stock")
+    def stock_display(self, obj):
+        return obj.stock
+
+    @display(description="Savings", label=True)
+    def savings_badge(self, obj):
+        try:
+            # Check for None to avoid errors if defaults aren't set
+            if obj.discount_amount and obj.discount_amount > 0:
+                return f"Save KSh {obj.discount_amount:,.0f}"
+        except:
+            pass
+        return "No Discount"
+
+
+class RecipeIngredientInline(TabularInline):
     model = RecipeIngredient
     extra = 1
-    raw_id_fields = ['product']
     autocomplete_fields = ['product']
-    
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "product":
-            kwargs["queryset"] = Product.objects.filter(is_active=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    tab = True
+
 
 @admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
+class RecipeAdmin(ModelAdmin):
     list_display = [
-        'recipe_id', 'title', 'difficulty', 'total_time_display', 
-        'servings', 'is_featured', 'is_active', 'created_at'
+        'image_preview', 'title', 'difficulty_badge', 'total_time_display', 
+        'servings', 'is_featured', 'is_active'
     ]
-    list_filter = ['difficulty', 'is_featured', 'is_active', 'created_at']
-    search_fields = ['title', 'recipe_id', 'description']
+    list_filter = ['difficulty', 'is_featured', 'is_active']
+    search_fields = ['title', 'recipe_id']
     prepopulated_fields = {'slug': ('title',)}
     list_editable = ['is_featured', 'is_active']
-    readonly_fields = ['recipe_id', 'created_at', 'updated_at']
     inlines = [RecipeIngredientInline]
-    
+
+    @display(description="Image")
+    def image_preview(self, obj):
+        return display_image(obj.image)
+
+    @display(
+        description="Difficulty",
+        label={
+            "easy": "success", 
+            "medium": "warning",
+            "hard": "danger",
+        }
+    )
+    def difficulty_badge(self, obj):
+        return obj.difficulty
+
+    @display(description="Time")
     def total_time_display(self, obj):
         return f"{obj.total_time} min"
-    total_time_display.short_description = 'Total Time'
 
-@admin.register(RecipeIngredient)
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ['recipe', 'display_name', 'quantity', 'order']
-    list_filter = ['recipe']
-    search_fields = ['name', 'recipe__title', 'product__name']
-    autocomplete_fields = ['product']
 
 @admin.register(Merchandise)
-class MerchandiseAdmin(admin.ModelAdmin):
-    list_display = ['product_id', 'name', 'price', 'stock', 'is_active', 'created_at']
-    list_filter = ['is_active', 'created_at']
-    search_fields = ['name', 'product_id', 'description']
-    list_editable = ['price', 'stock', 'is_active']
-    readonly_fields = ['product_id', 'created_at', 'updated_at']
+class MerchandiseAdmin(ModelAdmin):
+    list_display = ['image_preview', 'product_id', 'name', 'price_display', 'stock', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'product_id']
+    list_editable = ['stock', 'is_active']
 
+    @display(description="Image")
+    def image_preview(self, obj):
+        return display_image(obj.image)
 
-
-# products/admin.py
-
+    @display(description="Price")
+    def price_display(self, obj):
+        if obj.price is None: return "-"
+        return f"KSh {obj.price:,.2f}"
 
 
 @admin.register(ProductReview)
-class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ['product', 'get_reviewer_name', 'rating', 'rating_stars', 'created_at', 'is_approved']
-    list_filter = ['rating', 'is_approved', 'created_at', 'product__category']
-    search_fields = ['user__email', 'user__first_name', 'user__last_name', 'review_text', 'product__name']
-    readonly_fields = ['created_at']  # only keep created_at read-only
+class ProductReviewAdmin(ModelAdmin):
+    list_display = ['product', 'user_info', 'rating_badge', 'created_at', 'is_approved']
+    list_filter = ['rating', 'is_approved', 'created_at']
+    search_fields = ['user__email', 'product__name', 'review_text']
     list_editable = ['is_approved']
+    readonly_fields = ['created_at']
+
+    @display(description="User")
+    def user_info(self, obj):
+        if not obj.user: return "Anonymous"
+        return obj.user.get_full_name() or obj.user.email
+
+    @display(
+        description="Rating",
+        label={
+            1: "danger",
+            2: "warning",
+            3: "warning",
+            4: "success",
+            5: "success",
+        }
+    )
+    def rating_badge(self, obj):
+        return f"{obj.rating} ★"

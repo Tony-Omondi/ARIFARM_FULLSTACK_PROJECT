@@ -5,8 +5,80 @@
 {% block title %}{{ recipe.title }} - Recipes - Shop{% endblock %}
 
 {% block content %}
+
+{# --- CSS FOR UNIFIED CARD STYLING & PRINT --- #}
+<style>
+    /* Card Container */
+    .single-product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 10px;
+        height: 100%;
+    }
+    .single-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Image Ratio */
+    .product-image-ratio {
+        position: relative;
+        padding-top: 100%;
+        display: block;
+        background-color: #f9f9f9;
+    }
+    .product-image-ratio img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    /* Hover Image Switch */
+    .product-image-2 {
+        opacity: 0; visibility: hidden; transition: opacity 0.4s ease;
+    }
+    .single-product-card:hover .product-image-2 {
+        opacity: 1; visibility: visible;
+    }
+
+    /* Action Overlay */
+    .action-overlay {
+        position: absolute; bottom: 20px; left: 0; width: 100%; z-index: 5;
+        opacity: 0; transform: translateY(10px); transition: all 0.3s ease; text-align: center;
+    }
+    .single-product-card:hover .action-overlay {
+        opacity: 1; transform: translateY(0);
+    }
+    
+    /* Action Buttons */
+    .action-btn {
+        background: white; color: #333; width: 40px; height: 40px; line-height: 40px;
+        text-align: center; border-radius: 50%; margin: 0 5px; display: inline-block;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .action-btn:hover {
+        background: #E98C81; color: white; transform: scale(1.1);
+    }
+
+    /* Slider Fixes */
+    .slick-list { padding: 10px 0 20px 0 !important; margin: -10px 0 -20px 0; }
+    .single-item { padding: 0 10px; }
+
+    /* Print Styles */
+    @media print {
+        header, footer, .breadcrumbs-area, .recipe-actions, .social-share, .nav-tabs, .tab-pane:not(.active), .product-area, .recipe-download-card {
+            display: none !important;
+        }
+        .shop-wrapper { padding-top: 0; }
+        .product-summery { margin-top: 0; }
+        body { font-size: 12pt; color: #000; background: #fff; }
+        a { text-decoration: none; color: #000; }
+    }
+</style>
+
 <div class="shop-wrapper">
-    <!-- Breadcrumb -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -14,7 +86,7 @@
                     <div class="breadcrumb-content position-relative section-content">
                         <h3 class="title-3">{{ recipe.title }}</h3>
                         <ul>
-                            <li><a href="{% url 'products:home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
                             <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
                             <li>{{ recipe.title|truncatechars:30 }}</li>
                         </ul>
@@ -24,72 +96,65 @@
         </div>
     </div>
 
-    <!-- Recipe Main Area -->
     <div class="single-product-main-area">
         <div class="container container-default custom-area">
             <div class="row">
-                <!-- Recipe Image -->
                 <div class="col-lg-5 col-custom">
                     <div class="product-details-img">
                         <div class="single-image border">
-                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="img-fluid">
+                            {% if recipe.image %}
+                                <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="img-fluid w-100">
+                            {% else %}
+                                <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="img-fluid w-100">
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Recipe Info -->
                 <div class="col-lg-7 col-custom">
                     <div class="product-summery position-relative">
                         <div class="product-head mb-3">
                             <h2 class="product-title">{{ recipe.title }}</h2>
                         </div>
                         
-                        <!-- Recipe Meta -->
-                        <div class="recipe-meta mb-4">
-                            <div class="d-flex flex-wrap align-items-center mb-3">
-                                <span class="badge mr-3 mb-2" style="background-color: 
+                        <div class="recipe-meta mb-4 p-3 bg-light rounded border">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                <span class="badge p-2 mb-2 text-white text-uppercase" style="font-size: 12px; background-color: 
                                     {% if recipe.difficulty == 'easy' %}#28a745
                                     {% elif recipe.difficulty == 'medium' %}#ffc107
                                     {% elif recipe.difficulty == 'hard' %}#dc3545
                                     {% else %}#6c757d
-                                    {% endif %}; color: {% if recipe.difficulty == 'medium' %}#000{% else %}#fff{% endif %}; font-size: 14px;">
+                                    {% endif %};">
                                     {{ recipe.get_difficulty_display }}
                                 </span>
-                                <span class="text-muted mr-4 mb-2">
-                                    <i class="fa fa-clock-o"></i> Prep: {{ recipe.prep_time }}min
-                                </span>
-                                <span class="text-muted mr-4 mb-2">
-                                    <i class="fa fa-fire"></i> Cook: {{ recipe.cook_time }}min
-                                </span>
-                                <span class="text-muted mb-2">
-                                    <i class="fa fa-users"></i> Serves: {{ recipe.servings }}
-                                </span>
+                                
+                                <div class="d-flex gap-4 text-muted">
+                                    <span class="mr-3"><i class="fa fa-clock-o text-primary"></i> Prep: {{ recipe.prep_time }}m</span>
+                                    <span class="mr-3"><i class="fa fa-fire text-danger"></i> Cook: {{ recipe.cook_time }}m</span>
+                                    <span><i class="fa fa-users text-info"></i> Serves: {{ recipe.servings }}</span>
+                                </div>
                             </div>
-                            <div class="total-time mb-3">
-                                <h5 class="mb-0">
-                                    <i class="fa fa-clock text-primary"></i> 
-                                    Total Time: {{ recipe.total_time }} minutes
-                                </h5>
+                            <div class="total-time mt-2 pt-2 border-top">
+                                <h6 class="mb-0 text-dark">
+                                    <i class="fa fa-hourglass-half"></i> Total Time: {{ recipe.total_time }} minutes
+                                </h6>
                             </div>
                         </div>
 
-                        <!-- Description -->
                         <div class="desc-content mb-5">
-                            <h4 class="mb-3">About This Recipe</h4>
+                            <h5 class="mb-2">About This Recipe</h5>
                             <p>{{ recipe.description }}</p>
                         </div>
 
-                        <!-- Recipe ID -->
                         <div class="sku mb-3">
-                            <span>Recipe ID: {{ recipe.recipe_id }}</span>
+                            <span class="text-muted small">Recipe ID: {{ recipe.recipe_id }}</span>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="recipe-actions mb-5">
-                            <div class="d-flex flex-wrap">
-                                <a href="#" class="btn obrien-button primary-btn mr-3 mb-2" id="print-recipe">
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="btn obrien-button primary-btn mr-3 mb-2" onclick="window.print()">
                                     <i class="ion-printer"></i> Print Recipe
-                                </a>
+                                </button>
                                 <a href="#" class="btn obrien-button-2 treansparent-color mr-3 mb-2" id="save-recipe">
                                     <i class="ion-ios-bookmark-outline"></i> Save Recipe
                                 </a>
@@ -99,7 +164,6 @@
                             </div>
                         </div>
 
-                        <!-- Share Recipe -->
                         <div class="social-share mb-4">
                             <span>Share this recipe:</span>
                             <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
@@ -108,7 +172,6 @@
                             <a href="#"><i class="fa fa-whatsapp whatsapp-color" style="color: #25D366;"></i></a>
                         </div>
 
-                        <!-- Featured Badge -->
                         {% if recipe.is_featured %}
                         <div class="alert alert-warning">
                             <i class="fa fa-star"></i> <strong>Featured Recipe!</strong> This recipe is hand-picked by our chefs.
@@ -118,7 +181,6 @@
                 </div>
             </div>
 
-            <!-- Recipe Tabs -->
             <div class="row mt-no-text">
                 <div class="col-lg-12">
                     <ul class="nav nav-tabs" id="recipeTab" role="tablist">
@@ -134,25 +196,24 @@
                     </ul>
                     
                     <div class="tab-content mb-text" id="recipeTabContent">
-                        <!-- Ingredients Tab -->
                         <div class="tab-pane fade show active" id="ingredients" role="tabpanel">
-                            <div class="p-4">
+                            <div class="p-4 border bg-white">
                                 <h4 class="mb-4">Ingredients</h4>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <ul class="list-unstyled">
+                                        <ul class="list-group list-group-flush">
                                             {% for ingredient in ingredients %}
                                                 {% if forloop.counter <= ingredients.count|divisibleby:2 %}
-                                                    <li class="mb-2">
-                                                        <i class="fa fa-check text-success mr-2"></i>
+                                                    <li class="list-group-item px-0 py-2 border-0">
+                                                        <i class="fa fa-check-circle text-success mr-2"></i>
                                                         <strong>{{ ingredient.quantity }}</strong> 
                                                         {% if ingredient.product %}
-                                                            <a href="{{ ingredient.product.get_absolute_url }}">{{ ingredient.display_name }}</a>
+                                                            <a href="{{ ingredient.product.get_absolute_url }}" class="text-dark border-bottom border-dark">{{ ingredient.display_name }}</a>
                                                         {% else %}
                                                             {{ ingredient.display_name }}
                                                         {% endif %}
                                                         {% if ingredient.notes %}
-                                                            <small class="text-muted"> - {{ ingredient.notes }}</small>
+                                                            <small class="text-muted"> ({{ ingredient.notes }})</small>
                                                         {% endif %}
                                                     </li>
                                                 {% endif %}
@@ -160,19 +221,19 @@
                                         </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <ul class="list-unstyled">
+                                        <ul class="list-group list-group-flush">
                                             {% for ingredient in ingredients %}
                                                 {% if forloop.counter > ingredients.count|divisibleby:2 %}
-                                                    <li class="mb-2">
-                                                        <i class="fa fa-check text-success mr-2"></i>
+                                                    <li class="list-group-item px-0 py-2 border-0">
+                                                        <i class="fa fa-check-circle text-success mr-2"></i>
                                                         <strong>{{ ingredient.quantity }}</strong> 
                                                         {% if ingredient.product %}
-                                                            <a href="{{ ingredient.product.get_absolute_url }}">{{ ingredient.display_name }}</a>
+                                                            <a href="{{ ingredient.product.get_absolute_url }}" class="text-dark border-bottom border-dark">{{ ingredient.display_name }}</a>
                                                         {% else %}
                                                             {{ ingredient.display_name }}
                                                         {% endif %}
                                                         {% if ingredient.notes %}
-                                                            <small class="text-muted"> - {{ ingredient.notes }}</small>
+                                                            <small class="text-muted"> ({{ ingredient.notes }})</small>
                                                         {% endif %}
                                                     </li>
                                                 {% endif %}
@@ -183,64 +244,70 @@
                             </div>
                         </div>
 
-                        <!-- Instructions Tab -->
                         <div class="tab-pane fade" id="instructions" role="tabpanel">
-                            <div class="p-4">
+                            <div class="p-4 border bg-white">
                                 <h4 class="mb-4">Cooking Instructions</h4>
-                                <div class="instructions-content">
+                                <div class="instructions-content" style="line-height: 1.8;">
                                     {{ recipe.instructions|linebreaks }}
                                 </div>
                                 
-                                <!-- Tips Section -->
-                                <div class="tips-section mt-5">
-                                    <h5><i class="fa fa-lightbulb-o text-warning"></i> Chef's Tips</h5>
-                                    <div class="alert alert-light">
-                                        <ul class="mb-0">
-                                            <li>Make sure all ingredients are at room temperature before starting</li>
-                                            <li>Preheat your oven for at least 20 minutes before baking</li>
-                                            <li>Use fresh ingredients for the best flavor</li>
-                                            <li>Taste and adjust seasoning as you cook</li>
-                                        </ul>
-                                    </div>
+                                <div class="tips-section mt-5 p-3 bg-light rounded border-left border-warning" style="border-left-width: 5px !important;">
+                                    <h5 class="text-warning"><i class="fa fa-lightbulb-o"></i> Chef's Tips</h5>
+                                    <ul class="mb-0 pl-3">
+                                        <li>Make sure all ingredients are at room temperature before starting.</li>
+                                        <li>Preheat your oven for at least 20 minutes before baking.</li>
+                                        <li>Use fresh ingredients for the best flavor.</li>
+                                        <li>Taste and adjust seasoning as you cook.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Products Tab -->
                         <div class="tab-pane fade" id="products" role="tabpanel">
-                            <div class="p-4">
+                            <div class="p-4 border bg-white">
                                 <h4 class="mb-4">Shop Ingredients</h4>
                                 
                                 {% if ingredient_products %}
-                                    <div class="alert alert-info mb-4">
-                                        <h5 class="mb-2">Total Cost: ₵{{ ingredients_total_cost|floatformat:2 }}</h5>
-                                        <p class="mb-0">Click on any product below to add it to your cart</p>
+                                    <div class="alert alert-info mb-4 d-flex justify-content-between align-items-center">
+                                        <span><i class="fa fa-info-circle"></i> Estimated Cost: <strong>KSh {{ ingredients_total_cost|floatformat:2 }}</strong></span>
+                                        <small>Click "Add" to buy items</small>
                                     </div>
                                     
                                     <div class="row">
                                         {% for item in ingredient_products %}
-                                        <div class="col-md-6 mb-4">
-                                            <div class="ingredient-product card">
-                                                <div class="card-body">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-4">
+                                        <div class="col-md-6 col-lg-4 mb-4">
+                                            <div class="ingredient-product card h-100">
+                                                <div class="card-body p-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0" style="width: 70px;">
                                                             <a href="{{ item.product.get_absolute_url }}">
-                                                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                                                {% if item.product.image %}
+                                                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                                                {% else %}
+                                                                    <img src="{% static 'assets/images/product/placeholder.jpg' %}" class="img-fluid rounded">
+                                                                {% endif %}
                                                             </a>
                                                         </div>
-                                                        <div class="col-8">
-                                                            <h6 class="mb-1">
-                                                                <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                                        <div class="flex-grow-1 ms-3 ml-3">
+                                                            <h6 class="mb-1 text-truncate">
+                                                                <a href="{{ item.product.get_absolute_url }}" class="text-dark">{{ item.product.name }}</a>
                                                             </h6>
-                                                            <p class="text-muted small mb-1">
-                                                                <i class="fa fa-cube"></i> Quantity needed: {{ item.quantity }}
+                                                            <p class="text-muted small mb-2">
+                                                                <i class="fa fa-cube"></i> Needed: {{ item.quantity }}
                                                             </p>
                                                             <div class="d-flex justify-content-between align-items-center">
-                                                                <span class="text-success font-weight-bold">₵{{ item.product.price }}</span>
+                                                                <span class="text-success font-weight-bold">KSh {{ item.product.price }}</span>
+                                                                
                                                                 {% if item.product.stock > 0 %}
-                                                                    <a href="#" class="btn btn-sm obrien-button primary-btn">Add to Cart</a>
+                                                                    <form action="{% url 'cart:add_to_cart' %}" method="post" style="display:inline;">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                                                        <input type="hidden" name="quantity" value="1">
+                                                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                                                        <button type="submit" class="btn btn-sm obrien-button primary-btn px-2 py-1" style="font-size: 12px;">Add</button>
+                                                                    </form>
                                                                 {% else %}
-                                                                    <span class="badge badge-danger">Out of Stock</span>
+                                                                    <span class="badge badge-danger">Out Stock</span>
                                                                 {% endif %}
                                                             </div>
                                                         </div>
@@ -250,15 +317,9 @@
                                         </div>
                                         {% endfor %}
                                     </div>
-                                    
-                                    <div class="text-center mt-4">
-                                        <a href="{% url 'products:product_list' %}" class="btn obrien-button-3 black-button">
-                                            <i class="ion-bag"></i> Shop All Products
-                                        </a>
-                                    </div>
                                 {% else %}
                                     <div class="alert alert-warning">
-                                        <p class="mb-0">No specific products are linked to this recipe. Check out our store for ingredients.</p>
+                                        <p class="mb-0">No specific products are linked to this recipe yet. Browse our store to find ingredients manually.</p>
                                     </div>
                                 {% endif %}
                             </div>
@@ -269,7 +330,6 @@
         </div>
     </div>
 
-    <!-- Related Recipes -->
     {% if related_recipes %}
     <div class="product-area mb-text">
         <div class="container container-default custom-area">
@@ -285,43 +345,37 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 product-wrapper col-custom">
-                    <div class="product-slider">
+                    <div class="product-slider" data-slick-options='{"slidesToShow": 4, "slidesToScroll": 1, "infinite": true, "arrows": false, "dots": false}' data-slick-responsive='[{"breakpoint": 1200, "settings": {"slidesToShow": 3}}, {"breakpoint": 992, "settings": {"slidesToShow": 2}}, {"breakpoint": 576, "settings": {"slidesToShow": 1}}]'>
                         {% for related in related_recipes %}
                         <div class="single-item">
-                            <div class="single-product position-relative">
-                                <div class="product-image">
-                                    <a class="d-block" href="{{ related.get_absolute_url }}">
-                                        <img src="{{ related.image.url }}" alt="{{ related.title }}" class="product-image-1 w-100" style="height: 250px; object-fit: cover;">
+                            <div class="single-product-card position-relative">
+                                <div class="product-image position-relative">
+                                    <a class="d-block product-image-ratio" href="{{ related.get_absolute_url }}">
+                                        {% if related.image %}
+                                            <img src="{{ related.image.url }}" alt="{{ related.title }}" class="product-image-1">
+                                            <img src="{{ related.image.url }}" alt="{{ related.title }}" class="product-image-2 position-absolute" style="top:0;left:0;">
+                                        {% else %}
+                                            <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-1">
+                                            <img src="{% static 'assets/images/recipe/placeholder.jpg' %}" class="product-image-2 position-absolute" style="top:0;left:0;">
+                                        {% endif %}
                                     </a>
-                                    <span class="badge position-absolute" style="top:10px;left:10px; 
-                                        {% if related.difficulty == 'easy' %}background-color:#28a745;
-                                        {% elif related.difficulty == 'medium' %}background-color:#ffc107;color:#000;
-                                        {% elif related.difficulty == 'hard' %}background-color:#dc3545;
-                                        {% else %}background-color:#6c757d;
-                                        {% endif %}">
+                                    <span class="badge position-absolute" style="top:10px;left:10px; background-color:{% if related.difficulty == 'easy' %}#28a745{% elif related.difficulty == 'medium' %}#ffc107{% else %}#dc3545{% endif %}; color:white; padding:4px 8px; border-radius:4px; z-index:10;">
                                         {{ related.get_difficulty_display }}
                                     </span>
-                                </div>
-                                <div class="product-content">
-                                    <div class="product-title">
-                                        <h4 class="title-2">
-                                            <a href="{{ related.get_absolute_url }}">{{ related.title|truncatechars:40 }}</a>
-                                        </h4>
-                                    </div>
-                                    <div class="recipe-meta-small">
-                                        <small class="text-muted">
-                                            <i class="fa fa-clock-o"></i> {{ related.total_time }}min
-                                            <i class="fa fa-users ml-2"></i> {{ related.servings }} serves
-                                        </small>
+                                    <div class="action-overlay d-flex justify-content-center">
+                                        <a href="{{ related.get_absolute_url }}" class="action-btn" title="View Recipe"><i class="ion-eye"></i></a>
                                     </div>
                                 </div>
-                                <div class="add-action d-flex position-absolute">
-                                    <a href="{{ related.get_absolute_url }}" title="View Recipe"><i class="ion-eye"></i></a>
-                                    <a href="#" title="Save Recipe"><i class="ion-ios-bookmark-outline"></i></a>
-                                    <a href="#" title="Print Recipe"><i class="ion-printer"></i></a>
+                                <div class="product-content text-center" style="padding: 20px 15px;">
+                                    <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
+                                        <a href="{{ related.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ related.title|truncatechars:20 }}</a>
+                                    </h4>
+                                    <div class="recipe-meta-small small text-muted">
+                                        <i class="fa fa-clock-o"></i> {{ related.total_time }}m | <i class="fa fa-users"></i> {{ related.servings }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
@@ -330,17 +384,16 @@
     </div>
     {% endif %}
 
-    <!-- Download Recipe Card -->
     <div class="product-area mb-text">
         <div class="container container-default custom-area">
             <div class="row">
                 <div class="col-lg-8 m-auto text-center col-custom">
-                    <div class="recipe-download-card p-4 border rounded">
+                    <div class="recipe-download-card p-4 border rounded" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
                         <h3 class="mb-3">Download This Recipe</h3>
                         <p class="mb-4">Get a printable version of this recipe to keep in your kitchen or share with friends.</p>
                         <div class="d-flex justify-content-center flex-wrap">
-                            <a href="#" class="btn obrien-button primary-btn mr-3 mb-2" id="download-pdf">
-                                <i class="fa fa-file-pdf-o"></i> Download PDF
+                            <a href="#" class="btn obrien-button primary-btn mr-3 mb-2" onclick="window.print()">
+                                <i class="fa fa-file-pdf-o"></i> Print PDF
                             </a>
                             <a href="#" class="btn obrien-button-2 treansparent-color mb-2" id="download-image">
                                 <i class="fa fa-image"></i> Download Image
@@ -357,58 +410,19 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Print Recipe
-    $('#print-recipe').on('click', function(e) {
-        e.preventDefault();
-        window.print();
-    });
-
-    // Save Recipe
+    // Save Recipe Logic
     $('#save-recipe').on('click', function(e) {
         e.preventDefault();
-        // Save recipe logic
         alert('Recipe saved to your collection!');
         $(this).html('<i class="ion-ios-bookmark"></i> Recipe Saved');
         $(this).addClass('disabled');
     });
 
-    // Download PDF
-    $('#download-pdf').on('click', function(e) {
-        e.preventDefault();
-        alert('PDF download started! Check your downloads folder.');
-        // In a real app, this would trigger a PDF generation/download
-    });
-
-    // Download Image
+    // Download Image Dummy Logic
     $('#download-image').on('click', function(e) {
         e.preventDefault();
         alert('Recipe image downloaded!');
-        // In a real app, this would download the recipe card as image
-    });
-
-    // Add ingredients to cart
-    $('.ingredient-product .primary-btn').on('click', function(e) {
-        e.preventDefault();
-        var productName = $(this).closest('.ingredient-product').find('h6 a').text();
-        alert('Added ' + productName + ' to cart');
-        // Add to cart logic here
     });
 });
 </script>
-<style>
-.ingredient-product {
-    transition: all 0.3s ease;
-    border: 1px solid #eaeaea;
-}
-.ingredient-product:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-color: #28a745;
-}
-.recipe-download-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-.whatsapp-color {
-    color: #25D366 !important;
-}
-</style>
 {% endblock %}
