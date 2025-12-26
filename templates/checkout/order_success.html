@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +15,11 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#E98C81',
-                        'background-light': '#f8f9fa',
-                        'text-main': '#212529',
-                        'text-muted': '#6c757d',
+                        primary: '#16a34a', 
+                        'primary-dark': '#14532d',
+                        'background-light': '#f0fdf4',
+                        'text-main': '#1f2937',
+                        'text-muted': '#64748b',
                     },
                     fontFamily: { display: ['"Spline Sans"', 'sans-serif'] },
                 }
@@ -25,114 +27,129 @@
         }
     </script>
     <style>
-        body { font-family: 'Spline Sans', sans-serif; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; }
-        .receipt-card { background: white; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        body { 
+            font-family: 'Spline Sans', sans-serif; 
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); 
+            min-height: 100vh; 
+        }
+        /* Added relative positioning here to handle the watermark */
+        .receipt-card { 
+            background: white; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15); 
+            position: relative; 
+            z-index: 10;
+        }
         .jagged-bottom::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 20px;
             background: radial-gradient(circle at 10px 0, transparent 10px, white 10.5px) repeat-x bottom left / 20px 20px;
+            z-index: 20;
         }
         @media print { body { background: white; } .no-print { display: none; } .receipt-card { box-shadow: none; margin: 0; max-width: none; } }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="w-full max-w-2xl">
-        <div class="receipt-card overflow-hidden jagged-bottom">
-            <!-- Header -->
-            <div class="bg-primary/10 text-center py-8 px-6 border-b-2 border-dashed border-gray-300">
-                <div class="w-24 h-24 bg-primary rounded-full mx-auto flex items-center justify-center shadow-lg mb-4">
-                    <span class="material-symbols-outlined text-white text-5xl">check</span>
-                </div>
-                <h1 class="text-3xl font-bold text-text-main mb-2">Payment Successful!</h1>
-                <p class="text-text-muted">Thank you for shopping with Arifarm!</p>
-                <span class="inline-block mt-4 px-6 py-2 bg-primary/20 text-primary font-bold rounded-full text-sm uppercase tracking-wide">Paid</span>
+        <div class="receipt-card overflow-hidden jagged-bottom relative">
+            
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+                <img src="{% static 'assets/images/logo/logo.png' %}" alt="Watermark" class="w-2/3 opacity-5 grayscale object-contain">
             </div>
 
-            <!-- Order Info -->
-            <div class="p-6 space-y-4 border-b-2 border-dashed border-gray-300">
-                <div class="flex justify-between"><span class="text-text-muted">Order ID</span><span class="font-bold">#{{ order.id }}</span></div>
-                <div class="flex justify-between"><span class="text-text-muted">M-Pesa Receipt</span><span class="font-bold">{{ order.mpesa_receipt_number|default:"Processing" }}</span></div>
-                <div class="flex justify-between"><span class="text-text-muted">Order Date</span><span class="font-bold">{{ order.created_at|date:"M d, Y, h:i A" }}</span></div>
-                <div class="flex justify-between"><span class="text-text-muted">Delivery Zone</span><span class="font-bold">{{ order.zone.name }}</span></div>
+            <div class="relative z-10">
+                
+                <div class="bg-primary/10 text-center py-8 px-6 border-b-2 border-dashed border-primary/30 relative">
+                    
+                    <img src="{% static 'assets/images/logo/logo.png' %}" alt="Arifarm Logo" class="absolute top-4 right-4 w-16 h-auto object-contain">
 
-                <!-- Delivery Preferences -->
-                <div class="bg-green-50 p-4 rounded-lg mt-4">
-                    <h4 class="font-bold text-green-800 mb-2 flex items-center">
-                        <span class="material-symbols-outlined mr-2">local_shipping</span>
-                        Preferred Delivery Details
-                    </h4>
-                    <p class="text-green-900"><strong>Date:</strong> {{ order.preferred_delivery_date|date:"l, F j, Y" }}</p>
-                    <p class="text-green-900">
-                        <strong>Time Window:</strong>
-                        {% if order.preferred_delivery_time_start %}
-                            {{ order.preferred_delivery_time_start|time:"g:i A" }} – {{ order.preferred_delivery_time_end|time:"g:i A" }}
-                        {% else %}
-                            Any time
-                        {% endif %}
-                    </p>
-                    <p class="text-sm text-green-700 mt-2">We'll do our best to deliver within your preferred window!</p>
-                </div>
-            </div>
-
-            <!-- Customer Info -->
-            <div class="p-6 border-b-2 border-dashed border-gray-300">
-                <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Customer Details</h3>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span class="material-symbols-outlined text-text-muted">person</span>
+                    <div class="w-24 h-24 bg-primary rounded-full mx-auto flex items-center justify-center shadow-lg shadow-primary/40 mb-4">
+                        <span class="material-symbols-outlined text-white text-5xl">check</span>
                     </div>
-                    <div>
-                        <p class="font-bold text-text-main">{{ order.user.get_full_name|default:order.user.username }}</p>
-                        <p class="text-text-muted text-sm">{{ order.email }}</p>
-                        <p class="text-text-muted text-sm">{{ order.phone_number }}</p>
+                    <h1 class="text-3xl font-bold text-text-main mb-2">Payment Successful!</h1>
+                    <p class="text-text-muted">Thank you for shopping with Arifarm!</p>
+                    <span class="inline-block mt-4 px-6 py-2 bg-primary/20 text-primary-dark font-bold rounded-full text-sm uppercase tracking-wide border border-primary/20">Paid</span>
+                </div>
+
+                <div class="p-6 space-y-4 border-b-2 border-dashed border-gray-200">
+                    <div class="flex justify-between"><span class="text-text-muted">Order ID</span><span class="font-bold text-text-main">#{{ order.id }}</span></div>
+                    <div class="flex justify-between"><span class="text-text-muted">M-Pesa Receipt</span><span class="font-bold text-text-main">{{ order.mpesa_receipt_number|default:"Processing" }}</span></div>
+                    <div class="flex justify-between"><span class="text-text-muted">Order Date</span><span class="font-bold text-text-main">{{ order.created_at|date:"M d, Y, h:i A" }}</span></div>
+                    <div class="flex justify-between"><span class="text-text-muted">Delivery Zone</span><span class="font-bold text-text-main">{{ order.zone.name }}</span></div>
+
+                    <div class="bg-primary/5 border border-primary/20 p-4 rounded-lg mt-4 bg-white/50 backdrop-blur-sm">
+                        <h4 class="font-bold text-primary-dark mb-2 flex items-center">
+                            <span class="material-symbols-outlined mr-2">local_shipping</span>
+                            Preferred Delivery Details
+                        </h4>
+                        <p class="text-gray-700"><strong>Date:</strong> {{ order.preferred_delivery_date|date:"l, F j, Y" }}</p>
+                        <p class="text-gray-700">
+                            <strong>Time Window:</strong>
+                            {% if order.preferred_delivery_time_start %}
+                                {{ order.preferred_delivery_time_start|time:"g:i A" }} – {{ order.preferred_delivery_time_end|time:"g:i A" }}
+                            {% else %}
+                                Any time
+                            {% endif %}
+                        </p>
+                        <p class="text-sm text-primary mt-2 font-medium">We'll do our best to deliver within your preferred window!</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Items -->
-            <div class="p-6 bg-gray-50">
-                <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Items Purchased</h3>
-                <div class="space-y-4">
-                    {% for item in order.order_items.all %}
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-bold text-text-main">
-                                    {% if item.product %}{{ item.product.name }}{% else %}{{ item.basket.name }} (Combo){% endif %}
-                                </p>
-                                <p class="text-text-muted text-sm">Quantity: {{ item.quantity }}</p>
-                            </div>
-                            <p class="font-bold text-text-main">KSh {{ item.total_price|floatformat:2 }}</p>
+                <div class="p-6 border-b-2 border-dashed border-gray-200">
+                    <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Customer Details</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">person</span>
                         </div>
-                    {% empty %}
-                        <p class="text-center text-gray-500 py-4">No items</p>
-                    {% endfor %}
+                        <div>
+                            <p class="font-bold text-text-main">{{ order.user.get_full_name|default:order.user.username }}</p>
+                            <p class="text-text-muted text-sm">{{ order.email }}</p>
+                            <p class="text-text-muted text-sm">{{ order.phone_number }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Totals -->
-            <div class="p-6 bg-gray-100 space-y-3">
-                <div class="flex justify-between text-lg">
-                    <span>Subtotal</span>
-                    <span>KSh {{ order.subtotal_amount|floatformat:2 }}</span>
+                <div class="p-6 bg-gray-50/50">
+                    <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Items Purchased</h3>
+                    <div class="space-y-4">
+                        {% for item in order.order_items.all %}
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-text-main">
+                                        {% if item.product %}{{ item.product.name }}{% else %}{{ item.basket.name }} (Combo){% endif %}
+                                    </p>
+                                    <p class="text-text-muted text-sm">Quantity: {{ item.quantity }}</p>
+                                </div>
+                                <p class="font-bold text-text-main">KSh {{ item.total_price|floatformat:2 }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="text-center text-gray-500 py-4">No items</p>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="flex justify-between text-lg">
-                    <span>Delivery Fee ({{ order.zone.name }})</span>
-                    <span>KSh {{ order.delivery_fee|floatformat:2 }}</span>
-                </div>
-                <div class="flex justify-between text-2xl font-bold text-primary pt-3 border-t-2 border-primary">
-                    <span>Total Paid</span>
-                    <span>KSh {{ order.total_amount|floatformat:2 }}</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Buttons -->
+                <div class="p-6 bg-gray-50 space-y-3">
+                    <div class="flex justify-between text-lg text-text-muted">
+                        <span>Subtotal</span>
+                        <span>KSh {{ order.subtotal_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between text-lg text-text-muted">
+                        <span>Delivery Fee ({{ order.zone.name }})</span>
+                        <span>KSh {{ order.delivery_fee|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between text-2xl font-bold text-primary-dark pt-4 border-t-2 border-primary/30 mt-2">
+                        <span>Total Paid</span>
+                        <span>KSh {{ order.total_amount|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div> </div>
+
         <div class="text-center mt-8 no-print space-y-4">
-            <button onclick="window.print()" class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-full shadow-lg text-lg transition inline-flex items-center">
+            <button onclick="window.print()" class="bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-primary/30 text-lg transition inline-flex items-center transform hover:-translate-y-1">
                 <span class="material-symbols-outlined mr-2">print</span>
                 Print / Download Receipt
             </button>
             <div>
-                <a href="{% url 'products:product_list' %}" class="text-primary hover:underline font-medium text-lg">
+                <a href="{% url 'products:product_list' %}" class="text-primary hover:text-primary-dark font-medium text-lg transition-colors">
                     ← Continue Shopping
                 </a>
             </div>
