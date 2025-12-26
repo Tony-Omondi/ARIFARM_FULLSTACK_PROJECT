@@ -5,160 +5,399 @@
 {% block title %}My Cart - Arifarm{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h2 class="mb-4">My Shopping Cart</h2>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    {% if cart.items.exists %}
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Item</th>
-                        <th>Unit Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart.items.all %}
-                    <tr>
-                        <td>
-                            <strong>{{ item.name }}</strong>
-                            {% if item.product %}
-                                <small class="text-muted d-block">Product</small>
-                            {% elif item.basket %}
-                                <small class="text-muted d-block">Combo Basket</small>
-                            {% elif item.merchandise %}
-                                <small class="text-muted d-block">Merchandise</small>
-                            {% endif %}
-                        </td>
-
-                        <td>KSh {{ item.unit_price|floatformat:2 }}</td>
-
-                        <td>
-                            <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-flex gap-2 align-items-center">
-                                {% csrf_token %}
-                                <input type="hidden" name="item_id" value="{{ item.id }}">
-
-                                {# Determine max_stock and render quantity input #}
-                                {% if item.product %}
-                                    <input type="number"
-                                           name="quantity"
-                                           value="{{ item.quantity }}"
-                                           min="1"
-                                           {% if item.product.stock < item.quantity %}max="{{ item.product.stock }}"{% endif %}
-                                           class="form-control form-control-sm"
-                                           style="width: 90px;"
-                                           required>
-                                    <button type="submit" class="btn btn-primary btn-sm px-3">Update</button>
-
-                                    {% if item.product.stock < item.quantity %}
-                                        <small class="text-danger d-block mt-1 w-100">
-                                            Only {{ item.product.stock }} left in stock!
-                                        </small>
-                                    {% endif %}
-
-                                {% elif item.basket %}
-                                    <input type="number"
-                                           name="quantity"
-                                           value="{{ item.quantity }}"
-                                           min="1"
-                                           {% if item.basket.stock < item.quantity %}max="{{ item.basket.stock }}"{% endif %}
-                                           class="form-control form-control-sm"
-                                           style="width: 90px;"
-                                           required>
-                                    <button type="submit" class="btn btn-primary btn-sm px-3">Update</button>
-
-                                    {% if item.basket.stock < item.quantity %}
-                                        <small class="text-danger d-block mt-1 w-100">
-                                            Only {{ item.basket.stock }} left in stock!
-                                        </small>
-                                    {% endif %}
-
-                                {% elif item.merchandise %}
-                                    <input type="number"
-                                           name="quantity"
-                                           value="{{ item.quantity }}"
-                                           min="1"
-                                           {% if item.merchandise.stock < item.quantity %}max="{{ item.merchandise.stock }}"{% endif %}
-                                           class="form-control form-control-sm"
-                                           style="width: 90px;"
-                                           required>
-                                    <button type="submit" class="btn btn-primary btn-sm px-3">Update</button>
-
-                                    {% if item.merchandise.stock < item.quantity %}
-                                        <small class="text-danger d-block mt-1 w-100">
-                                            Only {{ item.merchandise.stock }} left in stock!
-                                        </small>
-                                    {% endif %}
-
-                                {% else %}
-                                    {# Fallback - should never happen #}
-                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
-                                           class="form-control form-control-sm" style="width: 90px;" required>
-                                    <button type="submit" class="btn btn-primary btn-sm px-3">Update</button>
-                                {% endif %}
-                            </form>
-                        </td>
-
-                        <td><strong>KSh {{ item.total_price|floatformat:2 }}</strong></td>
-
-                        <td>
-                            <a href="{% url 'cart:remove_from_cart' item.id %}"
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Remove this item from cart?')">
-                                Remove
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr class="table-success">
-                        <td colspan="3" class="text-end fw-bold fs-5">Grand Total:</td>
-                        <td colspan="2" class="fw-bold fs-5">KSh {{ cart.total_price|floatformat:2 }}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary btn-lg">
-                ← Continue Shopping
-            </a>
-            <div class="d-flex gap-3">
-                <a href="{% url 'cart:clear_cart' %}"
-                   class="btn btn-outline-danger btn-lg"
-                   onclick="return confirm('Clear entire cart?')">
-                    Clear Cart
-                </a>
-                <a href="{% url 'checkout:checkout' %}"
-                   class="btn btn-success btn-lg px-5 shadow">
-                    Proceed to Checkout →
-                </a>
+<div class="breadcrumbs-area position-relative">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="breadcrumb-content position-relative section-content">
+                    <h3 class="title-3">Shopping Cart</h3>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li>Cart</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    {% else %}
-        <div class="text-center py-5">
-            <div class="alert alert-info rounded-3 shadow-sm p-5">
-                <i class="fas fa-shopping-cart fa-5x text-muted mb-4"></i>
-                <h4>Your cart is empty</h4>
-                <p>Looks like you haven't added anything to your cart yet.</p>
-                <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg mt-3">
-                    Start Shopping Now
-                </a>
-            </div>
-        </div>
-    {% endif %}
+    </div>
 </div>
+
+<div class="cart-main-wrapper mt-no-text mb-no-text">
+    <div class="container container-default-2 custom-area">
+        <div class="row">
+            <div class="col-lg-12">
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if cart.items.exists %}
+                
+                {# Desktop Table View #}
+                <div class="cart-table table-responsive d-none d-lg-block">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="pro-thumbnail">Image</th>
+                                <th class="pro-title">Product</th>
+                                <th class="pro-price">Price</th>
+                                <th class="pro-quantity">Quantity</th>
+                                <th class="pro-subtotal">Total</th>
+                                <th class="pro-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart.items.all %}
+                            <tr>
+                                <td class="pro-thumbnail">
+                                    {% if item.product %}
+                                        <a href="{{ item.product.get_absolute_url }}">
+                                            {% if item.product.image %}
+                                                <img class="img-fluid" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="max-width: 80px; height: auto;">
+                                            {% else %}
+                                                <img class="img-fluid" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Product" style="max-width: 80px; height: auto;">
+                                            {% endif %}
+                                        </a>
+                                    {% elif item.basket %}
+                                        <a href="{{ item.basket.get_absolute_url }}">
+                                            {% if item.basket.image %}
+                                                <img class="img-fluid" src="{{ item.basket.image.url }}" alt="{{ item.basket.name }}" style="max-width: 80px; height: auto;">
+                                            {% else %}
+                                                <img class="img-fluid" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Basket" style="max-width: 80px; height: auto;">
+                                            {% endif %}
+                                        </a>
+                                    {% elif item.merchandise %}
+                                        <a href="{{ item.merchandise.get_absolute_url }}">
+                                            {% if item.merchandise.image %}
+                                                <img class="img-fluid" src="{{ item.merchandise.image.url }}" alt="{{ item.merchandise.name }}" style="max-width: 80px; height: auto;">
+                                            {% else %}
+                                                <img class="img-fluid" src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="Merch" style="max-width: 80px; height: auto;">
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td class="pro-title">
+                                    <a href="#" class="fw-bold">{{ item.name }}</a>
+                                    {% if item.basket %}
+                                        <span class="d-block text-muted small mt-1">(Combo Basket)</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pro-price"><span class="fw-semibold">KSh {{ item.unit_price|floatformat:2 }}</span></td>
+                                <td class="pro-quantity">
+                                    <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-flex align-items-center justify-content-center">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                                        
+                                        <div class="quantity">
+                                            <div class="cart-plus-minus">
+                                                {% if item.product %}
+                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity" 
+                                                    {% if item.product.stock < item.quantity %}max="{{ item.product.stock }}"{% endif %}>
+                                                {% elif item.basket %}
+                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
+                                                    {% if item.basket.stock < item.quantity %}max="{{ item.basket.stock }}"{% endif %}>
+                                                {% elif item.merchandise %}
+                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
+                                                    {% if item.merchandise.stock < item.quantity %}max="{{ item.merchandise.stock }}"{% endif %}>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="Update Cart">
+                                            <i class="fa fa-refresh me-1"></i> Update
+                                        </button>
+                                    </form>
+                                    {% if item.product and item.product.stock < item.quantity or item.basket and item.basket.stock < item.quantity or item.merchandise and item.merchandise.stock < item.quantity %}
+                                        <span class="text-danger small d-block mt-1"><i class="fa fa-exclamation-circle"></i> Low Stock!</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pro-subtotal"><span class="fw-bold">KSh {{ item.total_price|floatformat:2 }}</span></td>
+                                <td class="pro-remove">
+                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item from your cart?')" title="Remove" class="text-danger">
+                                        <i class="ion-trash-b"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Mobile Card View #}
+                <div class="cart-items-mobile d-lg-none">
+                    {% for item in cart.items.all %}
+                    <div class="cart-item-card mb-3 border rounded p-3">
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                {% if item.product %}
+                                    <a href="{{ item.product.get_absolute_url }}">
+                                        {% if item.product.image %}
+                                            <img class="img-fluid rounded" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                        {% else %}
+                                            <img class="img-fluid rounded" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Product">
+                                        {% endif %}
+                                    </a>
+                                {% elif item.basket %}
+                                    <a href="{{ item.basket.get_absolute_url }}">
+                                        {% if item.basket.image %}
+                                            <img class="img-fluid rounded" src="{{ item.basket.image.url }}" alt="{{ item.basket.name }}">
+                                        {% else %}
+                                            <img class="img-fluid rounded" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Basket">
+                                        {% endif %}
+                                    </a>
+                                {% elif item.merchandise %}
+                                    <a href="{{ item.merchandise.get_absolute_url }}">
+                                        {% if item.merchandise.image %}
+                                            <img class="img-fluid rounded" src="{{ item.merchandise.image.url }}" alt="{{ item.merchandise.name }}">
+                                        {% else %}
+                                            <img class="img-fluid rounded" src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="Merch">
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="col-8">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 fw-bold">{{ item.name }}</h6>
+                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item?')" class="text-danger ms-2">
+                                        <i class="ion-trash-b"></i>
+                                    </a>
+                                </div>
+                                {% if item.basket %}
+                                    <span class="d-block text-muted small mb-2">(Combo Basket)</span>
+                                {% endif %}
+                                <p class="mb-1 text-muted small">Price: <span class="fw-semibold text-dark">KSh {{ item.unit_price|floatformat:2 }}</span></p>
+                                
+                                <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-flex align-items-center mb-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                    <span class="small me-2">Qty:</span>
+                                    <div class="quantity">
+                                        <div class="cart-plus-minus">
+                                            {% if item.product %}
+                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity" 
+                                                {% if item.product.stock < item.quantity %}max="{{ item.product.stock }}"{% endif %}>
+                                            {% elif item.basket %}
+                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
+                                                {% if item.basket.stock < item.quantity %}max="{{ item.basket.stock }}"{% endif %}>
+                                            {% elif item.merchandise %}
+                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
+                                                {% if item.merchandise.stock < item.quantity %}max="{{ item.merchandise.stock }}"{% endif %}>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="Update Cart">
+                                        <i class="fa fa-refresh me-1"></i> Update
+                                    </button>
+                                </form>
+                                
+                                {% if item.product and item.product.stock < item.quantity or item.basket and item.basket.stock < item.quantity or item.merchandise and item.merchandise.stock < item.quantity %}
+                                    <span class="text-danger small"><i class="fa fa-exclamation-circle"></i> Low Stock!</span>
+                                {% endif %}
+                                
+                                <p class="mb-0 mt-2"><strong>Total: KSh {{ item.total_price|floatformat:2 }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="cart-update-option d-block d-md-flex justify-content-between mt-4">
+                    <div class="apply-coupon-wrapper">
+                        <div class="cart-update mt-3 mt-md-0">
+                            <a href="{% url 'products:product_list' %}" class="obrien-button primary-btn">
+                                <i class="fa fa-arrow-left me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                    <div class="cart-update mt-3 mt-md-0">
+                        <a href="{% url 'cart:clear_cart' %}" class="obrien-button white-btn" onclick="return confirm('Are you sure you want to clear your entire cart?')">
+                            <i class="ion-trash-b me-2"></i>Clear Cart
+                        </a>
+                    </div>
+                </div>
+
+                {% else %}
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center bg-light p-5 rounded shadow-sm">
+                            <i class="ion-bag mb-4 text-muted" style="font-size: 5rem;"></i>
+                            <h3 class="mb-3 fw-bold">Your cart is currently empty</h3>
+                            <p class="mb-4 text-muted">Discover fresh organic products and fill your basket with healthy choices.</p>
+                            <a href="{% url 'products:product_list' %}" class="obrien-button primary-btn">
+                                <i class="fa fa-shopping-cart me-2"></i>Start Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% if cart.items.exists %}
+        <div class="row mt-4">
+            <div class="col-lg-5 ms-auto col-custom">
+                <div class="cart-calculator-wrapper shadow-sm">
+                    <div class="cart-calculate-items">
+                        <h3 class="mb-3">Cart Totals</h3>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <tr class="border-bottom">
+                                    <td class="py-3">Sub Total</td>
+                                    <td class="py-3 text-end fw-semibold">KSh {{ cart.total_price|floatformat:2 }}</td>
+                                </tr>
+                                <tr class="total">
+                                    <td class="py-3 fw-bold">Total</td>
+                                    <td class="total-amount py-3 text-end fw-bold fs-5">KSh {{ cart.total_price|floatformat:2 }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <a href="{% url 'checkout:checkout' %}" class="obrien-button primary-btn d-block text-center text-dark mt-3" onclick="return confirmCheckout();">
+                        <i class="fa fa-lock me-2"></i>Proceed To Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+/* Enhanced Mobile Responsiveness */
+.cart-item-card {
+    background: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.cart-item-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.cart-calculator-wrapper {
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 25px;
+    background: #fff;
+}
+
+/* Improved quantity controls */
+.cart-plus-minus {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.cart-plus-minus-box {
+    width: 50px;
+    text-align: center;
+    border: none;
+    padding: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .cart-calculator-wrapper {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .breadcrumb-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .cart-update-option {
+        flex-direction: column;
+    }
+    
+    .cart-update {
+        width: 100%;
+    }
+    
+    .obrien-button {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .cart-item-card h6 {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .cart-calculator-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .breadcrumb-content h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Empty cart styling */
+.bg-light.shadow-sm {
+    border: 1px solid #e9ecef;
+}
+
+/* Smooth transitions */
+.obrien-button {
+    transition: all 0.3s ease;
+}
+
+.obrien-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Alert improvements */
+.alert {
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: #28a745;
+}
+
+.alert-danger {
+    border-left-color: #dc3545;
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+}
+
+/* Button styling */
+.btn-outline-secondary {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+}
+</style>
+
+<script>
+// Confirm and update cart before checkout
+function confirmCheckout() {
+    const forms = document.querySelectorAll('form[action*="update_cart_item"]');
+    const hasUnsavedChanges = Array.from(forms).some(form => {
+        const input = form.querySelector('.cart-plus-minus-box');
+        return input && input.defaultValue !== input.value;
+    });
+
+    if (hasUnsavedChanges) {
+        return confirm('You have unsaved quantity changes. Click OK to update your cart and proceed to checkout, or Cancel to review your cart.');
+    }
+    return true;
+}
+</script>
+
 {% endblock %}

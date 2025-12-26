@@ -68,18 +68,22 @@
     <script>
         const checkoutRequestID = "{{ checkout_request_id }}";
         const csrfToken = "{{ csrf_token }}";
-        
+        // Get the success URL dynamically from Django
+        const successUrl = "{% url 'checkout:order_success' order.id %}";
+
         let attempts = 0;
-        const maxAttempts = 60; // Approx 3 minutes
+        const maxAttempts = 24; // 24 * 5 seconds = 2 minutes max wait
         let isPollingActive = true; 
 
         function launchConfetti() {
-            confetti({
-                particleCount: 200,
-                spread: 80,
-                origin: { y: 0.6 },
-                colors: ['#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6f42c1']
-            });
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 200,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6f42c1']
+                });
+            }
         }
 
         function checkStatus() {
@@ -94,59 +98,28 @@
                 body: JSON.stringify({ checkout_request_id: checkoutRequestID })
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                if (!response.ok) throw new Error("Network error");
                 return response.json();
             })
             .then(data => {
                 console.log("Polling response:", data);
 
-                if (data.error) {
-                    handleFailure("System Error: " + data.error);
-                    return;
+                // 1. SUCCESS
+                if (data.status === "SUCCESS") {
+                    handleSuccess();
+                } 
+                // 2. FAILED
+                else if (data.status === "FAILED") {
+                    handleFailure(data.message || "Payment failed.");
                 }
-
-                const statusData = data.status || {};
-                let resultCode = statusData.ResultCode;
-                let resultDesc = statusData.ResultDesc || "Payment processing...";
-
-                // Handle string "PENDING" status directly
-                if (data.status === "PENDING") {
-                    handlePending();
-                    return;
-                }
-
-                // If ResultCode exists, check it
-                if (resultCode !== undefined && resultCode !== null) {
-                    const code = String(resultCode);
-
-                    // 1. SUCCESS
-                    if (code === "0") {
-                        handleSuccess();
-                    } 
-                    // 2. PROCESSING CODES (Don't fail, keep waiting)
-                    // 4999: "Transaction is still under processing"
-                    // 1037: "Timeout" (sometimes sent temporarily)
-                    else if (code === "4999" || resultDesc.toLowerCase().includes("processing")) {
-                        handlePending();
-                    }
-                    // 3. FAILURE CODES
-                    // 1032: Cancelled by user
-                    // 1: Insufficient Balance
-                    // 2001: Wrong PIN
-                    else {
-                        handleFailure(resultDesc);
-                    }
-                } else {
-                    // No ResultCode yet? It implies the transaction is still active on the user's phone
+                // 3. PENDING (Keep waiting)
+                else {
                     handlePending();
                 }
             })
             .catch(err => {
                 console.error("Polling error:", err);
-                // Network blip? Keep trying.
-                handlePending(); 
+                handlePending(); // Keep retrying even on network blip
             });
         }
 
@@ -155,8 +128,9 @@
             if (attempts >= maxAttempts) {
                 handleTimeout();
             } else if (isPollingActive) {
-                // Wait 3 seconds before checking again
-                setTimeout(checkStatus, 3000);
+                // === CRITICAL: 5000ms (5 Seconds) ===
+                // Prevents Safaricom "Spike Arrest" error
+                setTimeout(checkStatus, 5000);
             }
         }
 
@@ -170,15 +144,21 @@
                 <div class="text-success">
                     <i class="fas fa-check-circle icon-large mb-4"></i>
                     <h3 class="fw-bold">Payment Successful!</h3>
-                    <p class="lead">Thank you for shopping with Arifarm!</p>
+                    <p class="lead">Redirecting to receipt...</p>
                 </div>`;
 
+            // Update button to success state
             document.getElementById("status-message").innerHTML = `
-                <a href="{% url 'checkout:order_success' order.id %}" class="btn btn-success btn-lg mt-4 shadow fade-in">
-                    <i class="fas fa-receipt me-2"></i> View Order Receipt
+                <a href="${successUrl}" class="btn btn-success btn-lg mt-4 shadow fade-in">
+                    <i class="fas fa-receipt me-2"></i> View Receipt
                 </a>`;
             
             launchConfetti();
+
+            // Automatic redirect after 2 seconds
+            setTimeout(() => {
+                window.location.href = successUrl;
+            }, 2000);
         }
 
         function handleFailure(message) {
@@ -203,14 +183,14 @@
             
             document.getElementById("status-message").innerHTML = `
                 <div class="alert alert-warning fade-in">
-                    <p class="mb-0">We did not receive a confirmation in time. If you entered your PIN, please wait for the SMS receipt.</p>
+                    <p class="mb-0">We haven't received confirmation yet. If you received the M-Pesa SMS, your order will be processed shortly. Please check your email.</p>
                 </div>`;
             
             document.getElementById("retry-button").style.display = "inline-block";
         }
 
-        // Start polling immediately with a small delay
-        setTimeout(checkStatus, 1000);
+        // Initial delay before first check
+        setTimeout(checkStatus, 5000);
     </script>
 </body>
 </html>

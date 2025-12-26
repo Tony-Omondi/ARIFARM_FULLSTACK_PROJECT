@@ -1,4 +1,3 @@
-# checkout/views.py
 import json
 import logging
 from datetime import time
@@ -12,6 +11,11 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.db import transaction
+from django.db.models import Q 
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 
 from cart.models import Cart
 from .models import Order, OrderItem
@@ -19,6 +23,42 @@ from .forms import CheckoutForm
 from .mpesa import initiate_stk_push, query_stk_push
 
 logger = logging.getLogger(__name__)
+
+
+def send_order_confirmation_email(order):
+    """Send order confirmation email with receipt details"""
+    try:
+        subject = f'Order Confirmation #{order.id} - Arifarm'
+        
+        # Prepare context for email template
+        context = {
+            'order': order,
+            'customer_name': order.user.get_full_name() or order.user.email,
+            'order_items': order.items.all(),
+            'site_url': settings.SITE_URL,
+        }
+        
+        # Render HTML email template
+        html_content = render_to_string('checkout/emails/order_confirmation.html', context)
+        text_content = strip_tags(html_content)
+        
+        # Create email
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[order.email],
+        )
+        email.attach_alternative(html_content, "text/html")
+        
+        # Send email
+        email.send()
+        logger.info(f"Order confirmation email sent to {order.email} for Order #{order.id}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send order confirmation email for Order #{order.id}: {e}")
+        return False
 
 
 @login_required
@@ -137,20 +177,72 @@ def order_success_view(request, order_id):
 @require_POST
 @login_required
 def stk_status_view(request):
+    """
+    Polls Safaricom for status. 
+    If successful, updates the order immediately so the user isn't stuck waiting for the Callback.
+    """
     try:
         data = json.loads(request.body)
         checkout_request_id = data.get('checkout_request_id')
+        
         if not checkout_request_id:
             return JsonResponse({"error": "Missing checkout_request_id"}, status=400)
 
+        # 1. Fetch the Order
+        # We use filter().first() to avoid crashing if order is missing
+        order = Order.objects.filter(checkout_request_id=checkout_request_id).first()
+        if not order:
+            return JsonResponse({"error": "Order not found"}, status=404)
+
+        # 2. Query M-Pesa
         status_response = query_stk_push(checkout_request_id)
-        return JsonResponse({"status": status_response})
+        
+        # 3. Parse Response
+        result_code = str(status_response.get('ResultCode', ''))
+        result_desc = status_response.get('ResultDesc', '')
+
+        # --- CRITICAL FIX: Handle Success Here ---
+        if result_code == '0':
+            # Check if we need to update the DB (avoid double work if Callback already ran)
+            if order.status != 'paid':
+                with transaction.atomic():
+                    order.status = 'paid'
+                    order.mpesa_receipt_number = "Confirmed via Query" # Placeholder until callback updates it
+                    order.save(update_fields=['status', 'mpesa_receipt_number'])
+                    
+                    # Clear Cart
+                    if order.cart:
+                        order.cart.items.all().delete()
+                    
+                    # Send Email
+                    send_order_confirmation_email(order)
+                    
+                logger.info(f"Order #{order.id} marked PAID via STK Query.")
+
+            return JsonResponse({
+                "status": "SUCCESS", 
+                "message": "Payment received",
+                "order_id": order.id
+            })
+
+        # --- Handle Known Failures ---
+        elif result_code in ['1032', '1', '2001']: 
+            # 1032: Cancelled, 1: Low Balance, 2001: Wrong PIN
+            if order.status != 'failed':
+                order.status = 'failed'
+                order.save(update_fields=['status'])
+            return JsonResponse({"status": "FAILED", "message": result_desc})
+            
+        # --- Handle Processing/Pending ---
+        else:
+            return JsonResponse({"status": "PENDING", "message": result_desc})
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON"}, status=400)
     except Exception as e:
         logger.error(f"STK status error: {e}")
-        return JsonResponse({"error": "Server error"}, status=500)
+        # Return PENDING so the frontend keeps trying
+        return JsonResponse({"status": "PENDING", "message": "Connection error, retrying..."})
 
 
 @csrf_exempt
@@ -166,8 +258,22 @@ def payment_callback(request):
         result_code = int(stk_callback["ResultCode"])
         checkout_request_id = stk_callback["CheckoutRequestID"]
 
-        order = get_object_or_404(Order, checkout_request_id=checkout_request_id, status='pending')
+        # Use filter().first() for safety, or get_object_or_404
+        order = Order.objects.filter(checkout_request_id=checkout_request_id).first()
+        if not order:
+             return JsonResponse({"error": "Order not found"}, status=404)
 
+        # If order is already paid (via the Polling view), update receipt and exit
+        if order.status == 'paid':
+             if result_code == 0:
+                metadata = stk_callback["CallbackMetadata"]["Item"]
+                receipt = next((item["Value"] for item in metadata if item["Name"] == "MpesaReceiptNumber"), None)
+                if receipt:
+                    order.mpesa_receipt_number = receipt
+                    order.save(update_fields=['mpesa_receipt_number'])
+             return JsonResponse({"ResultCode": 0, "ResultDesc": "Already Processed"})
+
+        # Normal processing if Polling didn't catch it yet
         if result_code == 0:
             metadata = stk_callback["CallbackMetadata"]["Item"]
             receipt = next((item["Value"] for item in metadata if item["Name"] == "MpesaReceiptNumber"), None)
@@ -179,6 +285,9 @@ def payment_callback(request):
             # Clear user's cart
             if order.cart:
                 order.cart.items.all().delete()
+
+            # Send confirmation email with receipt
+            send_order_confirmation_email(order)
 
             logger.info(f"Payment SUCCESS → Order #{order.id} | Receipt: {receipt}")
             return JsonResponse({"ResultCode": 0, "ResultDesc": "Accepted"})

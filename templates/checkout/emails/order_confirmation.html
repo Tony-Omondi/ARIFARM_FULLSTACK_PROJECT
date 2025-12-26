@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Arifarm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .email-header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .success-badge {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .success-badge i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .order-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .order-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .order-info-row:last-child {
+            border-bottom: none;
+        }
+        .order-info-label {
+            font-weight: 600;
+            color: #6c757d;
+        }
+        .order-info-value {
+            color: #212529;
+            font-weight: 600;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #28a745;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #28a745;
+        }
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        .item-table th {
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .item-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .item-table tr:last-child td {
+            border-bottom: none;
+        }
+        .item-table .item-name {
+            font-weight: 600;
+        }
+        .total-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 16px;
+        }
+        .total-row.grand-total {
+            border-top: 2px solid #28a745;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #28a745;
+        }
+        .delivery-info {
+            background-color: #e7f5ff;
+            border-left: 4px solid #1971c2;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .delivery-info strong {
+            color: #1971c2;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+            }
+            .email-body {
+                padding: 20px;
+            }
+            .item-table {
+                font-size: 14px;
+            }
+            .item-table th,
+            .item-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>🎉 Order Confirmed!</h1>
+            <p>Thank you for your order, {{ customer_name }}</p>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <!-- Success Message -->
+            <div class="success-badge">
+                ✅ Your payment was successful and your order has been confirmed!
+            </div>
+
+            <!-- Order Information -->
+            <div class="order-info">
+                <div class="order-info-row">
+                    <span class="order-info-label">📦 Order Number:</span>
+                    <span class="order-info-value">#{{ order.id }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">📅 Order Date:</span>
+                    <span class="order-info-value">{{ order.created_at|date:"F d, Y H:i" }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">🧾 M-Pesa Receipt:</span>
+                    <span class="order-info-value">{{ order.mpesa_receipt_number }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">📧 Email:</span>
+                    <span class="order-info-value">{{ order.email }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">📱 Phone:</span>
+                    <span class="order-info-value">{{ order.phone_number }}</span>
+                </div>
+            </div>
+
+            <!-- Delivery Information -->
+            <div class="delivery-info">
+                <strong>🚚 Delivery Details:</strong><br>
+                <strong>Zone:</strong> {{ order.zone.name }}<br>
+                <strong>Preferred Date:</strong> {{ order.preferred_delivery_date|date:"F d, Y" }}<br>
+                <strong>Time Slot:</strong> 
+                {% if order.preferred_delivery_time_start and order.preferred_delivery_time_end %}
+                    {{ order.preferred_delivery_time_start|time:"H:i" }} - {{ order.preferred_delivery_time_end|time:"H:i" }}
+                {% else %}
+                    To be confirmed
+                {% endif %}
+            </div>
+
+            <!-- Order Items -->
+            <h2 class="section-title">📋 Order Items</h2>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td class="item-name">
+                            {% if item.product %}
+                                {{ item.product.name }}
+                            {% elif item.basket %}
+                                {{ item.basket.name }} <span style="color: #6c757d; font-size: 12px;">(Basket)</span>
+                            {% elif item.merchandise %}
+                                {{ item.merchandise.name }} <span style="color: #6c757d; font-size: 12px;">(Merch)</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">{{ item.quantity }}</td>
+                        <td style="text-align: right;">KSh {{ item.unit_price|floatformat:2 }}</td>
+                        <td style="text-align: right;"><strong>KSh {{ item.total_price|floatformat:2 }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Order Total -->
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span>KSh {{ order.subtotal_amount|floatformat:2 }}</span>
+                </div>
+                <div class="total-row">
+                    <span>Delivery Fee:</span>
+                    <span>KSh {{ order.delivery_fee|floatformat:2 }}</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total Paid:</span>
+                    <span>KSh {{ order.total_amount|floatformat:2 }}</span>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div style="text-align: center;">
+                <a href="{{ site_url }}/checkout/order/{{ order.id }}/" class="button">
+                    View Order Details
+                </a>
+            </div>
+
+            <!-- What's Next -->
+            <h2 class="section-title">📌 What's Next?</h2>
+            <ul style="line-height: 2;">
+                <li>✅ We've received your payment and confirmed your order</li>
+                <li>📦 Our team is preparing your fresh organic products</li>
+                <li>🚚 Your order will be delivered on {{ order.preferred_delivery_date|date:"F d, Y" }}</li>
+                <li>📱 You'll receive updates via SMS and email</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <strong>Arifarm - Fresh Organic Products</strong><br>
+            Bringing farm-fresh goodness to your doorstep 🌱
+            
+            <div class="contact-info">
+                <p>
+                    Need help? Contact us at:<br>
+                    📧 <a href="mailto:support@arifarm.com">support@arifarm.com</a><br>
+                    📱 Phone: +254 XXX XXX XXX<br>
+                    🌐 <a href="{{ site_url }}">Visit our website</a>
+                </p>
+            </div>
+
+            <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                This email was sent to {{ order.email }} regarding your order at Arifarm.<br>
+                © {% now "Y" %} Arifarm. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
