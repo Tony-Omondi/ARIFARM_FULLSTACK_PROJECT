@@ -193,3 +193,9 @@ def payment_callback(request):
     except Exception as e:
         logger.error(f"Callback processing error: {e}")
         return JsonResponse({"error": "Processing failed"}, status=500)
+
+
+@login_required
+def order_detail_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'checkout/order_detail.html', {'order': order})

@@ -6,6 +6,7 @@
 
 {% block content %}
 <div class="shop-wrapper">
+    <!-- Breadcrumbs -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -21,320 +22,292 @@
             </div>
         </div>
     </div>
-    
-    <div class="my-account-wrapper mt-no-text mb-no-text">
+
+    <!-- Main Account Section -->
+    <div class="my-account-wrapper mt-no-text mb-no-text py-5">
         <div class="container container-default-2 custom-area">
             <div class="row">
-                <div class="col-lg-12 col-custom">
-                    <div class="myaccount-page-wrapper">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4 col-custom">
-                                <div class="myaccount-tab-menu nav" role="tablist">
-                                    <a href="#dashboad" class="active" data-bs-toggle="tab">
-                                        <i class="fa fa-dashboard"></i> Dashboard
-                                    </a>
-                                    <a href="#orders" data-bs-toggle="tab">
-                                        <i class="fa fa-cart-arrow-down"></i> Orders
-                                    </a>
-                                    <a href="#account-info" data-bs-toggle="tab">
-                                        <i class="fa fa-user"></i> Account Details
-                                    </a>
-                                    <a href="{% url 'logout' %}">
-                                        <i class="fa fa-sign-out"></i> Logout
-                                    </a>
-                                </div>
-                            </div>
+                <!-- Sidebar Navigation -->
+                <div class="col-lg-3 col-md-4 col-custom mb-4 mb-md-0">
+                    <div class="myaccount-tab-menu nav flex-column bg-white shadow-sm rounded" role="tablist">
+                        <a class="nav-link active d-flex align-items-center py-3 px-4" 
+                           href="#dashboard" data-bs-toggle="tab">
+                            <i class="fa fa-tachometer-alt me-3 text-success"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a class="nav-link d-flex align-items-center py-3 px-4" 
+                           href="#orders" data-bs-toggle="tab">
+                            <i class="fa fa-shopping-cart me-3 text-primary"></i>
+                            <span>Orders</span>
+                        </a>
+                        <a class="nav-link d-flex align-items-center py-3 px-4" 
+                           href="#account-info" data-bs-toggle="tab">
+                            <i class="fa fa-user-circle me-3 text-info"></i>
+                            <span>Account Details</span>
+                        </a>
+                        <hr class="mx-4 my-2">
+                        <a class="nav-link d-flex align-items-center py-3 px-4 text-danger logout-link"
+                           href="{% url 'logout' %}">
+                            <i class="fa fa-sign-out-alt me-3"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
 
-                            <div class="col-lg-9 col-md-8 col-custom">
-                                <div class="tab-content" id="myaccountContent">
-                                    
-                                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <div class="profile-header mb-4">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <div class="profile-picture-container">
-                                                            {% if user.profile_picture %}
-                                                                <img src="{{ user.profile_picture.url }}" 
-                                                                     alt="{{ user.get_full_name|default:user.username }}" 
-                                                                     class="profile-picture rounded-circle shadow"
-                                                                     style="width: 100px; height: 100px; object-fit: cover; border: 4px solid white;">
-                                                            {% else %}
-                                                                <div class="default-profile-picture rounded-circle d-flex align-items-center justify-content-center shadow"
-                                                                     style="width: 100px; height: 100px; background: linear-gradient(135deg, #37582D 0%, #4CAF50 100%); color: white; font-size: 40px;">
-                                                                    <i class="fa fa-user"></i>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
+                <!-- Main Content Tabs -->
+                <div class="col-lg-9 col-md-8 col-custom">
+                    <div class="tab-content" id="myaccountContent">
+
+                        <!-- Dashboard Tab -->
+                        <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                            <div class="myaccount-content">
+                                <div class="profile-header bg-white shadow-sm rounded p-4 mb-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <div class="profile-picture-container">
+                                                {% if user.profile_picture %}
+                                                    <img src="{{ user.profile_picture.url }}" 
+                                                         alt="{{ user.get_full_name|default:user.username }}" 
+                                                         class="profile-picture rounded-circle shadow"
+                                                         style="width: 100px; height: 100px; object-fit: cover; border: 4px solid white;">
+                                                {% else %}
+                                                    <div class="default-profile-picture rounded-circle d-flex align-items-center justify-content-center shadow"
+                                                         style="width: 100px; height: 100px; background: linear-gradient(135deg, #37582D 0%, #4CAF50 100%); color: white; font-size: 40px;">
+                                                        <i class="fa fa-user"></i>
                                                     </div>
-                                                    <div class="col">
-                                                        <h3 class="mb-1">Welcome, {{ user.get_full_name|default:user.username }}!</h3>
-                                                        <p class="text-muted mb-0">{{ user.email }}</p>
-                                                        {% if user.date_joined %}
-                                                        <small class="text-muted">
-                                                            <i class="fa fa-calendar-alt mr-1"></i>
-                                                            Member since {{ user.date_joined|date:"F d, Y" }}
-                                                        </small>
-                                                        {% endif %}
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <a href="#account-info" class="btn obrien-button-2 primary-color rounded-0" data-bs-toggle="tab">
-                                                            <i class="fa fa-edit mr-1"></i> Edit Profile
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="row mb-4">
-                                                <div class="col-12 mb-3">
-                                                    <div class="stat-card card border-0 shadow-sm h-100">
-                                                        <div class="card-body text-center">
-                                                            <div class="stat-icon mb-3">
-                                                                <i class="fa fa-shopping-cart fa-2x text-primary"></i>
-                                                            </div>
-                                                            <h4 class="mb-1">{{ user.orders.count }}</h4>
-                                                            <p class="text-muted mb-0">Total Orders</p>
-                                                            <a href="#orders" data-bs-toggle="tab" class="small text-primary mt-2 d-block">
-                                                                View Orders <i class="fa fa-arrow-right ml-1"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {% endif %}
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="orders" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3><i class="fa fa-shopping-cart mr-2"></i> My Orders</h3>
-                                            <div class="myaccount-table table-responsive text-center">
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>Order ID</th>
-                                                            <th>Date</th>
-                                                            <th>Status</th>
-                                                            <th>Total</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for order in user.orders.all|dictsortreversed:"created_at" %}
-                                                        <tr>
-                                                            <td>#{{ order.id }}</td>
-                                                            <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                            <td>
-                                                                {% if order.status == 'paid' or order.status == 'delivered' %}
-                                                                    <span class="badge bg-success">{{ order.get_status_display }}</span>
-                                                                {% elif order.status == 'pending' %}
-                                                                    <span class="badge bg-warning text-dark">{{ order.get_status_display }}</span>
-                                                                {% elif order.status == 'failed' or order.status == 'cancelled' %}
-                                                                    <span class="badge bg-danger">{{ order.get_status_display }}</span>
-                                                                {% else %}
-                                                                    <span class="badge bg-secondary">{{ order.get_status_display }}</span>
-                                                                {% endif %}
-                                                            </td>
-                                                            <td>KES {{ order.total_amount|intcomma }}</td>
-                                                            <td>
-                                                                <a href="{% url 'checkout:order_success' order.id %}" class="btn obrien-button-2 small-btn">View</a>
-                                                            </td>
-                                                        </tr>
-                                                        {% empty %}
-                                                        <tr>
-                                                            <td colspan="5" class="text-center py-5">
-                                                                <i class="fa fa-shopping-cart fa-3x text-muted mb-3"></i>
-                                                                <h5>No Orders Yet</h5>
-                                                                <p class="text-muted">You haven't placed any orders yet.</p>
-                                                                <a href="{% url 'products:product_list' %}" class="btn obrien-button primary-btn">
-                                                                    <i class="fa fa-shopping-bag mr-2"></i> Start Shopping
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="account-info" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3><i class="fa fa-user mr-2"></i> Account Details</h3>
-                                            {% if messages %}
-                                                {% for message in messages %}
-                                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4">
-                                                    {{ message }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                                </div>
-                                                {% endfor %}
+                                        <div class="col">
+                                            <h3 class="mb-1">Welcome back, {{ user.get_full_name|default:user.username }}!</h3>
+                                            <p class="text-muted mb-1">{{ user.email }}</p>
+                                            {% if user.date_joined %}
+                                            <small class="text-muted">
+                                                <i class="fa fa-calendar-alt me-1"></i>
+                                                Member since {{ user.date_joined|date:"F d, Y" }}
+                                            </small>
                                             {% endif %}
-                                            
-                                            <div class="account-details-form">
-                                                <form method="post" enctype="multipart/form-data">
-                                                    {% csrf_token %}
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-lg-6 col-custom">
-                                                            <div class="single-input-item mb-3">
-                                                                <label for="first-name" class="required mb-1">First Name</label>
-                                                                {{ form.first_name }}
-                                                                {% if form.first_name.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-custom">
-                                                            <div class="single-input-item mb-3">
-                                                                <label for="last-name" class="required mb-1">Last Name</label>
-                                                                {{ form.last_name }}
-                                                                {% if form.last_name.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.last_name.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="email" class="required mb-1">Email Address</label>
-                                                        <input type="email" id="email" value="{{ user.email }}" disabled class="form-control bg-light" />
-                                                        <small class="text-muted">Contact support to change email address</small>
-                                                    </div>
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-lg-6 col-custom">
-                                                            <div class="single-input-item mb-3">
-                                                                <label for="phone" class="mb-1">Phone Number</label>
-                                                                {{ form.phone_number }}
-                                                                {% if form.phone_number.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.phone_number.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="col-lg-6 col-custom">
-                                                            <div class="single-input-item mb-3">
-                                                                <label for="county" class="mb-1">County</label>
-                                                                <select name="county" id="id_county">
-                                                                    <option value="">Select your County</option>
-                                                                    <option value="Mombasa" {% if form.county.value == "Mombasa" %}selected{% endif %}>Mombasa</option>
-                                                                    <option value="Kwale" {% if form.county.value == "Kwale" %}selected{% endif %}>Kwale</option>
-                                                                    <option value="Kilifi" {% if form.county.value == "Kilifi" %}selected{% endif %}>Kilifi</option>
-                                                                    <option value="Tana River" {% if form.county.value == "Tana River" %}selected{% endif %}>Tana River</option>
-                                                                    <option value="Lamu" {% if form.county.value == "Lamu" %}selected{% endif %}>Lamu</option>
-                                                                    <option value="Taita Taveta" {% if form.county.value == "Taita Taveta" %}selected{% endif %}>Taita Taveta</option>
-                                                                    <option value="Garissa" {% if form.county.value == "Garissa" %}selected{% endif %}>Garissa</option>
-                                                                    <option value="Wajir" {% if form.county.value == "Wajir" %}selected{% endif %}>Wajir</option>
-                                                                    <option value="Mandera" {% if form.county.value == "Mandera" %}selected{% endif %}>Mandera</option>
-                                                                    <option value="Marsabit" {% if form.county.value == "Marsabit" %}selected{% endif %}>Marsabit</option>
-                                                                    <option value="Isiolo" {% if form.county.value == "Isiolo" %}selected{% endif %}>Isiolo</option>
-                                                                    <option value="Meru" {% if form.county.value == "Meru" %}selected{% endif %}>Meru</option>
-                                                                    <option value="Tharaka-Nithi" {% if form.county.value == "Tharaka-Nithi" %}selected{% endif %}>Tharaka-Nithi</option>
-                                                                    <option value="Embu" {% if form.county.value == "Embu" %}selected{% endif %}>Embu</option>
-                                                                    <option value="Kitui" {% if form.county.value == "Kitui" %}selected{% endif %}>Kitui</option>
-                                                                    <option value="Machakos" {% if form.county.value == "Machakos" %}selected{% endif %}>Machakos</option>
-                                                                    <option value="Makueni" {% if form.county.value == "Makueni" %}selected{% endif %}>Makueni</option>
-                                                                    <option value="Nyandarua" {% if form.county.value == "Nyandarua" %}selected{% endif %}>Nyandarua</option>
-                                                                    <option value="Nyeri" {% if form.county.value == "Nyeri" %}selected{% endif %}>Nyeri</option>
-                                                                    <option value="Kirinyaga" {% if form.county.value == "Kirinyaga" %}selected{% endif %}>Kirinyaga</option>
-                                                                    <option value="Murang'a" {% if form.county.value == "Murang'a" %}selected{% endif %}>Murang'a</option>
-                                                                    <option value="Kiambu" {% if form.county.value == "Kiambu" %}selected{% endif %}>Kiambu</option>
-                                                                    <option value="Turkana" {% if form.county.value == "Turkana" %}selected{% endif %}>Turkana</option>
-                                                                    <option value="West Pokot" {% if form.county.value == "West Pokot" %}selected{% endif %}>West Pokot</option>
-                                                                    <option value="Samburu" {% if form.county.value == "Samburu" %}selected{% endif %}>Samburu</option>
-                                                                    <option value="Trans Nzoia" {% if form.county.value == "Trans Nzoia" %}selected{% endif %}>Trans Nzoia</option>
-                                                                    <option value="Uasin Gishu" {% if form.county.value == "Uasin Gishu" %}selected{% endif %}>Uasin Gishu</option>
-                                                                    <option value="Elgeyo Marakwet" {% if form.county.value == "Elgeyo Marakwet" %}selected{% endif %}>Elgeyo Marakwet</option>
-                                                                    <option value="Nandi" {% if form.county.value == "Nandi" %}selected{% endif %}>Nandi</option>
-                                                                    <option value="Baringo" {% if form.county.value == "Baringo" %}selected{% endif %}>Baringo</option>
-                                                                    <option value="Laikipia" {% if form.county.value == "Laikipia" %}selected{% endif %}>Laikipia</option>
-                                                                    <option value="Nakuru" {% if form.county.value == "Nakuru" %}selected{% endif %}>Nakuru</option>
-                                                                    <option value="Narok" {% if form.county.value == "Narok" %}selected{% endif %}>Narok</option>
-                                                                    <option value="Kajiado" {% if form.county.value == "Kajiado" %}selected{% endif %}>Kajiado</option>
-                                                                    <option value="Kericho" {% if form.county.value == "Kericho" %}selected{% endif %}>Kericho</option>
-                                                                    <option value="Bomet" {% if form.county.value == "Bomet" %}selected{% endif %}>Bomet</option>
-                                                                    <option value="Kakamega" {% if form.county.value == "Kakamega" %}selected{% endif %}>Kakamega</option>
-                                                                    <option value="Vihiga" {% if form.county.value == "Vihiga" %}selected{% endif %}>Vihiga</option>
-                                                                    <option value="Bungoma" {% if form.county.value == "Bungoma" %}selected{% endif %}>Bungoma</option>
-                                                                    <option value="Busia" {% if form.county.value == "Busia" %}selected{% endif %}>Busia</option>
-                                                                    <option value="Siaya" {% if form.county.value == "Siaya" %}selected{% endif %}>Siaya</option>
-                                                                    <option value="Kisumu" {% if form.county.value == "Kisumu" %}selected{% endif %}>Kisumu</option>
-                                                                    <option value="Homa Bay" {% if form.county.value == "Homa Bay" %}selected{% endif %}>Homa Bay</option>
-                                                                    <option value="Migori" {% if form.county.value == "Migori" %}selected{% endif %}>Migori</option>
-                                                                    <option value="Kisii" {% if form.county.value == "Kisii" %}selected{% endif %}>Kisii</option>
-                                                                    <option value="Nyamira" {% if form.county.value == "Nyamira" %}selected{% endif %}>Nyamira</option>
-                                                                    <option value="Nairobi City" {% if form.county.value == "Nairobi City" %}selected{% endif %}>Nairobi City</option>
-                                                                </select>
-                                                                {% if form.county.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.county.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="zone" class="mb-1">Delivery Zone</label>
-                                                        {{ form.zone }}
-                                                        <small class="text-muted">Select your area for accurate delivery fees</small>
-                                                        {% if form.zone.errors %}
-                                                        <div class="text-danger small mt-1">{{ form.zone.errors }}</div>
-                                                        {% endif %}
-                                                    </div>
-                                                    
-                                                    <div class="single-input-item mb-4">
-                                                        <label for="profile-picture" class="mb-1">Profile Picture</label>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="mr-4">
-                                                                {% if user.profile_picture %}
-                                                                    <img src="{{ user.profile_picture.url }}" alt="Current Profile" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #dee2e6;">
-                                                                {% else %}
-                                                                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: #f8f9fa; border: 3px solid #dee2e6;">
-                                                                        <i class="fa fa-user fa-2x text-muted"></i>
-                                                                    </div>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="flex-grow-1">
-                                                                {{ form.profile_picture }}
-                                                                {% if form.profile_picture.errors %}
-                                                                <div class="text-danger small mt-1">{{ form.profile_picture.errors }}</div>
-                                                                {% endif %}
-                                                                <small class="text-muted mt-2 d-block">Upload a new profile picture (JPG, PNG, max 5MB)</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="single-input-item single-item-button mt-4">
-                                                        <button type="submit" class="btn obrien-button primary-btn">
-                                                            <i class="fa fa-save mr-2"></i> Save Changes
-                                                        </button>
-                                                        <a href="#dashboad" class="btn obrien-button-2 primary-color ml-2" data-bs-toggle="tab">
-                                                            Cancel
-                                                        </a>
-                                                    </div>
-                                                </form>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#account-info" class="btn obrien-button-2 primary-color rounded-pill px-4" data-bs-toggle="tab">
+                                                <i class="fa fa-edit me-2"></i>Edit Profile
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body text-center py-5">
+                                                <i class="fa fa-shopping-bag fa-3x text-success mb-4"></i>
+                                                <h4>{{ user.orders.count }}</h4>
+                                                <p class="text-muted mb-3">Total Orders Placed</p>
+                                                <a href="#orders" data-bs-toggle="tab" class="btn obrien-button primary-btn">
+                                                    View All Orders <i class="fa fa-arrow-right ms-2"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Orders Tab -->
+                        <div class="tab-pane fade" id="orders" role="tabpanel">
+                            <div class="myaccount-content">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="mb-0"><i class="fa fa-shopping-cart me-2 text-primary"></i>My Orders</h3>
+                                    {% if user.orders.exists %}
+                                    <small class="text-muted">{{ user.orders.count }} order{{ user.orders.count|pluralize }}</small>
+                                    {% endif %}
+                                </div>
+
+                                {% if user.orders.exists %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle order-table bg-white shadow-sm rounded overflow-hidden">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Order</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Total</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for order in user.orders.all|dictsortreversed:"created_at" %}
+                                            <tr>
+                                                <td>
+                                                    <strong>#{{ order.id }}</strong><br>
+                                                    <small class="text-muted">{{ order.items.count }} item{{ order.items.count|pluralize }}</small>
+                                                </td>
+                                                <td>{{ order.created_at|date:"d M Y · H:i" }}</td>
+                                                <td>
+                                                    {% if order.status == 'delivered' %}
+                                                        <span class="badge bg-success px-3 py-2">Delivered</span>
+                                                    {% elif order.status == 'paid' %}
+                                                        <span class="badge bg-success-subtle text-success px-3 py-2">Paid</span>
+                                                    {% elif order.status == 'pending' %}
+                                                        <span class="badge bg-warning-subtle text-warning px-3 py-2">Pending Payment</span>
+                                                    {% elif order.status == 'failed' or order.status == 'cancelled' %}
+                                                        <span class="badge bg-danger-subtle text-danger px-3 py-2">{{ order.get_status_display }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary-subtle text-secondary px-3 py-2">{{ order.get_status_display }}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="fw-bold">KES {{ order.total_amount|intcomma }}</td>
+                                                <td class="text-end">
+                                                    <a href="{% url 'checkout:order_detail' order.id %}" 
+                                                       class="btn btn-sm btn-outline-success rounded-pill px-4">
+                                                        View Details →
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="text-center py-5 my-5">
+                                    <i class="fa fa-shopping-cart fa-5x text-muted mb-4 opacity-50"></i>
+                                    <h4 class="mb-3 text-muted">No orders yet</h4>
+                                    <p class="text-muted mb-4">Your order history will appear here once you start shopping.</p>
+                                    <a href="{% url 'products:product_list' %}" class="btn obrien-button primary-btn px-5">
+                                        <i class="fa fa-shopping-bag me-2"></i>Start Shopping
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Account Details Tab -->
+                        <div class="tab-pane fade" id="account-info" role="tabpanel">
+                            <div class="myaccount-content">
+                                <h3 class="mb-4"><i class="fa fa-user me-2 text-info"></i>Account Details</h3>
+
+                                {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <div class="account-details-form bg-white shadow-sm rounded p-4">
+                                    <form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label required">First Name</label>
+                                                    {{ form.first_name }}
+                                                    {% if form.first_name.errors %}
+                                                        <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label required">Last Name</label>
+                                                    {{ form.last_name }}
+                                                    {% if form.last_name.errors %}
+                                                        <div class="text-danger small mt-1">{{ form.last_name.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label required">Email Address</label>
+                                            <input type="email" value="{{ user.email }}" disabled class="form-control bg-light">
+                                            <small class="text-muted">Contact support to change your email</small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone Number</label>
+                                                    {{ form.phone_number }}
+                                                    {% if form.phone_number.errors %}
+                                                        <div class="text-danger small mt-1">{{ form.phone_number.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">County</label>
+                                                    {{ form.county }}
+                                                    {% if form.county.errors %}
+                                                        <div class="text-danger small mt-1">{{ form.county.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Delivery Zone</label>
+                                            {{ form.zone }}
+                                            <small class="text-muted">Helps us calculate accurate delivery fees</small>
+                                            {% if form.zone.errors %}
+                                                <div class="text-danger small mt-1">{{ form.zone.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Profile Picture</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-4">
+                                                    {% if user.profile_picture %}
+                                                        <img src="{{ user.profile_picture.url }}" class="rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;">
+                                                    {% else %}
+                                                        <div class="rounded-circle d-flex align-items-center justify-content-center border" style="width: 80px; height: 80px; background: #f8f9fa;">
+                                                            <i class="fa fa-user fa-2x text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    {{ form.profile_picture }}
+                                                    <small class="text-muted d-block mt-2">JPG or PNG • Max 5MB</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <button type="submit" class="btn obrien-button primary-btn px-5">
+                                                <i class="fa fa-save me-2"></i>Save Changes
+                                            </button>
+                                            <a href="#dashboard" class="btn btn-outline-secondary px-5" data-bs-toggle="tab">
+                                                Cancel
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="support-area">
+
+    <!-- Support Section -->
+    <div class="support-area py-5 bg-light">
         <div class="container container-default custom-area">
             <div class="row">
-                <div class="col-lg-12 col-custom">
-                    <div class="support-wrapper d-flex">
-                        <div class="support-content">
-                            <h1 class="title">Need Help ?</h1>
-                            <p class="desc-content">Our customer support team is here to help with any questions about your account.</p>
+                <div class="col-lg-12">
+                    <div class="support-wrapper d-flex flex-column flex-md-row justify-content-between align-items-center bg-white shadow-sm rounded p-5">
+                        <div class="support-content text-center text-md-start mb-4 mb-md-0">
+                            <h1 class="title mb-3">Need Help?</h1>
+                            <p class="desc-content text-muted">Our customer support team is ready to assist you with any questions.</p>
                         </div>
-                        <div class="support-button d-flex align-items-center">
-                            <a class="obrien-button primary-btn" href="{% url 'contact' %}">Contact now</a>
+                        <div class="support-button">
+                            <a class="obrien-button primary-btn px-5 py-3" href="{% url 'contact' %}">
+                                <i class="fa fa-headset me-2"></i>Contact Support
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -344,65 +317,98 @@
 </div>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .myaccount-tab-menu .nav-link {
+        color: #444;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .myaccount-tab-menu .nav-link:hover,
+    .myaccount-tab-menu .nav-link.active {
+        background-color: #f8fafc;
+        color: #37582D;
+        border-left-color: #4CAF50;
+        font-weight: 600;
+    }
+
+    .myaccount-tab-menu .logout-link:hover {
+        background-color: rgba(220, 38, 38, 0.1);
+        color: #dc2626 !important;
+    }
+
+    .order-table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .btn-outline-success.rounded-pill {
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-success.rounded-pill:hover {
+        background-color: #37582D;
+        border-color: #37582D;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header .row > div {
+            text-align: center !important;
+            margin-bottom: 1rem;
+        }
+        .profile-header .col-auto:last-child {
+            margin-bottom: 0;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Profile picture preview logic...
-    const profilePictureInput = document.getElementById('id_profile_picture');
-    if (profilePictureInput) {
-        profilePictureInput.addEventListener('change', function(e) {
+    // Profile picture preview
+    const profileInput = document.getElementById('id_profile_picture');
+    if (profileInput) {
+        profileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    this.value = '';
-                    return;
-                }
-                const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Only JPG and PNG files are allowed');
-                    this.value = '';
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewImg = document.querySelector('.profile-picture');
-                    if (previewImg) previewImg.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                this.value = '';
+                return;
             }
+
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                alert('Only JPG and PNG files are allowed');
+                this.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.querySelector('#account-info img.rounded-circle');
+                if (img) img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
         });
     }
 
-    // URL Hash Tab Switching
+    // Preserve tab on page reload (e.g., after form submit)
     const urlHash = window.location.hash;
     if (urlHash) {
-        const tab = document.querySelector(`.myaccount-tab-menu a[href="${urlHash}"]`);
-        if (tab) tab.click();
+        const triggerTab = document.querySelector(`.myaccount-tab-menu a[href="${urlHash}"]`);
+        if (triggerTab) {
+            const bsTab = new bootstrap.Tab(triggerTab);
+            bsTab.show();
+        }
     }
 });
 </script>
-
-<style>
-/* ... (Keep your existing styles) ... */
-
-/* Style for the Zone and County Dropdown (Select) */
-select[name="zone"], select[name="county"] {
-    width: 100%;
-    background-color: transparent;
-    border: 1px solid #e5e5e5;
-    border-radius: 0;
-    line-height: 23px;
-    padding: 10px 20px;
-    font-size: 14px;
-    color: #5d5d5d;
-    margin-bottom: 15px;
-    height: 50px; /* Match input height */
-}
-
-select[name="zone"]:focus, select[name="county"]:focus {
-    border-color: #37582D;
-    outline: none;
-}
-</style>
 {% endblock %}
