@@ -5,49 +5,236 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+/* ==================== Variables ==================== */
+:root {
+    --primary-green: #37582D;
+    --primary-hover: #2a4422;
+    --primary-light: #f0f7ef;
+    --success-color: #10b981;
+    --info-color: #3b82f6;
+    --border-radius: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== Global Styles ==================== */
+.bg-gradient-subtle {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* ==================== Breadcrumbs ==================== */
+.breadcrumb-checkout {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: #cbd5e1;
+    font-size: 1.25rem;
+}
+
+.breadcrumb-item a {
+    color: #64748b;
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--primary-green);
+}
+
+.breadcrumb-item.active {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+/* ==================== Cards ==================== */
+.checkout-card {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+}
+
+.checkout-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* ==================== Header Section ==================== */
+.checkout-header {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.delivery-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 20px rgba(55, 88, 45, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.checkout-header h3 {
+    color: #1e293b;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.checkout-header p {
+    color: #64748b;
+    font-size: 1.125rem;
+}
+
+/* ==================== Form Sections ==================== */
+.form-section {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e2e8f0;
+    transition: var(--transition);
+}
+
+.form-section:hover {
+    border-color: var(--primary-green);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.section-header i {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    color: white;
+    font-size: 1.125rem;
+}
+
+.section-header h5 {
+    margin: 0;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+
+/* ==================== Form Controls ==================== */
 .checkout-form-label {
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    display: block;
+    color: #475569;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
 }
 
 .form-control, .form-select {
-    border-radius: 8px;
-    border: 2px solid #e0e0e0;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    padding: 0.875rem 1.125rem;
+    transition: var(--transition);
+    font-size: 0.9375rem;
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px rgba(55, 88, 45, 0.1);
 }
 
-.checkout-card {
+.form-control::placeholder {
+    color: #cbd5e1;
+}
+
+/* ==================== Info Badges ==================== */
+.info-badge {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    border: 1px solid #93c5fd;
+}
+
+.info-badge i {
+    font-size: 1rem;
+}
+
+/* ==================== Alerts ==================== */
+.alert {
     border-radius: 12px;
     border: none;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.order-summary-item {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s ease;
+.alert i {
+    font-size: 1.25rem;
 }
 
-.order-summary-item:hover {
-    background-color: #f8f9fa;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    border-radius: 6px;
+/* ==================== Order Summary ==================== */
+.sticky-summary {
+    position: sticky;
+    top: 20px;
+}
+
+.summary-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    color: white;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.summary-header h4 {
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .order-summary-scroll {
-    max-height: 400px;
+    max-height: 450px;
     overflow-y: auto;
-    padding-right: 0.5rem;
+    padding: 1.5rem;
 }
 
 .order-summary-scroll::-webkit-scrollbar {
@@ -55,313 +242,497 @@
 }
 
 .order-summary-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f1f5f9;
     border-radius: 10px;
 }
 
 .order-summary-scroll::-webkit-scrollbar-thumb {
-    background: #28a745;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
     border-radius: 10px;
 }
 
-.total-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+.order-summary-item {
+    padding: 1.25rem;
+    border-bottom: 2px solid #f1f5f9;
+    transition: var(--transition);
     border-radius: 8px;
+}
+
+.order-summary-item:hover {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    transform: translateX(5px);
+}
+
+.order-summary-item:last-child {
+    border-bottom: none;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+}
+
+.item-details {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.item-price {
+    font-weight: 700;
+    color: var(--success-color);
+    font-size: 1.125rem;
+}
+
+/* ==================== Total Section ==================== */
+.total-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 2rem 1.5rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+}
+
+.total-row.divider {
+    border-bottom: 2px dashed #cbd5e1;
+    margin-bottom: 0.75rem;
+    padding-bottom: 1rem;
+}
+
+.total-row.grand-total {
     padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    margin: 1rem -0.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.total-label {
+    font-weight: 600;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.total-amount {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.grand-total .total-label {
+    font-size: 1.25rem;
+    color: var(--primary-green);
+}
+
+.grand-total .total-amount {
+    font-size: 2rem;
+    color: var(--success-color);
+}
+
+/* ==================== Trust Badges ==================== */
+.trust-badges {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
     margin-top: 1rem;
 }
 
+.trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: #475569;
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+.trust-badge i {
+    color: var(--success-color);
+    font-size: 1.125rem;
+}
+
+/* ==================== Checkout Button ==================== */
 .btn-checkout {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
     border: none;
-    border-radius: 10px;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border-radius: 50px;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
     color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    transition: var(--transition);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
 }
 
 .btn-checkout:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-    background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669 0%, var(--success-color) 100%);
 }
 
-.info-badge {
-    background-color: #e7f5ff;
-    color: #1971c2;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    display: inline-flex;
+.btn-checkout:active {
+    transform: translateY(-1px);
+}
+
+.btn-checkout.processing {
+    background: #94a3b8;
+    pointer-events: none;
+}
+
+.security-note {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.security-note small {
+    color: #64748b;
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    margin-top: 0.5rem;
+    font-weight: 500;
 }
 
-.sticky-summary {
-    position: sticky;
-    top: 20px;
+/* ==================== Empty State ==================== */
+.empty-cart-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
 }
 
+.empty-cart-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), #e8f4e5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.empty-cart-icon i {
+    font-size: 3rem;
+    color: var(--primary-green);
+    opacity: 0.5;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* ==================== Responsive ==================== */
 @media (max-width: 991px) {
     .sticky-summary {
         position: relative;
         top: 0;
         margin-top: 2rem;
     }
+
+    .form-section {
+        padding: 1.5rem;
+    }
+
+    .delivery-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
 }
 
-.breadcrumb-checkout {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-}
+@media (max-width: 767px) {
+    .checkout-header h3 {
+        font-size: 1.5rem;
+    }
 
-.breadcrumb-checkout .breadcrumb {
-    margin-bottom: 0;
-}
+    .section-header h5 {
+        font-size: 1.125rem;
+    }
 
-.delivery-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
+    .btn-checkout {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
 
-.form-section {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-}
+    .grand-total .total-amount {
+        font-size: 1.5rem;
+    }
 
-.form-section h5 {
-    color: #2c3e50;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    .form-section {
+        padding: 1.25rem;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-checkout">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'cart:cart_detail' %}"><i class="fa fa-shopping-cart me-1"></i>Cart</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><i class="fa fa-credit-card me-1"></i>Checkout</li>
-            </ol>
-        </nav>
-    </div>
-
-    <div class="row g-4">
-        <!-- Left: Checkout Form -->
-        <div class="col-lg-7">
-            <div class="card checkout-card">
-                <div class="card-body p-4 p-md-5">
-                    <div class="text-center mb-4">
-                        <div class="delivery-icon mx-auto">
-                            <i class="fa fa-truck"></i>
-                        </div>
-                        <h3 class="mb-2 fw-bold">Delivery & Payment Details</h3>
-                        <p class="text-muted">Complete your order with secure M-Pesa payment</p>
-                    </div>
-
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
-                                <i class="fa fa-info-circle me-2"></i>{{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
-                    <form method="post" id="checkout-form">
-                        {% csrf_token %}
-
-                        <!-- Contact Information Section -->
-                        <div class="form-section">
-                            <h5><i class="fa fa-user-circle"></i> Contact Information</h5>
-                            
-                            <div class="mb-4">
-                                <label for="{{ form.email.id_for_label }}" class="checkout-form-label">
-                                    <i class="fa fa-envelope me-2"></i>Email Address
-                                </label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger small mt-2">
-                                        <i class="fa fa-exclamation-circle me-1"></i>{{ form.email.errors|join:", " }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="{{ form.phone_number.id_for_label }}" class="checkout-form-label">
-                                    <i class="fa fa-mobile me-2"></i>Phone Number (M-Pesa)
-                                </label>
-                                {{ form.phone_number }}
-                                <div class="info-badge">
-                                    <i class="fa fa-info-circle"></i>
-                                    <span>We'll send the payment request to this number</span>
-                                </div>
-                                {% if form.phone_number.errors %}
-                                    <div class="text-danger small mt-2">
-                                        <i class="fa fa-exclamation-circle me-1"></i>{{ form.phone_number.errors|join:", " }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <!-- Delivery Details Section -->
-                        <div class="form-section">
-                            <h5><i class="fa fa-map-marker"></i> Delivery Details</h5>
-                            
-                            <div class="mb-4">
-                                <label for="{{ form.zone.id_for_label }}" class="checkout-form-label">
-                                    <i class="fa fa-location-arrow me-2"></i>Delivery Zone
-                                </label>
-                                {{ form.zone }}
-                                <div class="info-badge">
-                                    <i class="fa fa-truck"></i>
-                                    <span>Delivery fee will be calculated based on your zone</span>
-                                </div>
-                                {% if form.zone.errors %}
-                                    <div class="text-danger small mt-2">
-                                        <i class="fa fa-exclamation-circle me-1"></i>{{ form.zone.errors|join:", " }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="{{ form.preferred_delivery_date.id_for_label }}" class="checkout-form-label">
-                                        <i class="fa fa-calendar me-2"></i>Preferred Delivery Date
-                                    </label>
-                                    {{ form.preferred_delivery_date }}
-                                    <div class="info-badge">
-                                        <i class="fa fa-clock-o"></i>
-                                        <span>Available from tomorrow onwards</span>
-                                    </div>
-                                    {% if form.preferred_delivery_date.errors %}
-                                        <div class="text-danger small mt-2">
-                                            <i class="fa fa-exclamation-circle me-1"></i>{{ form.preferred_delivery_date.errors|join:", " }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="{{ form.preferred_delivery_time.id_for_label }}" class="checkout-form-label">
-                                        <i class="fa fa-clock-o me-2"></i>Preferred Time Slot
-                                    </label>
-                                    {{ form.preferred_delivery_time }}
-                                    {% if form.preferred_delivery_time.errors %}
-                                        <div class="text-danger small mt-2">
-                                            <i class="fa fa-exclamation-circle me-1"></i>{{ form.preferred_delivery_time.errors|join:", " }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-checkout w-100 mt-4">
-                            <i class="fa fa-lock me-2"></i>Pay <span id="pay-amount">KSh {{ total|floatformat:2 }}</span> via M-Pesa
-                            <i class="fa fa-arrow-right ms-2"></i>
-                        </button>
-
-                        <div class="text-center mt-3">
-                            <small class="text-muted">
-                                <i class="fa fa-shield me-1"></i>Secure payment powered by M-Pesa
-                            </small>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="bg-gradient-subtle py-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-checkout">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart me-1"></i>Cart</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="fas fa-credit-card me-1"></i>Checkout
+                    </li>
+                </ol>
+            </nav>
         </div>
 
-        <!-- Right: Order Summary -->
-        <div class="col-lg-5">
-            <div class="sticky-summary">
+        <div class="row g-4">
+            <!-- Left: Checkout Form -->
+            <div class="col-lg-7">
                 <div class="card checkout-card">
-                    <div class="card-body p-4">
-                        <h4 class="mb-4 fw-bold">
-                            <i class="fa fa-shopping-bag me-2"></i>Order Summary
-                        </h4>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="checkout-header">
+                            <div class="delivery-icon">
+                                <i class="fas fa-truck-fast"></i>
+                            </div>
+                            <h3><i class="fas fa-check-circle me-2"></i>Complete Your Order</h3>
+                            <p><i class="fas fa-lock me-1"></i>Secure checkout with M-Pesa payment</p>
+                        </div>
 
-                        <div class="order-summary-scroll mb-4">
-                            {% for item in cart.items.all %}
-                                <div class="order-summary-item">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="flex-grow-1">
-                                            <p class="mb-1 fw-semibold">{{ item }}</p>
-                                            <small class="text-muted">
-                                                <i class="fa fa-cube me-1"></i>Quantity: {{ item.quantity }}
-                                            </small>
-                                        </div>
-                                        <strong class="ms-3 text-success">KSh {{ item.total_price|floatformat:2 }}</strong>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        {% if message.tags == 'success' %}
+                                            <i class="fas fa-check-circle me-3"></i>
+                                        {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                            <i class="fas fa-exclamation-circle me-3"></i>
+                                        {% elif message.tags == 'warning' %}
+                                            <i class="fas fa-exclamation-triangle me-3"></i>
+                                        {% else %}
+                                            <i class="fas fa-info-circle me-3"></i>
+                                        {% endif %}
+                                        <div class="flex-grow-1">{{ message }}</div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                     </div>
                                 </div>
-                            {% empty %}
-                                <div class="text-center py-5">
-                                    <i class="fa fa-shopping-cart text-muted" style="font-size: 3rem;"></i>
-                                    <p class="text-muted mt-3">Your cart is empty</p>
-                                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-success btn-sm mt-2">
-                                        <i class="fa fa-arrow-left me-1"></i>Continue Shopping
-                                    </a>
-                                </div>
                             {% endfor %}
-                        </div>
+                        {% endif %}
 
-                        <div class="total-section">
-                            <div class="d-flex justify-content-between mb-3">
-                                <span class="fw-semibold"><i class="fa fa-shopping-basket me-2"></i>Subtotal</span>
-                                <span class="fw-semibold">KSh {{ subtotal|floatformat:2 }}</span>
-                            </div>
+                        <form method="post" id="checkout-form">
+                            {% csrf_token %}
 
-                            <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
-                                <span class="fw-semibold"><i class="fa fa-truck me-2"></i>Delivery Fee</span>
-                                <span class="fw-semibold" id="delivery-fee-display">
-                                    {% if delivery_fee is not None %}
-                                        KSh {{ delivery_fee|floatformat:2 }}
-                                    {% else %}
-                                        <span class="text-muted">Select zone</span>
+                            <!-- Contact Information Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    {% comment %} <i class="fas fa-user-circle"></i> {% endcomment %}
+                                    <h5><i class="fas fa-id-card me-2"></i>Contact Information</h5>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.email.id_for_label }}" class="checkout-form-label">
+                                        <i class="fas fa-envelope"></i>Email Address
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger small mt-2">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ form.email.errors|join:", " }}
+                                        </div>
                                     {% endif %}
-                                </span>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label for="{{ form.phone_number.id_for_label }}" class="checkout-form-label">
+                                        <i class="fas fa-mobile-alt"></i>Phone Number (M-Pesa)
+                                    </label>
+                                    {{ form.phone_number }}
+                                    <div class="info-badge">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Payment request will be sent to this number</span>
+                                    </div>
+                                    {% if form.phone_number.errors %}
+                                        <div class="text-danger small mt-2">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ form.phone_number.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fs-4 fw-bold text-success"><i class="fa fa-money me-2"></i>Total</span>
-                                <span class="fs-3 fw-bold text-success" id="grand-total-display">
-                                    KSh {{ total|floatformat:2 }}
-                                </span>
+                            <!-- Delivery Details Section -->
+                            <div class="form-section">
+                                <div class="section-header">
+                                    {% comment %} <i class="fas fa-map-marked-alt"></i> {% endcomment %}
+                                    <h5><i class="fas fa-truck me-2"></i>Delivery Details</h5>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.zone.id_for_label }}" class="checkout-form-label">
+                                        <i class="fas fa-location-arrow"></i>Delivery Zone
+                                    </label>
+                                    {{ form.zone }}
+                                    <div class="info-badge">
+                                        <i class="fas fa-truck"></i>
+                                        <span>Delivery fee calculated based on your zone</span>
+                                    </div>
+                                    {% if form.zone.errors %}
+                                        <div class="text-danger small mt-2">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ form.zone.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="{{ form.preferred_delivery_date.id_for_label }}" class="checkout-form-label">
+                                            <i class="fas fa-calendar-alt"></i>Preferred Date
+                                        </label>
+                                        {{ form.preferred_delivery_date }}
+                                        <div class="info-badge">
+                                            <i class="fas fa-clock"></i>
+                                            <span>From tomorrow onwards</span>
+                                        </div>
+                                        {% if form.preferred_delivery_date.errors %}
+                                            <div class="text-danger small mt-2">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.preferred_delivery_date.errors|join:", " }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="{{ form.preferred_delivery_time.id_for_label }}" class="checkout-form-label">
+                                            <i class="fas fa-clock"></i>Time Slot
+                                        </label>
+                                        {{ form.preferred_delivery_time }}
+                                        {% if form.preferred_delivery_time.errors %}
+                                            <div class="text-danger small mt-2">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.preferred_delivery_time.errors|join:", " }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
+
+                            <button type="submit" class="btn btn-checkout w-100">
+                                <i class="fas fa-lock"></i>
+                                <span>Pay <span id="pay-amount">KSh {{ total|floatformat:2 }}</span> via M-Pesa</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+
+                            <div class="security-note">
+                                <small>
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Secure payment powered by M-Pesa</span>
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="col-lg-5">
+                <div class="sticky-summary">
+                    <div class="card checkout-card">
+                        <div class="summary-header">
+                            <h4>
+                                <i class="fas fa-shopping-bag"></i>Order Summary
+                            </h4>
                         </div>
 
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <p class="mb-2 small fw-semibold">
-                                <i class="fa fa-check-circle text-success me-2"></i>100% Organic Products
-                            </p>
-                            <p class="mb-2 small fw-semibold">
-                                <i class="fa fa-check-circle text-success me-2"></i>Fresh from the Farm
-                            </p>
-                            <p class="mb-0 small fw-semibold">
-                                <i class="fa fa-check-circle text-success me-2"></i>Same Day Delivery Available
-                            </p>
-                        </div>
+                        {% if cart.items.all %}
+                            <div class="order-summary-scroll">
+                                {% for item in cart.items.all %}
+                                    <div class="order-summary-item">
+                                        <div class="item-name"><i class="fas fa-leaf me-2 text-success"></i>{{ item }}</div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <div class="item-details">
+                                                <i class="fas fa-cube"></i>
+                                                <span>Qty: {{ item.quantity }}</span>
+                                            </div>
+                                            <div class="item-price">KSh {{ item.total_price|floatformat:2 }}</div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="total-section">
+                                <div class="total-row divider">
+                                    <div class="total-label">
+                                        <i class="fas fa-shopping-basket"></i>
+                                        <span>Subtotal</span>
+                                    </div>
+                                    <div class="total-amount">KSh {{ subtotal|floatformat:2 }}</div>
+                                </div>
+
+                                <div class="total-row divider">
+                                    <div class="total-label">
+                                        <i class="fas fa-truck"></i>
+                                        <span>Delivery Fee</span>
+                                    </div>
+                                    <div class="total-amount" id="delivery-fee-display">
+                                        {% if delivery_fee is not None %}
+                                            KSh {{ delivery_fee|floatformat:2 }}
+                                        {% else %}
+                                            <span class="text-muted small">Select zone</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="total-row grand-total">
+                                    <div class="total-label">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Total</span>
+                                    </div>
+                                    <div class="total-amount" id="grand-total-display">
+                                        KSh {{ total|floatformat:2 }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="trust-badges">
+                                <div class="trust-badge">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>100% Organic Products</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <i class="fas fa-leaf"></i>
+                                    <span>Fresh from the Farm</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    <span>Same Day Delivery Available</span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="empty-cart-state">
+                                <div class="empty-cart-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">Your Cart is Empty</h5>
+                                <p class="text-muted mb-4">Add items to your cart to proceed with checkout</p>
+                                <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg rounded-pill px-5">
+                                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -374,7 +745,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Flatpickr for date picker
+    // Initialize Flatpickr
     const dateInput = document.getElementById('{{ form.preferred_delivery_date.id_for_label }}');
     if (dateInput) {
         flatpickr(dateInput, {
@@ -384,7 +755,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 firstDayOfWeek: 1
             },
             disableMobile: false,
-            theme: "light"
+            theme: "light",
+            onChange: function(selectedDates, dateStr, instance) {
+                dateInput.value = dateStr;
+            }
         });
     }
 
@@ -395,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const payAmount = document.getElementById('pay-amount');
     const subtotal = {{ subtotal|floatformat:2 }};
 
-    // Inject data-fee attributes into zone options
+    // Inject data-fee attributes
     {% for zone in form.zone.field.queryset %}
         const option{{ forloop.counter }} = zoneSelect.querySelector('option[value="{{ zone.id }}"]');
         if (option{{ forloop.counter }}) {
@@ -413,26 +787,47 @@ document.addEventListener('DOMContentLoaded', function () {
             if (deliveryFee > 0) {
                 deliveryFeeDisplay.innerHTML = 'KSh ' + deliveryFee.toFixed(2);
             } else {
-                deliveryFeeDisplay.innerHTML = '<span class="text-muted">Select zone</span>';
+                deliveryFeeDisplay.innerHTML = '<span class="text-muted small">Select zone</span>';
             }
             
             grandTotalDisplay.textContent = 'KSh ' + newTotal.toFixed(2);
             payAmount.textContent = 'KSh ' + newTotal.toFixed(2);
         });
 
-        // Trigger on page load if zone already selected
+        // Trigger on page load
         if (zoneSelect.value) {
             zoneSelect.dispatchEvent(new Event('change'));
         }
     }
 
-    // Form validation feedback
+    // Form submission handling
     const form = document.getElementById('checkout-form');
     form.addEventListener('submit', function(e) {
         const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Processing...';
+        submitBtn.classList.add('processing');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing Payment...</span>';
         submitBtn.disabled = true;
     });
+
+    // Add form control classes
+    const formInputs = document.querySelectorAll('#checkout-form input:not([type="hidden"]), #checkout-form select');
+    formInputs.forEach(input => {
+        if (!input.classList.contains('form-control') && !input.classList.contains('form-select')) {
+            if (input.tagName === 'SELECT') {
+                input.classList.add('form-select');
+            } else {
+                input.classList.add('form-control');
+            }
+        }
+    });
+
+    // Auto-dismiss alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
 });
 </script>
 {% endblock %}

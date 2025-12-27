@@ -4,17 +4,638 @@
 
 {% block title %}My Cart - Arifarm{% endblock %}
 
-{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ==================== Variables ==================== */
+:root {
+    --primary-green: #37582D;
+    --primary-hover: #2a4422;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --border-radius: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-<div class="breadcrumbs-area position-relative">
+/* ==================== Breadcrumbs ==================== */
+.breadcrumbs-area {
+    background: linear-gradient(135deg, #f0f7ef 0%, #e8f4e5 100%);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.breadcrumbs-area::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%2337582D' fill-opacity='0.1' d='M100,0 C155.228,0 200,44.772 200,100 C200,155.228 155.228,200 100,200 C44.772,200 0,155.228 0,100 C0,44.772 44.772,0 100,0 Z'%3E%3C/path%3E%3C/svg%3E");
+    opacity: 0.3;
+}
+
+.title-3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.title-3 i {
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.breadcrumb-content ul {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-content ul li {
+    position: relative;
+    padding-right: 1rem;
+}
+
+.breadcrumb-content ul li:not(:last-child)::after {
+    content: '›';
+    position: absolute;
+    right: 0;
+    color: #94a3b8;
+}
+
+.breadcrumb-content ul li a {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.breadcrumb-content ul li a:hover {
+    color: var(--primary-green);
+}
+
+.breadcrumb-content ul li:last-child {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+/* ==================== Cart Container ==================== */
+.cart-main-wrapper {
+    padding: 2rem 0;
+}
+
+.container-default-2 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ==================== Cart Table ==================== */
+.cart-table {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.cart-table table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.cart-table thead {
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+}
+
+.cart-table thead th {
+    color: white;
+    font-weight: 600;
+    padding: 1.25rem;
+    border: none;
+    font-size: 0.9375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cart-table thead th i {
+    margin-right: 0.5rem;
+}
+
+.cart-table tbody tr {
+    transition: var(--transition);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cart-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cart-table tbody td {
+    padding: 1.25rem;
+    vertical-align: middle;
+    border: none;
+}
+
+/* ==================== Product Cells ==================== */
+.pro-thumbnail {
+    width: 120px;
+}
+
+.pro-thumbnail img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    transition: var(--transition);
+}
+
+.pro-thumbnail img:hover {
+    border-color: var(--primary-green);
+    transform: scale(1.05);
+}
+
+.pro-title a {
+    color: #1e293b;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.pro-title a:hover {
+    color: var(--primary-green);
+}
+
+.combo-badge {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+/* ==================== Quantity Controls (Renamed) ==================== */
+.custom-qty-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.custom-qty-wrapper:hover {
+    border-color: var(--primary-green);
+}
+
+.custom-qty-input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #1e293b;
+    background: white;
+    outline: none;
+    -moz-appearance: textfield; /* Remove arrows firefox */
+}
+.custom-qty-input::-webkit-outer-spin-button,
+.custom-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Remove arrows chrome */
+    margin: 0;
+}
+
+.custom-qty-wrapper .c-qty-btn {
+    width: 40px;
+    height: 40px;
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 1.125rem;
+    transition: var(--transition);
+}
+
+.custom-qty-wrapper .c-qty-btn:hover {
+    background: var(--primary-green);
+    color: white;
+}
+
+.btn-update {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-update:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* ==================== Price Cells ==================== */
+.pro-price, .pro-subtotal {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pro-price {
+    color: var(--primary-green);
+}
+
+.pro-subtotal {
+    color: var(--success-color);
+    font-size: 1.125rem;
+}
+
+/* ==================== Remove Button ==================== */
+.pro-remove a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: var(--danger-color);
+    border-radius: 50%;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.pro-remove a:hover {
+    background: linear-gradient(135deg, #fca5a5, #f87171);
+    color: white;
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* ==================== Stock Warning ==================== */
+.stock-warning {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid #fbbf24;
+}
+
+/* ==================== Mobile Cart Items ==================== */
+.cart-items-mobile {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .cart-table {
+        display: none;
+    }
+    
+    .cart-items-mobile {
+        display: block;
+    }
+}
+
+.cart-item-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.cart-item-card:hover {
+    border-color: var(--primary-green);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* ==================== Action Buttons ==================== */
+.cart-update-option {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.btn-continue {
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: var(--transition);
+}
+
+.btn-continue:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(55, 88, 45, 0.3);
+    color: white;
+}
+
+.btn-clear {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #64748b;
+    border: none;
+    border-radius: 50px;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: var(--transition);
+}
+
+.btn-clear:hover {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: var(--danger-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+/* ==================== Empty Cart State ==================== */
+.empty-cart-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: var(--border-radius);
+    border: 2px dashed #cbd5e1;
+}
+
+.empty-cart-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #e8f4e5, #d4e6d0);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.empty-cart-icon i {
+    font-size: 3rem;
+    color: var(--primary-green);
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.btn-start-shopping {
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 3rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: var(--transition);
+    margin-top: 1.5rem;
+}
+
+.btn-start-shopping:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(55, 88, 45, 0.3);
+    color: white;
+}
+
+/* ==================== Cart Totals ==================== */
+.cart-calculator-wrapper {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e2e8f0;
+}
+
+.cart-calculator-wrapper h3 {
+    color: var(--primary-green);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+}
+
+.table {
+    margin: 0;
+}
+
+.table tr {
+    transition: var(--transition);
+}
+
+.table tr:hover {
+    background: #f8fafc;
+}
+
+.table td {
+    padding: 1rem 1.25rem;
+    border-color: #e2e8f0;
+}
+
+.total td {
+    background: linear-gradient(135deg, #f0f7ef, #e8f4e5);
+    font-size: 1.125rem;
+    color: var(--primary-green);
+}
+
+.total-amount {
+    color: var(--success-color);
+    font-size: 1.5rem;
+}
+
+/* ==================== Checkout Button ==================== */
+.btn-checkout {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    width: 100%;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: var(--transition);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    margin-top: 2rem;
+}
+
+.btn-checkout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669, var(--success-color));
+    color: white;
+}
+
+/* ==================== Alerts ==================== */
+.alert {
+    border-radius: 12px;
+    border: none;
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert i {
+    font-size: 1.25rem;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border-left-color: var(--success-color);
+    color: #065f46;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border-left-color: var(--danger-color);
+    color: #991b1b;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-left-color: var(--warning-color);
+    color: #92400e;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+/* ==================== Responsive Design ==================== */
+@media (max-width: 991px) {
+    .cart-update-option {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-continue, .btn-clear {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .title-3 {
+        font-size: 2rem;
+    }
+    
+    .cart-calculator-wrapper {
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .breadcrumbs-area {
+        padding: 2rem 0;
+    }
+    
+    .title-3 {
+        font-size: 1.75rem;
+    }
+    
+    .cart-item-card {
+        padding: 1rem;
+    }
+    
+    .btn-checkout {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .title-3 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .cart-calculator-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .table td {
+        padding: 0.75rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs-area">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <div class="breadcrumb-content position-relative section-content">
-                    <h3 class="title-3">Shopping Cart</h3>
+                <div class="breadcrumb-content position-relative">
+                    <h3 class="title-3">
+                        <i class="fas fa-shopping-cart"></i>Shopping Cart
+                    </h3>
                     <ul>
-                        <li><a href="{% url 'home' %}">Home</a></li>
-                        <li>Cart</li>
+                        <li><a href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+                        <li><i class="fas fa-shopping-basket me-1"></i>Cart</li>
                     </ul>
                 </div>
             </div>
@@ -22,33 +643,31 @@
     </div>
 </div>
 
-<div class="cart-main-wrapper mt-no-text mb-no-text">
-    <div class="container container-default-2 custom-area">
+<div class="cart-main-wrapper">
+    <div class="container container-default-2">
         <div class="row">
             <div class="col-lg-12">
-                
                 {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+                            <div class="flex-grow-1">{{ message }}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     {% endfor %}
                 {% endif %}
 
                 {% if cart.items.exists %}
-                
-                {# Desktop Table View #}
-                <div class="cart-table table-responsive d-none d-lg-block">
-                    <table class="table table-bordered">
+                <div class="cart-table d-none d-lg-block">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th class="pro-thumbnail">Image</th>
-                                <th class="pro-title">Product</th>
-                                <th class="pro-price">Price</th>
-                                <th class="pro-quantity">Quantity</th>
-                                <th class="pro-subtotal">Total</th>
-                                <th class="pro-remove">Remove</th>
+                                <th class="pro-thumbnail"><i class="fas fa-image"></i> Image</th>
+                                <th class="pro-title"><i class="fas fa-cube"></i> Product</th>
+                                <th class="pro-price"><i class="fas fa-tag"></i> Price</th>
+                                <th class="pro-quantity"><i class="fas fa-sort-amount-up"></i> Quantity</th>
+                                <th class="pro-subtotal"><i class="fas fa-calculator"></i> Total</th>
+                                <th class="pro-remove"><i class="fas fa-trash"></i> Remove</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,25 +677,25 @@
                                     {% if item.product %}
                                         <a href="{{ item.product.get_absolute_url }}">
                                             {% if item.product.image %}
-                                                <img class="img-fluid" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="max-width: 80px; height: auto;">
+                                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                                             {% else %}
-                                                <img class="img-fluid" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Product" style="max-width: 80px; height: auto;">
+                                                <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Product">
                                             {% endif %}
                                         </a>
                                     {% elif item.basket %}
                                         <a href="{{ item.basket.get_absolute_url }}">
                                             {% if item.basket.image %}
-                                                <img class="img-fluid" src="{{ item.basket.image.url }}" alt="{{ item.basket.name }}" style="max-width: 80px; height: auto;">
+                                                <img src="{{ item.basket.image.url }}" alt="{{ item.basket.name }}">
                                             {% else %}
-                                                <img class="img-fluid" src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Basket" style="max-width: 80px; height: auto;">
+                                                <img src="{% static 'assets/images/product/placeholder.jpg' %}" alt="Basket">
                                             {% endif %}
                                         </a>
                                     {% elif item.merchandise %}
                                         <a href="{{ item.merchandise.get_absolute_url }}">
                                             {% if item.merchandise.image %}
-                                                <img class="img-fluid" src="{{ item.merchandise.image.url }}" alt="{{ item.merchandise.name }}" style="max-width: 80px; height: auto;">
+                                                <img src="{{ item.merchandise.image.url }}" alt="{{ item.merchandise.name }}">
                                             {% else %}
-                                                <img class="img-fluid" src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="Merch" style="max-width: 80px; height: auto;">
+                                                <img src="{% static 'assets/images/merchandise/placeholder.jpg' %}" alt="Merch">
                                             {% endif %}
                                         </a>
                                     {% endif %}
@@ -84,41 +703,48 @@
                                 <td class="pro-title">
                                     <a href="#" class="fw-bold">{{ item.name }}</a>
                                     {% if item.basket %}
-                                        <span class="d-block text-muted small mt-1">(Combo Basket)</span>
+                                        <div class="combo-badge">
+                                            <i class="fas fa-gift"></i>Combo Basket
+                                        </div>
                                     {% endif %}
                                 </td>
-                                <td class="pro-price"><span class="fw-semibold">KSh {{ item.unit_price|floatformat:2 }}</span></td>
+                                <td class="pro-price">
+                                    <span class="fw-semibold">KSh {{ item.unit_price|floatformat:2 }}</span>
+                                </td>
+                                
                                 <td class="pro-quantity">
-                                    <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-flex align-items-center justify-content-center">
+                                    <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-inline-flex align-items-center">
                                         {% csrf_token %}
                                         <input type="hidden" name="item_id" value="{{ item.id }}">
                                         
-                                        <div class="quantity">
-                                            <div class="cart-plus-minus">
-                                                {% if item.product %}
-                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity" 
-                                                    {% if item.product.stock < item.quantity %}max="{{ item.product.stock }}"{% endif %}>
-                                                {% elif item.basket %}
-                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
-                                                    {% if item.basket.stock < item.quantity %}max="{{ item.basket.stock }}"{% endif %}>
-                                                {% elif item.merchandise %}
-                                                    <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
-                                                    {% if item.merchandise.stock < item.quantity %}max="{{ item.merchandise.stock }}"{% endif %}>
-                                                {% endif %}
-                                            </div>
+                                        <div class="custom-qty-wrapper">
+                                            <div class="c-dec c-qty-btn"><i class="fas fa-minus"></i></div>
+                                            {% if item.product %}
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.product.stock }}">
+                                            {% elif item.basket %}
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.basket.stock }}">
+                                            {% elif item.merchandise %}
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.merchandise.stock }}">
+                                            {% endif %}
+                                            <div class="c-inc c-qty-btn"><i class="fas fa-plus"></i></div>
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="Update Cart">
-                                            <i class="fa fa-refresh me-1"></i> Update
+                                        
+                                        <button type="submit" class="btn-update ms-3" title="Update Quantity">
+                                            <i class="fas fa-sync-alt"></i>Update
                                         </button>
                                     </form>
                                     {% if item.product and item.product.stock < item.quantity or item.basket and item.basket.stock < item.quantity or item.merchandise and item.merchandise.stock < item.quantity %}
-                                        <span class="text-danger small d-block mt-1"><i class="fa fa-exclamation-circle"></i> Low Stock!</span>
+                                        <div class="stock-warning">
+                                            <i class="fas fa-exclamation-circle"></i> Low Stock!
+                                        </div>
                                     {% endif %}
                                 </td>
-                                <td class="pro-subtotal"><span class="fw-bold">KSh {{ item.total_price|floatformat:2 }}</span></td>
+                                <td class="pro-subtotal">
+                                    <span class="fw-bold">KSh {{ item.total_price|floatformat:2 }}</span>
+                                </td>
                                 <td class="pro-remove">
-                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item from your cart?')" title="Remove" class="text-danger">
-                                        <i class="ion-trash-b"></i>
+                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item from your cart?')" title="Remove">
+                                        <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -127,10 +753,9 @@
                     </table>
                 </div>
 
-                {# Mobile Card View #}
                 <div class="cart-items-mobile d-lg-none">
                     {% for item in cart.items.all %}
-                    <div class="cart-item-card mb-3 border rounded p-3">
+                    <div class="cart-item-card">
                         <div class="row align-items-center">
                             <div class="col-4">
                                 {% if item.product %}
@@ -161,243 +786,271 @@
                             </div>
                             <div class="col-8">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="mb-0 fw-bold">{{ item.name }}</h6>
-                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item?')" class="text-danger ms-2">
-                                        <i class="ion-trash-b"></i>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ item.name }}</h6>
+                                        {% if item.basket %}
+                                            <div class="combo-badge mt-1">
+                                                <i class="fas fa-gift"></i>Combo Basket
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url 'cart:remove_from_cart' item.id %}" onclick="return confirm('Remove this item?')" class="text-danger">
+                                        <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>
-                                {% if item.basket %}
-                                    <span class="d-block text-muted small mb-2">(Combo Basket)</span>
-                                {% endif %}
-                                <p class="mb-1 text-muted small">Price: <span class="fw-semibold text-dark">KSh {{ item.unit_price|floatformat:2 }}</span></p>
                                 
-                                <form action="{% url 'cart:update_cart_item' %}" method="post" class="d-flex align-items-center mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Price:</span>
+                                    <span class="fw-semibold text-dark">KSh {{ item.unit_price|floatformat:2 }}</span>
+                                </div>
+                                
+                                <form action="{% url 'cart:update_cart_item' %}" method="post" class="mb-2">
                                     {% csrf_token %}
                                     <input type="hidden" name="item_id" value="{{ item.id }}">
-                                    <span class="small me-2">Qty:</span>
-                                    <div class="quantity">
-                                        <div class="cart-plus-minus">
+                                    <div class="d-flex align-items-center">
+                                        <span class="small me-2">Qty:</span>
+                                        
+                                        <div class="custom-qty-wrapper">
+                                            <div class="c-dec c-qty-btn"><i class="fas fa-minus"></i></div>
                                             {% if item.product %}
-                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity" 
-                                                {% if item.product.stock < item.quantity %}max="{{ item.product.stock }}"{% endif %}>
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.product.stock }}">
                                             {% elif item.basket %}
-                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
-                                                {% if item.basket.stock < item.quantity %}max="{{ item.basket.stock }}"{% endif %}>
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.basket.stock }}">
                                             {% elif item.merchandise %}
-                                                <input class="cart-plus-minus-box" value="{{ item.quantity }}" type="text" name="quantity"
-                                                {% if item.merchandise.stock < item.quantity %}max="{{ item.merchandise.stock }}"{% endif %}>
+                                                <input class="custom-qty-input" value="{{ item.quantity }}" type="number" name="quantity" max="{{ item.merchandise.stock }}">
                                             {% endif %}
+                                            <div class="c-inc c-qty-btn"><i class="fas fa-plus"></i></div>
                                         </div>
+                                        <button type="submit" class="btn-update ms-2">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
                                     </div>
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="Update Cart">
-                                        <i class="fa fa-refresh me-1"></i> Update
-                                    </button>
                                 </form>
                                 
                                 {% if item.product and item.product.stock < item.quantity or item.basket and item.basket.stock < item.quantity or item.merchandise and item.merchandise.stock < item.quantity %}
-                                    <span class="text-danger small"><i class="fa fa-exclamation-circle"></i> Low Stock!</span>
+                                    <div class="stock-warning">
+                                        <i class="fas fa-exclamation-circle"></i> Low Stock
+                                    </div>
                                 {% endif %}
                                 
-                                <p class="mb-0 mt-2"><strong>Total: KSh {{ item.total_price|floatformat:2 }}</strong></p>
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                    <span class="fw-bold">Total:</span>
+                                    <span class="fw-bold text-success">KSh {{ item.total_price|floatformat:2 }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-                <div class="cart-update-option d-block d-md-flex justify-content-between mt-4">
-                    <div class="apply-coupon-wrapper">
-                        <div class="cart-update mt-3 mt-md-0">
-                            <a href="{% url 'products:product_list' %}" class="obrien-button primary-btn">
-                                <i class="fa fa-arrow-left me-2"></i>Continue Shopping
-                            </a>
-                        </div>
-                    </div>
-                    <div class="cart-update mt-3 mt-md-0">
-                        <a href="{% url 'cart:clear_cart' %}" class="obrien-button white-btn" onclick="return confirm('Are you sure you want to clear your entire cart?')">
-                            <i class="ion-trash-b me-2"></i>Clear Cart
-                        </a>
-                    </div>
+                <div class="cart-update-option">
+                    <a href="{% url 'products:product_list' %}" class="btn-continue">
+                        <i class="fas fa-arrow-left"></i>Continue Shopping
+                    </a>
+                    <a href="{% url 'cart:clear_cart' %}" class="btn-clear" onclick="return confirm('Are you sure you want to clear your entire cart?')">
+                        <i class="fas fa-trash"></i>Clear Cart
+                    </a>
                 </div>
 
                 {% else %}
-                
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center bg-light p-5 rounded shadow-sm">
-                            <i class="ion-bag mb-4 text-muted" style="font-size: 5rem;"></i>
-                            <h3 class="mb-3 fw-bold">Your cart is currently empty</h3>
-                            <p class="mb-4 text-muted">Discover fresh organic products and fill your basket with healthy choices.</p>
-                            <a href="{% url 'products:product_list' %}" class="obrien-button primary-btn">
-                                <i class="fa fa-shopping-cart me-2"></i>Start Shopping
-                            </a>
-                        </div>
+                <div class="empty-cart-state">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-basket"></i>
                     </div>
+                    <h3 class="mb-3 fw-bold">Your cart is currently empty</h3>
+                    <p class="mb-4 text-muted">Discover fresh organic products and fill your basket with healthy choices.</p>
+                    <a href="{% url 'products:product_list' %}" class="btn-start-shopping">
+                        <i class="fas fa-shopping-cart"></i>Start Shopping
+                    </a>
                 </div>
-                
                 {% endif %}
-
             </div>
         </div>
 
         {% if cart.items.exists %}
         <div class="row mt-4">
-            <div class="col-lg-5 ms-auto col-custom">
-                <div class="cart-calculator-wrapper shadow-sm">
-                    <div class="cart-calculate-items">
-                        <h3 class="mb-3">Cart Totals</h3>
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <tr class="border-bottom">
-                                    <td class="py-3">Sub Total</td>
-                                    <td class="py-3 text-end fw-semibold">KSh {{ cart.total_price|floatformat:2 }}</td>
-                                </tr>
-                                <tr class="total">
-                                    <td class="py-3 fw-bold">Total</td>
-                                    <td class="total-amount py-3 text-end fw-bold fs-5">KSh {{ cart.total_price|floatformat:2 }}</td>
-                                </tr>
-                            </table>
-                        </div>
+            <div class="col-lg-5 ms-auto">
+                <div class="cart-calculator-wrapper">
+                    <h3>
+                        <i class="fas fa-calculator"></i>Cart Totals
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td class="py-3">
+                                    <i class="fas fa-shopping-basket me-2"></i>Sub Total
+                                </td>
+                                <td class="py-3 text-end fw-semibold">KSh {{ cart.total_price|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">
+                                    <i class="fas fa-truck me-2"></i>Delivery Fee
+                                </td>
+                                <td class="py-3 text-end">
+                                    <span class="text-muted small">Calculated at checkout</span>
+                                </td>
+                            </tr>
+                            <tr class="total">
+                                <td class="py-3 fw-bold">
+                                    <i class="fas fa-receipt me-2"></i>Estimated Total
+                                </td>
+                                <td class="total-amount py-3 text-end fw-bold">KSh {{ cart.total_price|floatformat:2 }}</td>
+                            </tr>
+                        </table>
                     </div>
-                    <a href="{% url 'checkout:checkout' %}" class="obrien-button primary-btn d-block text-center text-dark mt-3" onclick="return confirmCheckout();">
-                        <i class="fa fa-lock me-2"></i>Proceed To Checkout
+                    <a href="{% url 'checkout:checkout' %}" class="btn-checkout" onclick="return confirmCheckout();">
+                        <i class="fas fa-lock"></i>
+                        <span>Proceed To Checkout</span>
+                        <i class="fas fa-arrow-right"></i>
                     </a>
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Secure checkout with M-Pesa
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
         {% endif %}
-
     </div>
 </div>
+{% endblock %}
 
-<style>
-/* Enhanced Mobile Responsiveness */
-.cart-item-card {
-    background: #fff;
-    transition: box-shadow 0.3s ease;
-}
-
-.cart-item-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.cart-calculator-wrapper {
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 25px;
-    background: #fff;
-}
-
-/* Improved quantity controls */
-.cart-plus-minus {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.cart-plus-minus-box {
-    width: 50px;
-    text-align: center;
-    border: none;
-    padding: 5px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 991px) {
-    .cart-calculator-wrapper {
-        margin-top: 30px;
-    }
-}
-
-@media (max-width: 767px) {
-    .breadcrumb-content h3 {
-        font-size: 1.5rem;
-    }
-    
-    .cart-update-option {
-        flex-direction: column;
-    }
-    
-    .cart-update {
-        width: 100%;
-    }
-    
-    .obrien-button {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .cart-item-card h6 {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 575px) {
-    .cart-calculator-wrapper {
-        padding: 20px 15px;
-    }
-    
-    .breadcrumb-content h3 {
-        font-size: 1.25rem;
-    }
-}
-
-/* Empty cart styling */
-.bg-light.shadow-sm {
-    border: 1px solid #e9ecef;
-}
-
-/* Smooth transitions */
-.obrien-button {
-    transition: all 0.3s ease;
-}
-
-.obrien-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Alert improvements */
-.alert {
-    border-radius: 8px;
-    border-left: 4px solid;
-}
-
-.alert-success {
-    border-left-color: #28a745;
-}
-
-.alert-danger {
-    border-left-color: #dc3545;
-}
-
-.alert-warning {
-    border-left-color: #ffc107;
-}
-
-/* Button styling */
-.btn-outline-secondary {
-    font-size: 0.875rem;
-    padding: 0.25rem 0.75rem;
-}
-</style>
-
+{% block extra_js %}
 <script>
-// Confirm and update cart before checkout
+document.addEventListener('DOMContentLoaded', function () {
+    // Quantity increment/decrement functionality - UPDATED SELECTORS
+    document.querySelectorAll('.custom-qty-wrapper').forEach(function(container) {
+        // We use our new unique classes
+        const decreaseBtn = container.querySelector('.c-dec');
+        const increaseBtn = container.querySelector('.c-inc');
+        const input = container.querySelector('.custom-qty-input');
+        
+        if (decreaseBtn && increaseBtn && input) {
+            decreaseBtn.addEventListener('click', function() {
+                let value = parseInt(input.value);
+                if (value > 1) {
+                    input.value = value - 1;
+                    // Trigger change event for any listeners
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                let value = parseInt(input.value);
+                // Default to a high number if max is not set
+                const max = parseInt(input.getAttribute('max')) || 9999; 
+                
+                if (value < max) {
+                    input.value = value + 1;
+                    input.dispatchEvent(new Event('change'));
+                } else {
+                    // Optional: Visual feedback (red flash) when limit reached
+                    container.style.borderColor = 'var(--danger-color)';
+                    setTimeout(() => container.style.borderColor = '#e2e8f0', 300);
+                }
+            });
+            
+            input.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                const max = parseInt(this.getAttribute('max')) || 9999;
+                
+                if (isNaN(value) || value < 1) {
+                    this.value = 1;
+                } else if (value > max) {
+                    this.value = max;
+                }
+            });
+        }
+    });
+
+    // Confirm before removing items
+    document.querySelectorAll('a[href*="remove_from_cart"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to remove this item from your cart?')) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+
+// Confirm checkout with unsaved changes
 function confirmCheckout() {
     const forms = document.querySelectorAll('form[action*="update_cart_item"]');
-    const hasUnsavedChanges = Array.from(forms).some(form => {
-        const input = form.querySelector('.cart-plus-minus-box');
-        return input && input.defaultValue !== input.value;
+    let hasUnsavedChanges = false;
+    
+    forms.forEach(function(form) {
+        // TARGET NEW INPUT CLASS
+        const input = form.querySelector('.custom-qty-input');
+        if (input && input.defaultValue !== input.value) {
+            hasUnsavedChanges = true;
+        }
     });
 
     if (hasUnsavedChanges) {
-        return confirm('You have unsaved quantity changes. Click OK to update your cart and proceed to checkout, or Cancel to review your cart.');
+        const confirmUpdate = confirm('You have unsaved quantity changes. Would you like to update your cart before proceeding to checkout?');
+        if (confirmUpdate) {
+            // Submit all update forms
+            forms.forEach(function(form) {
+                const input = form.querySelector('.custom-qty-input');
+                if (input && input.defaultValue !== input.value) {
+                    // Create a hidden form and submit it
+                    const hiddenForm = document.createElement('form');
+                    hiddenForm.method = 'POST';
+                    hiddenForm.action = form.action;
+                    hiddenForm.style.display = 'none';
+                    
+                    // Add CSRF token
+                    const csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
+                    if (csrfInput) {
+                        const csrfClone = csrfInput.cloneNode(true);
+                        hiddenForm.appendChild(csrfClone);
+                    }
+                    
+                    // Add item ID
+                    const itemIdInput = form.querySelector('input[name="item_id"]');
+                    if (itemIdInput) {
+                        const itemIdClone = itemIdInput.cloneNode(true);
+                        hiddenForm.appendChild(itemIdClone);
+                    }
+                    
+                    // Add quantity
+                    const quantityInput = document.createElement('input');
+                    quantityInput.type = 'hidden';
+                    quantityInput.name = 'quantity';
+                    quantityInput.value = input.value;
+                    hiddenForm.appendChild(quantityInput);
+                    
+                    document.body.appendChild(hiddenForm);
+                    hiddenForm.submit();
+                }
+            });
+            
+            // Show loading message
+            const checkoutBtn = document.querySelector('.btn-checkout');
+            if (checkoutBtn) {
+                checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Updating Cart...</span>';
+                checkoutBtn.disabled = true;
+            }
+            
+            return false; // Prevent immediate navigation
+        } else {
+            return false; // Stay on cart page
+        }
     }
-    return true;
+    
+    return true; // Proceed to checkout
 }
-</script>
 
+// Auto-dismiss alerts
+setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(alert => {
+        if (alert.classList.contains('show')) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }
+    });
+}, 5000);
+</script>
 {% endblock %}

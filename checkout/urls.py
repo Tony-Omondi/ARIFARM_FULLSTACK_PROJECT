@@ -10,4 +10,5 @@ urlpatterns = [
     path('stk-status/', views.stk_status_view, name='stk_status'),
     path('callback/', views.payment_callback, name='payment_callback'),
     path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('pending-deliveries/', views.pending_deliveries_view, name='pending_deliveries'),
 ]

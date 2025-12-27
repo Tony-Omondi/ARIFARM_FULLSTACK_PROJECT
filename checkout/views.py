@@ -308,3 +308,21 @@ def payment_callback(request):
 def order_detail_view(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'checkout/order_detail.html', {'order': order})
+
+
+@login_required
+def pending_deliveries_view(request):
+    """
+    Fetches orders that are paid but not yet delivered.
+    Assuming 'paid' means they are ready for delivery, 
+    and you change status to 'delivered' later.
+    """
+    # Filter for orders that are paid but not delivered yet
+    pending_orders = Order.objects.filter(
+        user=request.user, 
+        status='paid'  # Or 'processing', depending on your workflow
+    ).order_by('-created_at')
+
+    return render(request, 'checkout/pending_deliveries.html', {
+        'orders': pending_orders
+    })
