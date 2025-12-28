@@ -11,13 +11,12 @@
 {% block content %}
 
 <style>
-    /* Global Container Padding */
+    /* Your existing styles remain unchanged */
     .shop-wrapper {
         background-color: #f8f9fa;
         padding-bottom: 50px;
     }
 
-    /* Card Styling */
     .single-product-card {
         background: #fff;
         border-radius: 8px;
@@ -31,10 +30,9 @@
         box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
     }
     
-    /* Image Handling for 1:1 Aspect Ratio */
     .product-image-ratio {
         position: relative;
-        padding-top: 100%; /* Creates 1:1 aspect ratio */
+        padding-top: 100%;
         display: block;
     }
     .product-image-ratio img {
@@ -46,7 +44,6 @@
         object-fit: cover;
     }
 
-    /* Image Switch Effect on Hover */
     .product-image-2 {
         opacity: 0;
         visibility: hidden;
@@ -57,7 +54,6 @@
         visibility: visible;
     }
 
-    /* Action Buttons Overlay Animation */
     .action-overlay {
         position: absolute;
         bottom: 20px;
@@ -74,7 +70,6 @@
         transform: translateY(0);
     }
     
-    /* Individual Action Button Styling */
     .action-btn {
         background: white;
         color: #333;
@@ -90,12 +85,11 @@
         cursor: pointer;
     }
     .action-btn:hover {
-        background: #E98C81; /* Accent Color */
+        background: #E98C81;
         color: white;
         transform: scale(1.1);
     }
     
-    /* Out of Stock Badge */
     .out-of-stock-badge {
         background: #dc3545;
         color: #fff;
@@ -107,6 +101,12 @@
         top: 10px;
         left: 10px;
         z-index: 10;
+    }
+
+    /* Mobile filter button enhancement */
+    .filter-btn {
+        font-size: 1.1rem;
+        border-width: 2px;
     }
 </style>
 
@@ -143,8 +143,22 @@
 
     <div class="shop-main-area">
         <div class="container container-default custom-area">
+
+            <!-- Mobile Filters Button -->
+            <div class="mb-4 d-lg-none">
+                <button class="btn btn-outline-primary filter-btn w-100 py-3 fw-bold" 
+                        type="button" 
+                        data-bs-toggle="offcanvas" 
+                        data-bs-target="#sidebarOffcanvas" 
+                        aria-controls="sidebarOffcanvas">
+                    <i class="fa fa-filter me-2"></i> Filters & Categories 
+                    <span class="badge bg-secondary ms-2">{{ products|length }}</span>
+                </button>
+            </div>
+
             <div class="row flex-row-reverse">
 
+                <!-- Main Products Area -->
                 <div class="col-lg-9 col-12 col-custom widget-mt">
 
                     <div class="shop_toolbar_wrapper d-flex justify-content-end align-items-center mb-4" style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e1e1e1;">
@@ -166,7 +180,6 @@
                         {% for product in products %}
                         <div class="col-md-4 col-sm-6 col-12 mb-4 product-area">
                             <div class="single-product-card position-relative">
-
                                 <div class="product-image position-relative">
                                     <a class="d-block product-image-ratio" href="{{ product.get_absolute_url }}">
                                         {% if product.image %}
@@ -183,15 +196,12 @@
                                     {% endif %}
 
                                     {% if product.stock <= 0 %}
-                                        <div class="out-of-stock-badge">
-                                            Out of Stock
-                                        </div>
+                                        <div class="out-of-stock-badge">Out of Stock</div>
                                     {% endif %}
 
                                     <div class="action-overlay d-flex justify-content-center">
                                         {% if product.stock > 0 %}
                                             {% if user.is_authenticated %}
-                                                <!-- Add to Cart Button (Logged-in User) -->
                                                 <form action="{% url 'cart:add_to_cart' %}" method="post" style="display: inline;">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="product_id" value="{{ product.id }}">
@@ -202,19 +212,16 @@
                                                     </button>
                                                 </form>
                                             {% else %}
-                                                <!-- Login Prompt (Guest User) -->
                                                 <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="action-btn" title="Login to Add to Cart">
                                                     <i class="ion-bag"></i>
                                                 </a>
                                             {% endif %}
                                         {% endif %}
 
-                                        <!-- Quick View -->
                                         <a href="{{ product.get_absolute_url }}" class="action-btn" title="Quick View">
                                             <i class="ion-eye"></i>
                                         </a>
 
-                                        <!-- Wishlist (placeholder) -->
                                         <a href="#" class="action-btn" title="Add to Wishlist">
                                             <i class="ion-ios-heart-outline"></i>
                                         </a>
@@ -241,7 +248,7 @@
                                     </div>
 
                                     <div class="price-box">
-                                        <span class="regular-price" style="color: #1B1B1C; font-weight: 700; font-size: 16px;">₵{{ product.price }}</span>
+                                        <span class="regular-price" style="color: #1B1B1C; font-weight: 700; font-size: 16px;">KSh {{ product.price }}</span>
                                         {% if product.stock <= 0 %}
                                             <small class="text-danger d-block mt-2">Currently unavailable</small>
                                         {% endif %}
@@ -280,12 +287,13 @@
 
                 </div>
 
-                <!-- Sidebar remains unchanged -->
+                <!-- Sidebar / Offcanvas Column -->
                 <div class="col-lg-3 col-12 col-custom">
-                    <aside class="sidebar_widget widget-mt">
+
+                    <!-- Desktop Sidebar - visible only on large screens -->
+                    <aside class="sidebar_widget widget-mt d-none d-lg-block">
                         <div class="widget_inner" style="background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #eee;">
-                            <!-- Search, Categories, Shop By, Recent Products — all unchanged -->
-                            <!-- (Your original sidebar code here - no changes needed) -->
+                            <!-- Search -->
                             <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
                                 <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Search</h3>
                                 <div class="search-box">
@@ -300,6 +308,7 @@
                                 </div>
                             </div>
 
+                            <!-- Categories -->
                             <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
                                 <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Categories</h3>
                                 <ul class="sidebar-list" style="list-style: none; padding: 0;">
@@ -310,6 +319,7 @@
                                 </ul>
                             </div>
 
+                            <!-- Shop By -->
                             <div class="widget-list widget-mb-4" style="margin-bottom: 30px;">
                                 <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shop By</h3>
                                 <ul class="sidebar-list" style="list-style: none; padding: 0;">
@@ -319,6 +329,7 @@
                                 </ul>
                             </div>
 
+                            <!-- Recent Products -->
                             <div class="widget-list">
                                 <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Recent Products</h3>
                                 <div class="sidebar-body">
@@ -329,7 +340,7 @@
                                         </a>
                                         <div class="product-content">
                                             <h4 class="title-2" style="font-size: 14px; margin-bottom: 5px; font-weight: 500;"><a href="{{ p.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ p.name }}</a></h4>
-                                            <div class="price-box"><span class="regular-price" style="font-weight: 700; color: #1B1B1C;">₵{{ p.price }}</span></div>
+                                            <div class="price-box"><span class="regular-price" style="font-weight: 700; color: #1B1B1C;">KSh {{ p.price }}</span></div>
                                         </div>
                                     </div>
                                     {% endfor %}
@@ -337,9 +348,71 @@
                             </div>
                         </div>
                     </aside>
+
+                    <!-- Mobile Offcanvas Sidebar -->
+                    <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+                        <div class="offcanvas-header border-bottom">
+                            <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">
+                                <i class="fa fa-filter me-2"></i> Shop Filters
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body px-0">
+                            <div class="widget_inner" style="padding: 25px 20px;">
+                                <!-- Same widgets as desktop (you can simplify if needed) -->
+                                <div class="widget-list mb-4">
+                                    <h3 class="widget-title">Search</h3>
+                                    <div class="search-box">
+                                        <form action="{% url 'products:search' %}">
+                                            <div class="input-group">
+                                                <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}">
+                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="widget-list mb-4">
+                                    <h3 class="widget-title">Categories</h3>
+                                    <ul class="list-unstyled">
+                                        <li><a href="{% url 'products:product_list' %}">All Products ({{ total_products }})</a></li>
+                                        {% for cat in categories %}
+                                            <li><a href="{% url 'products:category_products' cat.slug %}">{{ cat.name }} ({{ cat.get_products_count }})</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="widget-list mb-4">
+                                    <h3 class="widget-title">Shop By</h3>
+                                    <ul class="list-unstyled">
+                                        <li><a href="{% url 'products:basket_list' %}">Combo Baskets</a></li>
+                                        <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
+                                        <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="widget-list">
+                                    <h3 class="widget-title">Recent Products</h3>
+                                    {% for p in recent_products|slice:":3" %}
+                                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                        <a href="{{ p.get_absolute_url }}" style="width: 60px; flex-shrink: 0; margin-right: 12px;">
+                                            <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}" class="img-fluid rounded">
+                                        </a>
+                                        <div>
+                                            <h6 class="mb-1"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h6>
+                                            <strong>KSh {{ p.price }}</strong>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

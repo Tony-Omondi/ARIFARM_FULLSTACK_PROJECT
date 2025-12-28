@@ -5902,3 +5902,23 @@ body {
 
 /* OPTIONAL: If the logo disappears behind a white background, 
    change z-index above to 999 and keep opacity very low. */
+
+
+.avatar-icon {
+    transition: all 0.2s ease;
+}
+
+.avatar-icon:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.profile-icon-link {
+    color: #4a4a4a;
+    transition: color 0.2s ease;
+}
+
+.profile-icon-link:hover {
+    color: #E98C81;
+    text-decoration: none;
+}

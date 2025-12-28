@@ -9,24 +9,28 @@
 
 {% block content %}
 
-{# --- UNIFIED CARD CSS --- #}
 <style>
-    /* Card Styling */
+    /* ──────────────────────────────────────────────────────────────
+       SHARED STYLES (consistent with other listing pages)
+    ────────────────────────────────────────────────────────────── */
+    .shop-wrapper {
+        background-color: #f8f9fa;
+        padding-bottom: 50px;
+    }
+
     .single-product-card {
         background: #fff;
         border-radius: 8px;
         overflow: hidden;
         border: 1px solid #eee;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 30px;
         height: 100%;
     }
     .single-product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
     }
-    
-    /* Image Ratio */
+
     .product-image-ratio {
         position: relative;
         padding-top: 100%;
@@ -38,7 +42,6 @@
         top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
     }
 
-    /* Hover Image Switch */
     .product-image-2 {
         opacity: 0;
         visibility: hidden;
@@ -49,7 +52,6 @@
         visibility: visible;
     }
 
-    /* Action Overlay */
     .action-overlay {
         position: absolute;
         bottom: 20px; left: 0; width: 100%;
@@ -63,73 +65,81 @@
         opacity: 1;
         transform: translateY(0);
     }
-    
-    /* Action Buttons */
+
     .action-btn {
         background: white; color: #333;
         width: 40px; height: 40px; line-height: 40px;
         text-align: center; border-radius: 50%;
-        margin: 0 5px; display: inline-block;
+        margin: 0 5px;
+        display: inline-block;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         transition: all 0.2s; cursor: pointer; border: none;
     }
     .action-btn:hover {
-        background: #E98C81; color: white; transform: scale(1.1);
-    }
-    
-    /* Badges */
-    .discount-badge {
-        background: #dc3545; color: #fff;
-        padding: 5px 10px; border-radius: 3px;
-        font-size: 11px; font-weight: 600;
-        position: absolute; top: 10px; left: 10px; z-index: 10;
-    }
-    .out-of-stock-overlay {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.7);
-        z-index: 4; display: flex; align-items: center; justify-content: center;
-    }
-    .out-of-stock-overlay span {
-        background: #333; color: #fff; padding: 5px 15px; font-size: 12px; text-transform: uppercase;
+        background: #E98C81;
+        color: white;
+        transform: scale(1.1);
     }
 
-    /* List View Specifics */
+    .discount-badge {
+        background: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+    }
+
+    .out-of-stock-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255,255,255,0.85);
+        z-index: 4;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .out-of-stock-overlay span {
+        background: #dc3545;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* List View */
     .shop_wrapper.grid_list .single-product-card {
         display: flex;
         flex-direction: row;
         height: auto;
     }
-    .shop_wrapper.grid_list .product-image {
-        width: 250px;
+    .shop_wrapper.grid_list .product-image-ratio {
+        padding-top: 0;
+        width: 260px;
         flex-shrink: 0;
     }
     .shop_wrapper.grid_list .product-content {
         text-align: left !important;
-        padding: 20px 30px;
+        padding: 25px 30px;
         flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
     .shop_wrapper.grid_list .action-overlay {
-        display: none; /* Hide hover actions in list view, use static buttons */
+        display: none;
     }
-    .shop_wrapper.grid_list .add-action-listview {
-        margin-top: 15px;
-    }
-    .shop_wrapper.grid_list .add-action-listview a {
-        display: inline-block;
-        width: 40px; height: 40px; line-height: 40px;
-        text-align: center; background: #f2f2f2;
-        color: #333; margin-right: 10px; border-radius: 50%;
-        transition: 0.3s;
-    }
-    .shop_wrapper.grid_list .add-action-listview a:hover {
-        background: #E98C81; color: #fff;
+
+    /* Mobile filter button */
+    .filter-btn {
+        font-size: 1.1rem;
+        border-width: 2px;
+        font-weight: 600;
     }
 </style>
 
 <div class="shop-wrapper">
+    <!-- Breadcrumbs -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -143,7 +153,8 @@
                             {% endif %}
                         </h3>
                         <ul>
-                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Shop</a></li>
                             <li>Combo Offers</li>
                         </ul>
                     </div>
@@ -154,18 +165,41 @@
 
     <div class="shop-main-area">
         <div class="container container-default custom-area">
+
+            <!-- Mobile Filters Button -->
+            <div class="mb-4 d-lg-none">
+                <button class="btn btn-outline-primary filter-btn w-100 py-3"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#basketSidebarOffcanvas"
+                        aria-controls="basketSidebarOffcanvas">
+                    <i class="fa fa-filter me-2"></i> Filters & Offers
+                    <span class="badge bg-secondary ms-2">{{ baskets|length }}</span>
+                </button>
+            </div>
+
             <div class="row flex-row-reverse">
-                
+
+                <!-- Main Content - Combos Grid -->
                 <div class="col-lg-9 col-12 col-custom widget-mt">
-                    
-                    <div class="shop_toolbar_wrapper d-flex justify-content-between align-items-center mb-4" style="background: #fff; padding: 10px 20px; border: 1px solid #eee; border-radius: 5px;">
-                        <div class="shop_toolbar_btn">
-                            <button type="button" class="btn-grid-3 active" data-role="grid_3" title="Grid View"><i class="fa fa-th"></i></button>
-                            <button type="button" class="btn-list" data-role="grid_list" title="List View"><i class="fa fa-th-list"></i></button>
+
+                    <!-- Toolbar -->
+                    <div class="shop_toolbar_wrapper d-flex justify-content-between align-items-center mb-4"
+                         style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e1e1e1; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                        <div class="shop_toolbar_btn d-flex gap-2">
+                            <button type="button" class="btn-grid-3 active" data-role="grid_3" title="Grid View"
+                                    style="width:42px;height:42px;border-radius:6px;border:1px solid #ddd;">
+                                <i class="fa fa-th"></i>
+                            </button>
+                            <button type="button" class="btn-list" data-role="grid_list" title="List View"
+                                    style="width:42px;height:42px;border-radius:6px;border:1px solid #ddd;">
+                                <i class="fa fa-th-list"></i>
+                            </button>
                         </div>
-                        <div class="shop-select">
+
+                        <div class="shop-select" style="min-width:240px;">
                             <form method="get">
-                                <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
+                                <select name="ordering" class="form-control" style="border-radius:6px;height:42px;" onchange="this.form.submit()">
                                     <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
                                     <option value="name" {% if request.GET.ordering == 'name' %}selected{% endif %}>Name: A-Z</option>
                                     <option value="-name" {% if request.GET.ordering == '-name' %}selected{% endif %}>Name: Z-A</option>
@@ -173,18 +207,16 @@
                                     <option value="-price" {% if request.GET.ordering == '-price' %}selected{% endif %}>Price: High to Low</option>
                                     <option value="-discount_percentage" {% if request.GET.ordering == '-discount_percentage' %}selected{% endif %}>Best Discount</option>
                                 </select>
-                                {% if request.GET.q %}
-                                    <input type="hidden" name="q" value="{{ request.GET.q }}">
-                                {% endif %}
+                                {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
                             </form>
                         </div>
                     </div>
 
+                    <!-- Combos Grid -->
                     <div class="row shop_wrapper grid_3">
                         {% for basket in baskets %}
-                        <div class="col-md-4 col-sm-6 col-12 col-custom product-area">
+                        <div class="col-md-4 col-sm-6 col-12 mb-4 product-area">
                             <div class="single-product-card position-relative">
-                                
                                 <div class="product-image position-relative">
                                     <a class="d-block product-image-ratio" href="{{ basket.get_absolute_url }}">
                                         {% if basket.image %}
@@ -207,71 +239,104 @@
                                     {% endif %}
 
                                     <div class="action-overlay d-flex justify-content-center">
-                                        <a href="{{ basket.get_absolute_url }}" class="action-btn" title="View Bundle"><i class="ion-eye"></i></a>
-                                        <a href="#" class="action-btn" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
+                                        <a href="{{ basket.get_absolute_url }}" class="action-btn" title="View Bundle">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                        <a href="#" class="action-btn" title="Add to Wishlist">
+                                            <i class="ion-ios-heart-outline"></i>
+                                        </a>
                                     </div>
                                 </div>
 
-                                <div class="product-content text-center">
-                                    <div class="product-title">
-                                        <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
-                                            <a href="{{ basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ basket.name }}</a>
-                                        </h4>
-                                    </div>
+                                <div class="product-content text-center" style="padding: 20px 15px;">
+                                    <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">
+                                        <a href="{{ basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ basket.name }}</a>
+                                    </h4>
 
-                                    <div class="price-box">
-                                        <span class="regular-price" style="color: #1B1B1C; font-weight: 700; font-size: 16px;">KSh {{ basket.price }}</span>
+                                    <div class="price-box mb-2">
+                                        <span class="regular-price" style="font-size: 18px; font-weight: 700; color: #1B1B1C;">
+                                            KSh {{ basket.price }}
+                                        </span>
                                         {% if basket.total_original_price > basket.price %}
-                                            <span class="old-price" style="color: #999; text-decoration: line-through; font-size: 13px; margin-left: 5px;">KSh {{ basket.total_original_price|floatformat:2 }}</span>
+                                            <span class="old-price ms-2" style="color: #999; text-decoration: line-through; font-size: 14px;">
+                                                KSh {{ basket.total_original_price|floatformat:0 }}
+                                            </span>
                                         {% endif %}
                                     </div>
 
-                                    <div class="list-view-content mt-2">
+                                    <div class="d-flex justify-content-center gap-3 mb-2">
+                                        <small class="text-success">
+                                            <i class="fa fa-cube me-1"></i>{{ basket.included_products.count }} items
+                                        </small>
                                         {% if basket.savings_per_basket > 0 %}
-                                            <p class="text-success mb-1 small d-none d-md-block">
-                                                <i class="fa fa-check-circle"></i> Save KSh {{ basket.savings_per_basket|floatformat:2 }}
-                                            </p>
+                                            <small class="text-danger fw-bold">
+                                                Save KSh {{ basket.savings_per_basket|floatformat:0 }}
+                                            </small>
                                         {% endif %}
-                                        <p class="desc-content mb-2 text-muted small d-none d-sm-block">{{ basket.description|truncatewords:15 }}</p>
-                                        
-                                        <div class="add-action-listview d-none">
-                                            <a href="{{ basket.get_absolute_url }}" title="View Details"><i class="ion-eye"></i></a>
-                                            <a href="#" title="Add to Wishlist"><i class="ion-ios-heart-outline"></i></a>
-                                        </div>
                                     </div>
-                                    
-                                    <div class="grid-view-content mt-2">
-                                        <small class="text-muted"><i class="fa fa-cube"></i> {{ basket.included_products.count }} items included</small>
+
+                                    <!-- List view extra content -->
+                                    <div class="list-view-content mt-3 d-none d-sm-block">
+                                        <p class="text-muted small mb-3">{{ basket.description|truncatewords:25 }}</p>
+
+                                        <div class="add-action-listview d-flex gap-2 justify-content-center">
+                                            <a href="{{ basket.get_absolute_url }}" class="action-btn" title="View Details">
+                                                <i class="ion-eye"></i>
+                                            </a>
+                                            <a href="#" class="action-btn" title="Add to Wishlist">
+                                                <i class="ion-ios-heart-outline"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {% empty %}
                         <div class="col-12 text-center py-5">
-                            <div style="background: white; padding: 40px; border-radius: 8px; border: 1px solid #eee;">
-                                <i class="ion-sad-outline" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
-                                <h4 style="color: #666; font-weight: 600;">No combo offers found</h4>
-                                {% if request.GET.q %}
-                                    <p class="text-muted">No combos found matching "{{ request.GET.q }}"</p>
-                                {% else %}
-                                    <p class="text-muted">Check back soon for special combo deals!</p>
-                                {% endif %}
+                            <div style="background: white; padding: 50px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+                                <i class="ion-sad-outline" style="font-size: 60px; color: #ddd;"></i>
+                                <h4 class="mt-3 mb-2" style="color: #555;">No combo offers found</h4>
+                                <p class="text-muted mb-4">
+                                    {% if request.GET.q %}
+                                        No offers match "{{ request.GET.q }}"
+                                    {% else %}
+                                        Check back soon for exciting combo deals!
+                                    {% endif %}
+                                </p>
+                                <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary px-4 py-2">Browse All Products</a>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
 
+                    <!-- Pagination -->
                     {% if is_paginated %}
-                    <div class="row mt-4">
+                    <div class="row mt-5">
                         <div class="col-12">
-                            <nav class="pagination pagination-wrap">
-                                <ul class="pagination justify-content-center" style="gap: 5px;">
+                            <nav>
+                                <ul class="pagination justify-content-center gap-2">
                                     {% if page_obj.has_previous %}
-                                        <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                    <li class="page-item">
+                                        <a class="page-link rounded-circle" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"
+                                           style="width:48px;height:48px;line-height:32px;">
+                                            <i class="ion-ios-arrow-thin-left"></i>
+                                        </a>
+                                    </li>
                                     {% endif %}
-                                    <li class="active"><a class="page-link" style="background:#E98C81; border-color:#E98C81; color:white;">{{ page_obj.number }}</a></li>
+
+                                    <li class="page-item active">
+                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;background:#E98C81;border-color:#E98C81;color:white;">
+                                            {{ page_obj.number }}
+                                        </span>
+                                    </li>
+
                                     {% if page_obj.has_next %}
-                                        <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                    <li class="page-item">
+                                        <a class="page-link rounded-circle" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"
+                                           style="width:48px;height:48px;line-height:32px;">
+                                            <i class="ion-ios-arrow-thin-right"></i>
+                                        </a>
+                                    </li>
                                     {% endif %}
                                 </ul>
                             </nav>
@@ -279,91 +344,145 @@
                     </div>
                     {% endif %}
                 </div>
+
+                <!-- Sidebar / Offcanvas Column -->
                 <div class="col-lg-3 col-12 col-custom">
-                    <aside class="sidebar_widget widget-mt">
-                        <div class="widget_inner" style="background: #fff; padding: 25px; border-radius: 8px; border: 1px solid #eee;">
-                            
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Search Combos</h3>
-                                <div class="search-box">
-                                    <form action=".">
-                                        <div class="input-group">
-                                            <input type="text" name="q" class="form-control" placeholder="Search combos..." value="{{ request.GET.q|default:'' }}" style="height: 45px; font-size: 14px;">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+
+                    <!-- Desktop Sidebar -->
+                    <aside class="sidebar_widget widget-mt d-none d-lg-block sticky-top" style="top: 100px;">
+                        <div class="widget_inner" style="background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+
+                            <!-- Search -->
+                            <div class="widget-list mb-4 pb-3 border-bottom">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Search Combos</h3>
+                                <form action="{% url 'products:basket_list' %}">
+                                    <div class="input-group">
+                                        <input type="text" name="q" class="form-control" placeholder="e.g. family pack...">
+                                        <button class="btn btn-primary" type="submit" style="background:#E98C81;border-color:#E98C81;">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shop By</h3>
-                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
-                                    <li class="mb-2"><a href="{% url 'products:product_list' %}" style="color: #666;">All Products</a></li>
-                                    <li class="mb-2"><a href="{% url 'products:basket_list' %}" style="color: #E98C81; font-weight: 600;">Combo Offers</a></li>
-                                    <li class="mb-2"><a href="{% url 'products:merchandise_list' %}" style="color: #666;">Merchandise</a></li>
-                                    <li class="mb-2"><a href="{% url 'products:recipe_list' %}" style="color: #666;">Recipes</a></li>
+                            <!-- Shop By -->
+                            <div class="widget-list mb-4 pb-3 border-bottom">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Shop By</h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><a href="{% url 'products:product_list' %}" class="text-muted">All Products</a></li>
+                                    <li class="mb-2"><a href="{% url 'products:basket_list' %}" class="text-primary fw-bold">Combo Offers</a></li>
+                                    <li class="mb-2"><a href="{% url 'products:merchandise_list' %}" class="text-muted">Merchandise</a></li>
+                                    <li><a href="{% url 'products:recipe_list' %}" class="text-muted">Recipes</a></li>
                                 </ul>
                             </div>
 
+                            <!-- Best Value / Featured Combos -->
                             <div class="widget-list">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Best Value</h3>
-                                <div class="sidebar-body">
-                                    {% for best_basket in baskets|slice:":3" %}
-                                    <div class="sidebar-product d-flex align-items-center mb-3" style="border-bottom: 1px dashed #eee; padding-bottom: 10px;">
-                                        <a href="{{ best_basket.get_absolute_url }}" class="image" style="flex-shrink:0; margin-right: 15px;">
-                                            <img src="{{ best_basket.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ best_basket.name }}" width="70" class="rounded">
-                                        </a>
-                                        <div class="product-content">
-                                            <h6 class="title-2 mb-1" style="font-size: 14px;"><a href="{{ best_basket.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ best_basket.name|truncatechars:20 }}</a></h6>
-                                            <div class="price-box">
-                                                <span class="regular-price text-success font-weight-bold">KSh {{ best_basket.price }}</span>
-                                                {% if best_basket.discount_percentage > 0 %}
-                                                    <small class="d-block text-danger">{{ best_basket.discount_percentage }}% Off</small>
-                                                {% endif %}
-                                            </div>
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Best Value</h3>
+                                {% for b in baskets|slice:":3" %}
+                                <div class="d-flex mb-3">
+                                    <a href="{{ b.get_absolute_url }}" class="me-3 flex-shrink-0">
+                                        <img src="{{ b.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" 
+                                             alt="{{ b.name }}" class="rounded" width="70" height="70" style="object-fit:cover;">
+                                    </a>
+                                    <div>
+                                        <h6 class="mb-1 small"><a href="{{ b.get_absolute_url }}" class="text-dark">{{ b.name|truncatechars:25 }}</a></h6>
+                                        <div class="small">
+                                            <strong class="text-success">KSh {{ b.price }}</strong>
+                                            {% if b.discount_percentage > 0 %}
+                                                <span class="text-danger ms-2">{{ b.discount_percentage }}% off</span>
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    {% endfor %}
                                 </div>
+                                {% empty %}
+                                <p class="text-muted small">No featured combos yet</p>
+                                {% endfor %}
                             </div>
-
                         </div>
                     </aside>
+
+                    <!-- Mobile Offcanvas -->
+                    <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="basketSidebarOffcanvas" aria-labelledby="basketSidebarLabel">
+                        <div class="offcanvas-header border-bottom">
+                            <h5 class="offcanvas-title" id="basketSidebarLabel">
+                                <i class="fa fa-filter me-2"></i> Combo Filters
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                        </div>
+                        <div class="offcanvas-body px-0">
+                            <div class="p-4">
+                                <!-- Search -->
+                                <div class="mb-4 pb-3 border-bottom">
+                                    <h6 class="fw-bold mb-2">Search Combos</h6>
+                                    <form action="{% url 'products:basket_list' %}">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" name="q" class="form-control" placeholder="Family pack, party...">
+                                            <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Quick Links -->
+                                <div class="mb-4 pb-3 border-bottom">
+                                    <h6 class="fw-bold mb-3">Shop By</h6>
+                                    <ul class="list-unstyled small">
+                                        <li class="mb-2"><a href="{% url 'products:product_list' %}">All Products</a></li>
+                                        <li class="mb-2"><a href="{% url 'products:basket_list' %}" class="fw-bold text-primary">Combo Offers</a></li>
+                                        <li class="mb-2"><a href="{% url 'products:merchandise_list' %}">Merchandise</a></li>
+                                        <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
+                                    </ul>
+                                </div>
+
+                                <!-- CTA -->
+                                <div class="text-center py-3">
+                                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-success btn-sm w-100">
+                                        Browse All Products
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Simple View Switcher Script
-    document.addEventListener('DOMContentLoaded', function() {
-        const gridBtn = document.querySelector('.btn-grid-3');
-        const listBtn = document.querySelector('.btn-list');
-        const wrapper = document.querySelector('.shop_wrapper');
-        const addActionsList = document.querySelectorAll('.add-action-listview');
+document.addEventListener('DOMContentLoaded', function() {
+    const gridBtn = document.querySelector('.btn-grid-3');
+    const listBtn = document.querySelector('.btn-list');
+    const wrapper = document.querySelector('.shop_wrapper');
 
-        if(gridBtn && listBtn && wrapper) {
-            gridBtn.addEventListener('click', function() {
-                wrapper.classList.remove('grid_list');
-                wrapper.classList.add('grid_3');
-                gridBtn.classList.add('active');
-                listBtn.classList.remove('active');
-                addActionsList.forEach(el => el.classList.add('d-none'));
-            });
-
-            listBtn.addEventListener('click', function() {
-                wrapper.classList.remove('grid_3');
-                wrapper.classList.add('grid_list');
-                listBtn.classList.add('active');
-                gridBtn.classList.remove('active');
-                addActionsList.forEach(el => el.classList.remove('d-none'));
-            });
+    if (gridBtn && listBtn && wrapper) {
+        function activateGrid() {
+            wrapper.classList.remove('grid_list');
+            wrapper.classList.add('grid_3');
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+            document.querySelectorAll('.list-view-content').forEach(el => el.classList.add('d-none'));
+            document.querySelectorAll('.action-overlay').forEach(el => el.style.display = '');
         }
-    });
+
+        function activateList() {
+            wrapper.classList.remove('grid_3');
+            wrapper.classList.add('grid_list');
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+            document.querySelectorAll('.list-view-content').forEach(el => el.classList.remove('d-none'));
+            document.querySelectorAll('.action-overlay').forEach(el => el.style.display = 'none');
+        }
+
+        gridBtn.addEventListener('click', activateGrid);
+        listBtn.addEventListener('click', activateList);
+
+        // Start in grid view
+        activateGrid();
+    }
+});
 </script>
 {% endblock %}

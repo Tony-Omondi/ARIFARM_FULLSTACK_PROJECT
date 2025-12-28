@@ -9,24 +9,28 @@
 
 {% block content %}
 
-{# --- UNIFIED CARD CSS --- #}
 <style>
-    /* Card Styling */
+    /* ──────────────────────────────────────────────────────────────
+       SHARED STYLES (aligned with product_list & merchandise_list)
+    ────────────────────────────────────────────────────────────── */
+    .shop-wrapper {
+        background-color: #f8f9fa;
+        padding-bottom: 50px;
+    }
+
     .single-product-card {
         background: #fff;
         border-radius: 8px;
         overflow: hidden;
         border: 1px solid #eee;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 30px;
         height: 100%;
     }
     .single-product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
     }
-    
-    /* Image Ratio */
+
     .product-image-ratio {
         position: relative;
         padding-top: 100%;
@@ -38,7 +42,6 @@
         top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
     }
 
-    /* Hover Image Switch */
     .product-image-2 {
         opacity: 0;
         visibility: hidden;
@@ -49,7 +52,6 @@
         visibility: visible;
     }
 
-    /* Action Overlay */
     .action-overlay {
         position: absolute;
         bottom: 20px; left: 0; width: 100%;
@@ -63,66 +65,62 @@
         opacity: 1;
         transform: translateY(0);
     }
-    
-    /* Action Buttons */
+
     .action-btn {
         background: white; color: #333;
         width: 40px; height: 40px; line-height: 40px;
         text-align: center; border-radius: 50%;
-        margin: 0 5px; display: inline-block;
+        margin: 0 5px;
+        display: inline-block;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         transition: all 0.2s; cursor: pointer; border: none;
     }
     .action-btn:hover {
-        background: #E98C81; color: white; transform: scale(1.1);
+        background: #E98C81;
+        color: white;
+        transform: scale(1.1);
     }
-    
-    /* Badges */
+
+    /* Recipe-specific badges */
     .recipe-badge {
         position: absolute; top: 10px; left: 10px; z-index: 10;
-        color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+        color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+        text-transform: capitalize;
     }
-    .badge-easy { background-color: #28a745; }
-    .badge-medium { background-color: #ffc107; color: #333; }
-    .badge-hard { background-color: #dc3545; }
+    .badge-easy   { background-color: #28a745; }
+    .badge-medium { background-color: #ffc107; color: #212529; }
+    .badge-hard   { background-color: #dc3545; }
 
-    /* List View Specifics */
+    /* List View */
     .shop_wrapper.grid_list .single-product-card {
         display: flex;
         flex-direction: row;
         height: auto;
     }
-    .shop_wrapper.grid_list .product-image {
-        width: 250px;
+    .shop_wrapper.grid_list .product-image-ratio {
+        padding-top: 0;
+        width: 260px;
         flex-shrink: 0;
     }
     .shop_wrapper.grid_list .product-content {
         text-align: left !important;
-        padding: 20px 30px;
+        padding: 25px 30px;
         flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
     .shop_wrapper.grid_list .action-overlay {
         display: none;
     }
-    .shop_wrapper.grid_list .add-action-listview {
-        margin-top: 15px;
-    }
-    .shop_wrapper.grid_list .add-action-listview a {
-        display: inline-block;
-        width: 40px; height: 40px; line-height: 40px;
-        text-align: center; background: #f2f2f2;
-        color: #333; margin-right: 10px; border-radius: 50%;
-        transition: 0.3s;
-    }
-    .shop_wrapper.grid_list .add-action-listview a:hover {
-        background: #E98C81; color: #fff;
+
+    /* Mobile filter button */
+    .filter-btn {
+        font-size: 1.1rem;
+        border-width: 2px;
+        font-weight: 600;
     }
 </style>
 
 <div class="shop-wrapper">
+    <!-- Breadcrumbs -->
     <div class="breadcrumbs-area position-relative">
         <div class="container">
             <div class="row">
@@ -130,13 +128,14 @@
                     <div class="breadcrumb-content position-relative section-content">
                         <h3 class="title-3">
                             {% if request.GET.q %}
-                                Recipe Search: "{{ request.GET.q }}"
+                                Recipes matching "{{ request.GET.q }}"
                             {% else %}
                                 Recipes
                             {% endif %}
                         </h3>
                         <ul>
-                            <li><a href="{% url 'products:product_list' %}">Home</a></li>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'products:product_list' %}">Shop</a></li>
                             <li>Recipes</li>
                         </ul>
                     </div>
@@ -147,37 +146,58 @@
 
     <div class="shop-main-area">
         <div class="container container-default custom-area">
+
+            <!-- Mobile Filters Button -->
+            <div class="mb-4 d-lg-none">
+                <button class="btn btn-outline-primary filter-btn w-100 py-3"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#recipeSidebarOffcanvas"
+                        aria-controls="recipeSidebarOffcanvas">
+                    <i class="fa fa-filter me-2"></i> Filters & Categories
+                    <span class="badge bg-secondary ms-2">{{ recipes|length }}</span>
+                </button>
+            </div>
+
             <div class="row flex-row-reverse">
-                
+
+                <!-- Main Content - Recipes Grid -->
                 <div class="col-lg-9 col-12 col-custom widget-mt">
-                    
-                    <div class="shop_toolbar_wrapper d-flex justify-content-between align-items-center mb-4" style="background: #fff; padding: 10px 20px; border: 1px solid #eee; border-radius: 5px;">
-                        <div class="shop_toolbar_btn">
-                            <button type="button" class="btn-grid-3 active" data-role="grid_3" title="Grid View"><i class="fa fa-th"></i></button>
-                            <button type="button" class="btn-list" data-role="grid_list" title="List View"><i class="fa fa-th-list"></i></button>
+
+                    <!-- Toolbar -->
+                    <div class="shop_toolbar_wrapper d-flex justify-content-between align-items-center mb-4"
+                         style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e1e1e1; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                        <div class="shop_toolbar_btn d-flex gap-2">
+                            <button type="button" class="btn-grid-3 active" data-role="grid_3" title="Grid View"
+                                    style="width:42px;height:42px;border-radius:6px;border:1px solid #ddd;">
+                                <i class="fa fa-th"></i>
+                            </button>
+                            <button type="button" class="btn-list" data-role="grid_list" title="List View"
+                                    style="width:42px;height:42px;border-radius:6px;border:1px solid #ddd;">
+                                <i class="fa fa-th-list"></i>
+                            </button>
                         </div>
-                        <div class="shop-select">
+
+                        <div class="shop-select" style="min-width:240px;">
                             <form method="get">
-                                <select name="ordering" class="form-control nice-select w-100" onchange="this.form.submit()">
+                                <select name="ordering" class="form-control" style="border-radius:6px;height:42px;" onchange="this.form.submit()">
                                     <option value="-created_at" {% if not request.GET.ordering or request.GET.ordering == '-created_at' %}selected{% endif %}>Newest First</option>
-                                    <option value="title">Title: A-Z</option>
-                                    <option value="-title">Title: Z-A</option>
-                                    <option value="prep_time">Prep Time: Low to High</option>
-                                    <option value="-prep_time">Prep Time: High to Low</option>
-                                    <option value="total_time">Total Time: Low to High</option>
+                                    <option value="title" {% if request.GET.ordering == 'title' %}selected{% endif %}>Title: A-Z</option>
+                                    <option value="-title" {% if request.GET.ordering == '-title' %}selected{% endif %}>Title: Z-A</option>
+                                    <option value="prep_time" {% if request.GET.ordering == 'prep_time' %}selected{% endif %}>Prep Time: Short → Long</option>
+                                    <option value="-prep_time" {% if request.GET.ordering == '-prep_time' %}selected{% endif %}>Prep Time: Long → Short</option>
+                                    <option value="total_time" {% if request.GET.ordering == 'total_time' %}selected{% endif %}>Total Time: Short → Long</option>
                                 </select>
-                                {% if request.GET.q %}
-                                    <input type="hidden" name="q" value="{{ request.GET.q }}">
-                                {% endif %}
+                                {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
                             </form>
                         </div>
                     </div>
 
+                    <!-- Recipes Grid -->
                     <div class="row shop_wrapper grid_3">
                         {% for recipe in recipes %}
-                        <div class="col-md-4 col-sm-6 col-12 col-custom product-area">
+                        <div class="col-md-4 col-sm-6 col-12 mb-4 product-area">
                             <div class="single-product-card position-relative">
-                                
                                 <div class="product-image position-relative">
                                     <a class="d-block product-image-ratio" href="{{ recipe.get_absolute_url }}">
                                         {% if recipe.image %}
@@ -197,60 +217,54 @@
                                     </span>
 
                                     {% if recipe.is_featured %}
-                                        <span class="badge badge-warning position-absolute" style="top:10px; right:10px; z-index:10;">
-                                            <i class="fa fa-star"></i>
+                                        <span class="badge bg-warning position-absolute" style="top:10px;right:10px;z-index:10;">
+                                            <i class="fa fa-star"></i> Featured
                                         </span>
                                     {% endif %}
 
                                     <div class="action-overlay d-flex justify-content-center">
-                                        <a href="{{ recipe.get_absolute_url }}" class="action-btn" title="View Recipe"><i class="ion-eye"></i></a>
-                                        <a href="#" class="action-btn" title="Save Recipe"><i class="ion-ios-bookmark-outline"></i></a>
-                                        <a href="#" class="action-btn" title="Print Recipe"><i class="ion-printer"></i></a>
+                                        <a href="{{ recipe.get_absolute_url }}" class="action-btn" title="View Recipe">
+                                            <i class="ion-eye"></i>
+                                        </a>
+                                        <a href="#" class="action-btn" title="Save to Cookbook">
+                                            <i class="ion-ios-bookmark-outline"></i>
+                                        </a>
+                                        <a href="#" class="action-btn" title="Print Recipe">
+                                            <i class="ion-printer"></i>
+                                        </a>
                                     </div>
                                 </div>
 
-                                <div class="product-content text-center">
-                                    <div class="product-title">
-                                        <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin: 0 0 8px;">
-                                            <a href="{{ recipe.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ recipe.title }}</a>
-                                        </h4>
+                                <div class="product-content text-center" style="padding: 20px 15px;">
+                                    <h4 class="title-2" style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">
+                                        <a href="{{ recipe.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ recipe.title }}</a>
+                                    </h4>
+
+                                    <div class="recipe-meta mb-2 small text-muted">
+                                        <span class="me-3"><i class="fa fa-clock-o"></i> {{ recipe.total_time }} min</span>
+                                        <span><i class="fa fa-users"></i> {{ recipe.servings }} servings</span>
                                     </div>
 
-                                    <div class="recipe-meta mb-2" style="color: #666; font-size: 13px;">
-                                        <span class="mr-2"><i class="fa fa-clock-o"></i> {{ recipe.total_time }}m</span>
-                                        <span><i class="fa fa-users"></i> {{ recipe.servings }}</span>
-                                    </div>
+                                    <!-- List view extra info -->
+                                    <div class="list-view-content mt-3 d-none d-sm-block">
+                                        <p class="text-muted small mb-3">{{ recipe.description|truncatewords:35 }}</p>
 
-                                    <div class="list-view-content mt-2 d-none d-sm-block">
-                                        <p class="desc-content text-muted small mb-2">{{ recipe.description|truncatewords:25 }}</p>
-                                        
-                                        <div class="recipe-meta-full mb-3 small text-muted">
-                                            <div class="d-flex flex-wrap">
-                                                <span class="mr-3"><i class="fa fa-clock-o"></i> Prep: {{ recipe.prep_time }}m</span>
-                                                <span class="mr-3"><i class="fa fa-fire"></i> Cook: {{ recipe.cook_time }}m</span>
-                                                <span><i class="fa fa-list"></i> {{ recipe.ingredients.count }} Ingredients</span>
-                                            </div>
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                            <span class="badge bg-light"><i class="fa fa-clock-o me-1"></i>Prep: {{ recipe.prep_time }}m</span>
+                                            <span class="badge bg-light"><i class="fa fa-fire me-1"></i>Cook: {{ recipe.cook_time }}m</span>
+                                            <span class="badge bg-light"><i class="fa fa-utensils me-1"></i>{{ recipe.ingredients.count }} ingredients</span>
                                         </div>
 
-                                        {% with ingredients=recipe.ingredients.all|slice:":5" %}
-                                        {% if ingredients %}
-                                        <div class="ingredients-preview mb-3">
-                                            <div class="d-flex flex-wrap">
-                                                {% for ingredient in ingredients %}
-                                                <span class="badge badge-light mr-1 mb-1 border">{{ ingredient.display_name }}</span>
-                                                {% endfor %}
-                                                {% if recipe.ingredients.count > 5 %}
-                                                <span class="badge badge-secondary">+{{ recipe.ingredients.count|add:"-5" }} more</span>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% endwith %}
-
-                                        <div class="add-action-listview d-flex">
-                                            <a href="{{ recipe.get_absolute_url }}" title="View Full Recipe"><i class="ion-eye"></i></a>
-                                            <a href="#" title="Save to Cookbook"><i class="ion-ios-bookmark-outline"></i></a>
-                                            <a href="#" title="Print Recipe"><i class="ion-printer"></i></a>
+                                        <div class="add-action-listview d-flex gap-2">
+                                            <a href="{{ recipe.get_absolute_url }}" class="action-btn" title="View Full Recipe">
+                                                <i class="ion-eye"></i>
+                                            </a>
+                                            <a href="#" class="action-btn" title="Save">
+                                                <i class="ion-ios-bookmark-outline"></i>
+                                            </a>
+                                            <a href="#" class="action-btn" title="Print">
+                                                <i class="ion-printer"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -258,30 +272,50 @@
                         </div>
                         {% empty %}
                         <div class="col-12 text-center py-5">
-                            <div style="background: white; padding: 40px; border-radius: 8px; border: 1px solid #eee;">
-                                <i class="ion-sad-outline" style="font-size: 50px; color: #ccc; margin-bottom: 15px;"></i>
-                                <h4 style="color: #666; font-weight: 600;">No recipes found</h4>
-                                {% if request.GET.q %}
-                                    <p class="text-muted">No recipes found for "{{ request.GET.q }}"</p>
-                                {% else %}
-                                    <p class="text-muted">Check back soon for new recipes!</p>
-                                {% endif %}
+                            <div style="background: white; padding: 50px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+                                <i class="ion-sad-outline" style="font-size: 60px; color: #ddd;"></i>
+                                <h4 class="mt-3 mb-2" style="color: #555;">No recipes found</h4>
+                                <p class="text-muted mb-4">
+                                    {% if request.GET.q %}
+                                        No recipes match "{{ request.GET.q }}"
+                                    {% else %}
+                                        Check back soon for new delicious ideas!
+                                    {% endif %}
+                                </p>
+                                <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary px-4 py-2">Browse Ingredients</a>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
 
+                    <!-- Pagination -->
                     {% if is_paginated %}
-                    <div class="row mt-4">
+                    <div class="row mt-5">
                         <div class="col-12">
-                            <nav class="pagination pagination-wrap">
-                                <ul class="pagination justify-content-center" style="gap: 5px;">
+                            <nav>
+                                <ul class="pagination justify-content-center gap-2">
                                     {% if page_obj.has_previous %}
-                                        <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-left"></i></a></li>
+                                    <li class="page-item">
+                                        <a class="page-link rounded-circle" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"
+                                           style="width:48px;height:48px;line-height:32px;">
+                                            <i class="ion-ios-arrow-thin-left"></i>
+                                        </a>
+                                    </li>
                                     {% endif %}
-                                    <li class="active"><a class="page-link" style="background:#E98C81; border-color:#E98C81; color:white;">{{ page_obj.number }}</a></li>
+
+                                    <li class="page-item active">
+                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;background:#E98C81;border-color:#E98C81;color:white;">
+                                            {{ page_obj.number }}
+                                        </span>
+                                    </li>
+
                                     {% if page_obj.has_next %}
-                                        <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" class="page-link"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                    <li class="page-item">
+                                        <a class="page-link rounded-circle" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}"
+                                           style="width:48px;height:48px;line-height:32px;">
+                                            <i class="ion-ios-arrow-thin-right"></i>
+                                        </a>
+                                    </li>
                                     {% endif %}
                                 </ul>
                             </nav>
@@ -289,107 +323,172 @@
                     </div>
                     {% endif %}
                 </div>
+
+                <!-- Sidebar / Offcanvas -->
                 <div class="col-lg-3 col-12 col-custom">
-                    <aside class="sidebar_widget widget-mt">
-                        <div class="widget_inner" style="background: #fff; padding: 25px; border-radius: 8px; border: 1px solid #eee;">
-                            
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Search Recipes</h3>
-                                <div class="search-box">
-                                    <form action=".">
-                                        <div class="input-group">
-                                            <input type="text" name="q" class="form-control" placeholder="Search recipes..." value="{{ request.GET.q|default:'' }}" style="height: 45px; font-size: 14px;">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
-                                            </div>
+
+                    <!-- Desktop Sidebar -->
+                    <aside class="sidebar_widget widget-mt d-none d-lg-block sticky-top" style="top: 100px;">
+                        <div class="widget_inner" style="background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+
+                            <!-- Search -->
+                            <div class="widget-list mb-4 pb-3 border-bottom">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Search Recipes</h3>
+                                <form action="{% url 'products:recipe_list' %}">
+                                    <div class="input-group">
+                                        <input type="text" name="q" class="form-control" placeholder="e.g. chicken curry...">
+                                        <button class="btn btn-primary" type="submit" style="background:#E98C81;border-color:#E98C81;">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Difficulty -->
+                            <div class="widget-list mb-4 pb-3 border-bottom">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Difficulty</h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="?difficulty=easy" class="d-block p-2 rounded {% if request.GET.difficulty == 'easy' %}bg-success text-white{% else %}text-muted{% endif %}">
+                                            Easy Recipes
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="?difficulty=medium" class="d-block p-2 rounded {% if request.GET.difficulty == 'medium' %}bg-warning text-dark{% else %}text-muted{% endif %}">
+                                            Medium Recipes
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="?difficulty=hard" class="d-block p-2 rounded {% if request.GET.difficulty == 'hard' %}bg-danger text-white{% else %}text-muted{% endif %}">
+                                            Hard Recipes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'products:recipe_list' %}" class="d-block p-2 rounded text-primary fw-bold">
+                                            All Difficulties
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Quick Meals -->
+                            <div class="widget-list mb-4 pb-3 border-bottom">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Quick & Easy</h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><a href="?max_time=30" class="text-muted">Under 30 minutes</a></li>
+                                    <li class="mb-2"><a href="?max_time=45" class="text-muted">Under 45 minutes</a></li>
+                                    <li class="mb-2"><a href="?max_time=60" class="text-muted">Under 1 hour</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Featured / Popular -->
+                            <div class="widget-list">
+                                <h3 class="widget-title mb-3" style="font-size: 18px; font-weight: 600; color: #333;">Featured Recipes</h3>
+                                {% for r in recipes|slice:":3" %}
+                                <div class="d-flex mb-3">
+                                    <a href="{{ r.get_absolute_url }}" class="me-3 flex-shrink-0">
+                                        <img src="{{ r.image.url|default:'/static/assets/images/recipe/placeholder.jpg' }}" 
+                                             alt="{{ r.title }}" class="rounded" width="70" height="70" style="object-fit:cover;">
+                                    </a>
+                                    <div>
+                                        <h6 class="mb-1 small"><a href="{{ r.get_absolute_url }}" class="text-dark">{{ r.title|truncatechars:28 }}</a></h6>
+                                        <div class="small text-muted">
+                                            <i class="fa fa-clock-o me-1"></i>{{ r.total_time }} min
+                                            <span class="ms-2 badge bg-light">{{ r.get_difficulty_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <p class="text-muted small">No featured recipes yet</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Mobile Offcanvas -->
+                    <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="recipeSidebarOffcanvas" aria-labelledby="recipeSidebarLabel">
+                        <div class="offcanvas-header border-bottom">
+                            <h5 class="offcanvas-title" id="recipeSidebarLabel">
+                                <i class="fa fa-filter me-2"></i> Recipe Filters
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                        </div>
+                        <div class="offcanvas-body px-0">
+                            <div class="p-4">
+                                <!-- Search -->
+                                <div class="mb-4 pb-3 border-bottom">
+                                    <h6 class="fw-bold mb-2">Search Recipes</h6>
+                                    <form action="{% url 'products:recipe_list' %}">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" name="q" class="form-control" placeholder="e.g. pasta, smoothie...">
+                                            <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
                                         </div>
                                     </form>
                                 </div>
-                            </div>
 
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Difficulty</h3>
-                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
-                                    <li class="mb-2"><a href="?difficulty=easy" style="color: #28a745;">Easy Recipes</a></li>
-                                    <li class="mb-2"><a href="?difficulty=medium" style="color: #ffc107;">Medium Recipes</a></li>
-                                    <li class="mb-2"><a href="?difficulty=hard" style="color: #dc3545;">Hard Recipes</a></li>
-                                    <li class="mb-2"><a href="{% url 'products:recipe_list' %}" style="color: #666;">All Difficulties</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="widget-list widget-mb-4">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Quick Meals</h3>
-                                <ul class="sidebar-list" style="list-style: none; padding: 0;">
-                                    <li class="mb-2"><a href="?max_time=30" style="color: #666;">Under 30 minutes</a></li>
-                                    <li class="mb-2"><a href="?max_time=60" style="color: #666;">Under 1 hour</a></li>
-                                    <li class="mb-2"><a href="?max_time=90" style="color: #666;">Under 1.5 hours</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="widget-list">
-                                <h3 class="widget-title" style="font-size: 18px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Featured</h3>
-                                <div class="sidebar-body">
-                                    {% for featured_recipe in recipes|slice:":3" %}
-                                    <div class="sidebar-product d-flex align-items-center mb-3" style="border-bottom: 1px dashed #eee; padding-bottom: 10px;">
-                                        <a href="{{ featured_recipe.get_absolute_url }}" class="image" style="flex-shrink:0; margin-right: 15px;">
-                                            <img src="{{ featured_recipe.image.url|default:'/static/assets/images/recipe/placeholder.jpg' }}" alt="{{ featured_recipe.title }}" width="80" class="rounded">
-                                        </a>
-                                        <div class="product-content">
-                                            <h6 class="title-2 mb-1" style="font-size: 14px;"><a href="{{ featured_recipe.get_absolute_url }}" style="color: #333; text-decoration: none;">{{ featured_recipe.title|truncatechars:20 }}</a></h6>
-                                            <div class="recipe-meta-small small text-muted">
-                                                <i class="fa fa-clock-o"></i> {{ featured_recipe.total_time }}m 
-                                                <span class="ml-1 badge badge-light">{{ featured_recipe.get_difficulty_display }}</span>
-                                            </div>
-                                        </div>
+                                <!-- Difficulty -->
+                                <div class="mb-4 pb-3 border-bottom">
+                                    <h6 class="fw-bold mb-3">Difficulty</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="?difficulty=easy" class="btn btn-outline-success btn-sm {% if request.GET.difficulty == 'easy' %}active{% endif %}">Easy</a>
+                                        <a href="?difficulty=medium" class="btn btn-outline-warning btn-sm {% if request.GET.difficulty == 'medium' %}active{% endif %}">Medium</a>
+                                        <a href="?difficulty=hard" class="btn btn-outline-danger btn-sm {% if request.GET.difficulty == 'hard' %}active{% endif %}">Hard</a>
+                                        <a href="{% url 'products:recipe_list' %}" class="btn btn-outline-primary btn-sm">All</a>
                                     </div>
-                                    {% endfor %}
+                                </div>
+
+                                <!-- Quick Meals -->
+                                <div class="mb-4 pb-3 border-bottom">
+                                    <h6 class="fw-bold mb-3">Quick & Easy</h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="?max_time=30" class="btn btn-outline-info btn-sm">Under 30 min</a>
+                                        <a href="?max_time=45" class="btn btn-outline-info btn-sm">Under 45 min</a>
+                                        <a href="?max_time=60" class="btn btn-outline-info btn-sm">Under 1 hour</a>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
-                    </aside>
+                    </div>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Same list/grid switcher script as used in other templates
-        const gridBtn = document.querySelector('.btn-grid-3');
-        const listBtn = document.querySelector('.btn-list');
-        const wrapper = document.querySelector('.shop_wrapper');
-        const listViewContent = document.querySelectorAll('.list-view-content'); 
-        const actionOverlay = document.querySelectorAll('.action-overlay'); 
+document.addEventListener('DOMContentLoaded', function() {
+    const gridBtn = document.querySelector('.btn-grid-3');
+    const listBtn = document.querySelector('.btn-list');
+    const wrapper = document.querySelector('.shop_wrapper');
 
-        if(gridBtn && listBtn && wrapper) {
-            
-            // Initial State: Grid View (Hide List Content)
-            listViewContent.forEach(el => el.classList.add('d-none'));
-
-            gridBtn.addEventListener('click', function() {
-                wrapper.classList.remove('grid_list');
-                wrapper.classList.add('grid_3');
-                gridBtn.classList.add('active');
-                listBtn.classList.remove('active');
-                
-                listViewContent.forEach(el => el.classList.add('d-none'));
-                actionOverlay.forEach(el => el.style.display = ''); 
-            });
-
-            listBtn.addEventListener('click', function() {
-                wrapper.classList.remove('grid_3');
-                wrapper.classList.add('grid_list');
-                listBtn.classList.add('active');
-                gridBtn.classList.remove('active');
-
-                listViewContent.forEach(el => el.classList.remove('d-none'));
-                actionOverlay.forEach(el => el.style.display = 'none');
-            });
+    if (gridBtn && listBtn && wrapper) {
+        function activateGrid() {
+            wrapper.classList.remove('grid_list');
+            wrapper.classList.add('grid_3');
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+            document.querySelectorAll('.list-view-content').forEach(el => el.classList.add('d-none'));
+            document.querySelectorAll('.action-overlay').forEach(el => el.style.display = '');
         }
-    });
+
+        function activateList() {
+            wrapper.classList.remove('grid_3');
+            wrapper.classList.add('grid_list');
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+            document.querySelectorAll('.list-view-content').forEach(el => el.classList.remove('d-none'));
+            document.querySelectorAll('.action-overlay').forEach(el => el.style.display = 'none');
+        }
+
+        gridBtn.addEventListener('click', activateGrid);
+        listBtn.addEventListener('click', activateList);
+
+        // Start in grid view
+        activateGrid();
+    }
+});
 </script>
 {% endblock %}
