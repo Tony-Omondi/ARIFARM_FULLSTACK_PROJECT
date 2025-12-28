@@ -1,19 +1,20 @@
-# products/forms.py
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import (
-    Product, ProductBasket, Recipe, Merchandise, 
+    Product, ProductBasket, Recipe, Merchandise,
     BasketItem, RecipeIngredient, Category, ProductReview
 )
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'stock', 'image', 
+        fields = ['name', 'description', 'price', 'stock', 'image',
                   'category', 'is_new', 'is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
         }
+
 
 class ProductBasketForm(forms.ModelForm):
     class Meta:
@@ -22,28 +23,29 @@ class ProductBasketForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
         }
-    
+
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price and price <= 0:
             raise ValidationError("Price must be greater than zero.")
         return price
 
+
 class BasketItemForm(forms.ModelForm):
     class Meta:
         model = BasketItem
         fields = ['product', 'quantity']
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Only show active products
         self.fields['product'].queryset = Product.objects.filter(is_active=True)
-    
+
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
         if quantity and quantity < 1:
             raise ValidationError("Quantity must be at least 1.")
         return quantity
+
 
 class AddToBasketForm(forms.Form):
     """Form for adding products to a basket in admin"""
@@ -59,34 +61,74 @@ class AddToBasketForm(forms.Form):
         help_text="Enter quantities for each selected product in order"
     )
 
+
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'image', 'description', 'instructions', 
-                  'prep_time', 'cook_time', 'servings', 'difficulty', 
+        fields = ['title', 'image', 'description', 'instructions',
+                  'prep_time', 'cook_time', 'servings', 'difficulty',
                   'is_featured', 'is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'instructions': forms.Textarea(attrs={'rows': 10}),
         }
 
+
+class RecipeIngredientForm(forms.ModelForm):
+    class Meta:
+        model = RecipeIngredient
+        fields = ['product', 'custom_name', 'quantity', 'notes', 'order']
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-select'}),
+            'custom_name': forms.TextInput(attrs={
+                'placeholder': 'Use this for non-shop ingredients (e.g. Salt, Water, 2 cloves garlic...)',
+                'class': 'form-control'
+            }),
+            'quantity': forms.TextInput(attrs={
+                'placeholder': 'e.g. 2 cups, 500g, to taste',
+                'class': 'form-control'
+            }),
+            'notes': forms.TextInput(attrs={
+                'placeholder': 'Optional notes (e.g. freshly ground)',
+                'class': 'form-control'
+            }),
+            'order': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.filter(is_active=True)
+        self.fields['custom_name'].required = False  # Optional when product is selected
+
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        custom_name = cleaned_data.get('custom_name')
+
+        # Validation: require either product OR custom_name
+        if not product and not custom_name.strip():
+            raise ValidationError(
+                "You must either select a product from the shop OR enter a custom ingredient name."
+            )
+
+        return cleaned_data
+
+
 class BuyIngredientsForm(forms.Form):
-    """Form for buying all ingredients from a recipe"""
     recipe = forms.ModelChoiceField(queryset=Recipe.objects.filter(is_active=True))
-    
+
     def buy_ingredients(self):
+        # Placeholder: integrate with cart system
         recipe = self.cleaned_data['recipe']
-        # Logic to add all ingredient products to cart
-        # This would integrate with your cart system
         pass
 
-# ADDED: SearchForm that was missing
+
 class SearchForm(forms.Form):
     q = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Search products, recipes...'
+            'placeholder': 'Search products, recipes, baskets...'
         })
     )
     category = forms.ModelChoiceField(
@@ -95,7 +137,7 @@ class SearchForm(forms.Form):
         empty_label="All Categories"
     )
 
-# ADDED: FilterForm that was missing
+
 class FilterForm(forms.Form):
     category = forms.ModelChoiceField(
         queryset=Category.objects.filter(is_active=True),
@@ -106,7 +148,7 @@ class FilterForm(forms.Form):
     max_price = forms.DecimalField(max_digits=10, decimal_places=2, required=False)
     is_new = forms.BooleanField(required=False)
 
-# ADDED: Category Form
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -115,18 +157,7 @@ class CategoryForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 3}),
         }
 
-# ADDED: Recipe Ingredient Form
-class RecipeIngredientForm(forms.ModelForm):
-    class Meta:
-        model = RecipeIngredient
-        fields = ['product', 'name', 'quantity', 'notes', 'order']
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Only show active products
-        self.fields['product'].queryset = Product.objects.filter(is_active=True)
 
-# ADDED: Merchandise Form
 class MerchandiseForm(forms.ModelForm):
     class Meta:
         model = Merchandise
@@ -134,14 +165,14 @@ class MerchandiseForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
         }
-    
+
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price and price <= 0:
             raise ValidationError("Price must be greater than zero.")
         return price
 
-# ADDED: Quick Add Form (for admin dashboard)
+
 class QuickAddProductForm(forms.Form):
     name = forms.CharField(max_length=200)
     price = forms.DecimalField(max_digits=10, decimal_places=2)
@@ -151,7 +182,7 @@ class QuickAddProductForm(forms.Form):
         required=False
     )
 
-# ADDED: Bulk Upload Form (for CSV upload)
+
 class BulkUploadForm(forms.Form):
     file = forms.FileField(label='CSV File')
     product_type = forms.ChoiceField(
@@ -162,18 +193,18 @@ class BulkUploadForm(forms.Form):
         ]
     )
 
-# ADDED: Price Update Form
+
 class PriceUpdateForm(forms.Form):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.filter(is_active=True)
     )
     percentage = forms.DecimalField(
-        max_digits=5, 
+        max_digits=5,
         decimal_places=2,
-        help_text="Percentage to increase/decrease (e.g., 10 for 10% increase, -10 for 10% decrease)"
+        help_text="Percentage to increase/decrease (e.g., 10 for +10%, -10 for -10%)"
     )
 
-# ADDED: Stock Update Form
+
 class StockUpdateForm(forms.Form):
     product = forms.ModelChoiceField(queryset=Product.objects.all())
     quantity = forms.IntegerField(help_text="Positive to add, negative to remove")
@@ -187,7 +218,7 @@ class StockUpdateForm(forms.Form):
     )
     notes = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 2}))
 
-# ADDED: Export Form
+
 class ExportForm(forms.Form):
     format = forms.ChoiceField(
         choices=[
@@ -207,8 +238,6 @@ class ExportForm(forms.Form):
     )
     include_inactive = forms.BooleanField(required=False, initial=False)
 
-
-# products/forms.py
 
 class ProductReviewForm(forms.ModelForm):
     class Meta:

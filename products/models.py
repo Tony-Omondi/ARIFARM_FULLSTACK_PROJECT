@@ -385,38 +385,51 @@ class Recipe(models.Model):
         return total
 
 class RecipeIngredient(models.Model):
-    """Ingredients for recipes - can reference products"""
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
+    
+    # Option 1: Link to real product in shop
     product = models.ForeignKey(
-        Product, 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        Product,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
         related_name='used_in_recipes'
     )
-    name = models.CharField(max_length=200, help_text="Ingredient name if not a product")
-    quantity = models.CharField(max_length=100, help_text="e.g., 2 cups, 500g, 3 pieces")
+    
+    # Option 2: Custom ingredient name (when no product is linked)
+    custom_name = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Fill this if ingredient is NOT a product in your shop (e.g. 'Salt', 'Olive oil', '2 cloves garlic')"
+    )
+    
+    quantity = models.CharField(max_length=100, help_text="e.g. 2 cups, 500g, 3 pieces, to taste")
     notes = models.CharField(max_length=200, blank=True)
     order = models.PositiveIntegerField(default=0)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['order']
+        ordering = ['order', 'id']
         verbose_name = "Recipe Ingredient"
         verbose_name_plural = "Recipe Ingredients"
     
     def __str__(self):
-        product_name = self.product.name if self.product else self.name
-        return f"{self.quantity} {product_name} for {self.recipe.title}"
+        name = self.product.name if self.product else self.custom_name
+        return f"{self.quantity} {name} for {self.recipe.title}"
     
     @property
     def display_name(self):
-        """Display either product name or custom name"""
-        return self.product.name if self.product else self.name
+        """Returns product name if linked, otherwise custom name"""
+        return self.product.name if self.product else self.custom_name
+    
+    @property
+    def is_custom(self):
+        return bool(self.custom_name and not self.product)
     
     @property
     def ingredient_price(self):
-        """Get price if ingredient is a product"""
+        """Price only if it's a linked product"""
         return self.product.price if self.product else None
 
 class Merchandise(models.Model):
