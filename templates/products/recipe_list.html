@@ -11,8 +11,14 @@
 
 <style>
     /* ──────────────────────────────────────────────────────────────
-       SHARED STYLES (aligned with product_list & merchandise_list)
+       UNIFORM THEME: Pastel Green primary + Sun Yellow highlights
     ────────────────────────────────────────────────────────────── */
+    :root {
+        --primary-green: #77DD77;
+        --sun-yellow: #FFDF22;
+        --sun-yellow-dark: #E8C000;
+    }
+
     .shop-wrapper {
         background-color: #f8f9fa;
         padding-bottom: 50px;
@@ -28,7 +34,7 @@
     }
     .single-product-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 10px 25px rgba(119, 221, 119, 0.25) !important; /* soft green glow */
     }
 
     .product-image-ratio {
@@ -76,20 +82,26 @@
         transition: all 0.2s; cursor: pointer; border: none;
     }
     .action-btn:hover {
-        background: #E98C81;
+        background: var(--primary-green);
         color: white;
         transform: scale(1.1);
     }
 
-    /* Recipe-specific badges */
+    /* Recipe-specific badges - updated to fit new theme */
     .recipe-badge {
         position: absolute; top: 10px; left: 10px; z-index: 10;
         color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
         text-transform: capitalize;
     }
-    .badge-easy   { background-color: #28a745; }
-    .badge-medium { background-color: #ffc107; color: #212529; }
-    .badge-hard   { background-color: #dc3545; }
+    .badge-easy   { background-color: var(--primary-green); }           /* Pastel green for easy */
+    .badge-medium { background-color: var(--sun-yellow); color: #212529; } /* Sun yellow for medium */
+    .badge-hard   { background-color: #dc3545; }                         /* Keep red for hard (warning) */
+
+    /* Featured badge → Sun Yellow */
+    .single-product-card .badge.bg-warning {
+        background-color: var(--sun-yellow) !important;
+        color: #333 !important;
+    }
 
     /* List View */
     .shop_wrapper.grid_list .single-product-card {
@@ -116,6 +128,30 @@
         font-size: 1.1rem;
         border-width: 2px;
         font-weight: 600;
+    }
+
+    /* Override Bootstrap primary blue */
+    .btn-outline-primary {
+        color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+        color: white;
+    }
+
+    /* Pagination active state */
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
+        color: white !important;
+    }
+
+    /* Search button in sidebar */
+    .widget_inner .btn-primary {
+        background-color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
     }
 </style>
 
@@ -304,7 +340,7 @@
                                     {% endif %}
 
                                     <li class="page-item active">
-                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;background:#E98C81;border-color:#E98C81;color:white;">
+                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;">
                                             {{ page_obj.number }}
                                         </span>
                                     </li>
@@ -337,7 +373,7 @@
                                 <form action="{% url 'products:recipe_list' %}">
                                     <div class="input-group">
                                         <input type="text" name="q" class="form-control" placeholder="e.g. chicken curry...">
-                                        <button class="btn btn-primary" type="submit" style="background:#E98C81;border-color:#E98C81;">
+                                        <button class="btn btn-primary" type="submit">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>

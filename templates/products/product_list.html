@@ -11,7 +11,13 @@
 {% block content %}
 
 <style>
-    /* Your existing styles remain unchanged */
+    /* Uniform Theme: Pastel Green (primary) + Sun Yellow (highlights) */
+    :root {
+        --primary-green: #77DD77;
+        --sun-yellow: #FFDF22;
+        --sun-yellow-dark: #E8C000; /* For hover if needed */
+    }
+
     .shop-wrapper {
         background-color: #f8f9fa;
         padding-bottom: 50px;
@@ -27,7 +33,7 @@
     }
     .single-product-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 10px 25px rgba(119, 221, 119, 0.25) !important; /* Soft green glow */
     }
     
     .product-image-ratio {
@@ -85,7 +91,7 @@
         cursor: pointer;
     }
     .action-btn:hover {
-        background: #E98C81;
+        background: var(--primary-green);
         color: white;
         transform: scale(1.1);
     }
@@ -101,6 +107,38 @@
         top: 10px;
         left: 10px;
         z-index: 10;
+    }
+
+    /* Override Bootstrap primary blue */
+    .btn-outline-primary {
+        color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+        color: white;
+    }
+
+    /* Active pagination */
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
+        color: white !important;
+    }
+
+    /* "New" badge → Sun Yellow */
+    .single-product-card .badge {
+        background: var(--sun-yellow);
+        color: #333;
+    }
+
+    /* Star ratings → Sun Yellow */
+    .product-rating i {
+        color: var(--sun-yellow);
+    }
+    .product-rating i.fa-star-o {
+        color: #ddd;
     }
 
     /* Mobile filter button enhancement */
@@ -192,7 +230,7 @@
                                     </a>
 
                                     {% if product.is_new %}
-                                        <span class="badge position-absolute" style="top:10px;left:10px; background: #E98C81; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; z-index: 10;">New</span>
+                                        <span class="badge position-absolute" style="top:10px;left:10px; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; z-index: 10;">New</span>
                                     {% endif %}
 
                                     {% if product.stock <= 0 %}
@@ -229,11 +267,10 @@
                                 </div>
 
                                 <div class="product-content text-center" style="padding: 20px 15px;">
-                                    <div class="product-rating mb-2" style="color: #E98C81; font-size: 12px;">
+                                    <div class="product-rating mb-2" style="font-size: 12px;">
                                         {% with rating=product.average_rating|floatformat:0 %}
                                             {% for i in "12345"|make_list %}
-                                                <i class="fa fa-star{% if forloop.counter > rating %}-o{% endif %}"
-                                                   style="color: {% if forloop.counter > rating %}#ddd{% else %}#E98C81{% endif %};"></i>
+                                                <i class="fa fa-star{% if forloop.counter > rating %}-o{% endif %}"></i>
                                             {% endfor %}
                                         {% endwith %}
                                         {% if product.reviews_count > 0 %}
@@ -275,7 +312,7 @@
                                     {% if page_obj.has_previous %}
                                         <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" style="border-radius: 50%; width: 40px; height: 40px; line-height: 25px; color: #333; border: 1px solid #ccc;"><i class="ion-ios-arrow-thin-left"></i></a></li>
                                     {% endif %}
-                                    <li class="page-item active"><a class="page-link" style="background-color: #E98C81; border-color: #E98C81; color: white; border-radius: 50%; width: 40px; height: 40px; line-height: 25px;">{{ page_obj.number }}</a></li>
+                                    <li class="page-item active"><a class="page-link" style="border-radius: 50%; width: 40px; height: 40px; line-height: 25px;">{{ page_obj.number }}</a></li>
                                     {% if page_obj.has_next %}
                                         <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}" style="border-radius: 50%; width: 40px; height: 40px; line-height: 25px; color: #333; border: 1px solid #ccc;"><i class="ion-ios-arrow-thin-right"></i></a></li>
                                     {% endif %}
@@ -290,7 +327,7 @@
                 <!-- Sidebar / Offcanvas Column -->
                 <div class="col-lg-3 col-12 col-custom">
 
-                    <!-- Desktop Sidebar - visible only on large screens -->
+                    <!-- Desktop Sidebar -->
                     <aside class="sidebar_widget widget-mt d-none d-lg-block">
                         <div class="widget_inner" style="background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #eee;">
                             <!-- Search -->
@@ -349,62 +386,67 @@
                         </div>
                     </aside>
 
-                    <!-- Mobile Offcanvas Sidebar -->
+                    <!-- Mobile Offcanvas Sidebar - IMPROVED SPACING -->
                     <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
-                        <div class="offcanvas-header border-bottom">
-                            <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">
-                                <i class="fa fa-filter me-2"></i> Shop Filters
+                        <div class="offcanvas-header border-bottom py-4">
+                            <h5 class="offcanvas-title fw-bold fs-4" id="sidebarOffcanvasLabel">
+                                <i class="fa fa-filter me-3"></i> Shop Filters
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
-                        <div class="offcanvas-body px-0">
-                            <div class="widget_inner" style="padding: 25px 20px;">
-                                <!-- Same widgets as desktop (you can simplify if needed) -->
-                                <div class="widget-list mb-4">
-                                    <h3 class="widget-title">Search</h3>
-                                    <div class="search-box">
-                                        <form action="{% url 'products:search' %}">
-                                            <div class="input-group">
-                                                <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}">
-                                                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
-                                            </div>
-                                        </form>
+                        <div class="offcanvas-body px-4 py-5">
+                            <!-- Search -->
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-4 text-dark">Search</h5>
+                                <form action="{% url 'products:search' %}">
+                                    <div class="input-group input-group-lg">
+                                        <input type="text" name="q" class="form-control" placeholder="Search Our Store" value="{{ request.GET.q|default:'' }}" style="height: 50px;">
+                                        <button class="btn btn-outline-secondary" type="submit" style="height: 50px;"><i class="fa fa-search fs-5"></i></button>
                                     </div>
-                                </div>
+                                </form>
+                            </div>
 
-                                <div class="widget-list mb-4">
-                                    <h3 class="widget-title">Categories</h3>
-                                    <ul class="list-unstyled">
-                                        <li><a href="{% url 'products:product_list' %}">All Products ({{ total_products }})</a></li>
-                                        {% for cat in categories %}
-                                            <li><a href="{% url 'products:category_products' cat.slug %}">{{ cat.name }} ({{ cat.get_products_count }})</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                            <hr class="my-5">
 
-                                <div class="widget-list mb-4">
-                                    <h3 class="widget-title">Shop By</h3>
-                                    <ul class="list-unstyled">
-                                        <li><a href="{% url 'products:basket_list' %}">Combo Baskets</a></li>
-                                        <li><a href="{% url 'products:merchandise_list' %}">Merchandise & Gifts</a></li>
-                                        <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
-                                    </ul>
-                                </div>
-
-                                <div class="widget-list">
-                                    <h3 class="widget-title">Recent Products</h3>
-                                    {% for p in recent_products|slice:":3" %}
-                                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        <a href="{{ p.get_absolute_url }}" style="width: 60px; flex-shrink: 0; margin-right: 12px;">
-                                            <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}" class="img-fluid rounded">
-                                        </a>
-                                        <div>
-                                            <h6 class="mb-1"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h6>
-                                            <strong>KSh {{ p.price }}</strong>
-                                        </div>
-                                    </div>
+                            <!-- Categories -->
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-4 text-dark">Categories</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-3"><a href="{% url 'products:product_list' %}" class="text-decoration-none py-2 d-block fs-6">All Products ({{ total_products }})</a></li>
+                                    {% for cat in categories %}
+                                        <li class="mb-3"><a href="{% url 'products:category_products' cat.slug %}" class="text-decoration-none py-2 d-block fs-6">{{ cat.name }} ({{ cat.get_products_count }})</a></li>
                                     {% endfor %}
+                                </ul>
+                            </div>
+
+                            <hr class="my-5">
+
+                            <!-- Shop By -->
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-4 text-dark">Shop By</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-3"><a href="{% url 'products:basket_list' %}" class="text-decoration-none py-2 d-block fs-6">Combo Baskets</a></li>
+                                    <li class="mb-3"><a href="{% url 'products:merchandise_list' %}" class="text-decoration-none py-2 d-block fs-6">Merchandise & Gifts</a></li>
+                                    <li class="mb-3"><a href="{% url 'products:recipe_list' %}" class="text-decoration-none py-2 d-block fs-6">Recipes</a></li>
+                                </ul>
+                            </div>
+
+                            <hr class="my-5">
+
+                            <!-- Recent Products -->
+                            <div>
+                                <h5 class="fw-bold mb-4 text-dark">Recent Products</h5>
+                                {% for p in recent_products|slice:":3" %}
+                                <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                                    <a href="{{ p.get_absolute_url }}" class="flex-shrink-0 me-3">
+                                        <img src="{{ p.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" alt="{{ p.name }}" class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                                    </a>
+                                    <div>
+                                        <h6 class="mb-1"><a href="{{ p.get_absolute_url }}" class="text-decoration-none">{{ p.name }}</a></h6>
+                                        <strong class="text-success">KSh {{ p.price }}</strong>
+                                    </div>
                                 </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

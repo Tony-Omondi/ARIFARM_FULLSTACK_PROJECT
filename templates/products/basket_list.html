@@ -11,8 +11,14 @@
 
 <style>
     /* ──────────────────────────────────────────────────────────────
-       SHARED STYLES (consistent with other listing pages)
+       UNIFORM THEME: Pastel Green primary + Sun Yellow highlights
     ────────────────────────────────────────────────────────────── */
+    :root {
+        --primary-green: #77DD77;
+        --sun-yellow: #FFDF22;
+        --sun-yellow-dark: #E8C000;
+    }
+
     .shop-wrapper {
         background-color: #f8f9fa;
         padding-bottom: 50px;
@@ -28,7 +34,7 @@
     }
     .single-product-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 10px 25px rgba(119, 221, 119, 0.25) !important; /* soft green glow */
     }
 
     .product-image-ratio {
@@ -76,14 +82,14 @@
         transition: all 0.2s; cursor: pointer; border: none;
     }
     .action-btn:hover {
-        background: #E98C81;
+        background: var(--primary-green);
         color: white;
         transform: scale(1.1);
     }
 
     .discount-badge {
-        background: #dc3545;
-        color: white;
+        background: var(--sun-yellow);
+        color: #333;
         padding: 6px 12px;
         border-radius: 6px;
         font-size: 12px;
@@ -135,6 +141,30 @@
         font-size: 1.1rem;
         border-width: 2px;
         font-weight: 600;
+    }
+
+    /* Override Bootstrap primary blue */
+    .btn-outline-primary {
+        color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+        color: white;
+    }
+
+    /* Pagination active state */
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
+        color: white !important;
+    }
+
+    /* Search button in sidebar */
+    .widget_inner .btn-primary {
+        background-color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
     }
 </style>
 
@@ -325,7 +355,7 @@
                                     {% endif %}
 
                                     <li class="page-item active">
-                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;background:#E98C81;border-color:#E98C81;color:white;">
+                                        <span class="page-link rounded-circle" style="width:48px;height:48px;line-height:32px;">
                                             {{ page_obj.number }}
                                         </span>
                                     </li>
@@ -358,7 +388,7 @@
                                 <form action="{% url 'products:basket_list' %}">
                                     <div class="input-group">
                                         <input type="text" name="q" class="form-control" placeholder="e.g. family pack...">
-                                        <button class="btn btn-primary" type="submit" style="background:#E98C81;border-color:#E98C81;">
+                                        <button class="btn btn-primary" type="submit">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>
@@ -402,47 +432,67 @@
                         </div>
                     </aside>
 
-                    <!-- Mobile Offcanvas -->
+                    <!-- Mobile Offcanvas - IMPROVED SPACING & READABILITY -->
                     <div class="offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="basketSidebarOffcanvas" aria-labelledby="basketSidebarLabel">
-                        <div class="offcanvas-header border-bottom">
-                            <h5 class="offcanvas-title" id="basketSidebarLabel">
-                                <i class="fa fa-filter me-2"></i> Combo Filters
+                        <div class="offcanvas-header border-bottom py-4">
+                            <h5 class="offcanvas-title fw-bold fs-4" id="basketSidebarLabel">
+                                <i class="fa fa-filter me-3"></i> Combo Filters
                             </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
-                        <div class="offcanvas-body px-0">
-                            <div class="p-4">
-                                <!-- Search -->
-                                <div class="mb-4 pb-3 border-bottom">
-                                    <h6 class="fw-bold mb-2">Search Combos</h6>
-                                    <form action="{% url 'products:basket_list' %}">
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" name="q" class="form-control" placeholder="Family pack, party...">
-                                            <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
+                        <div class="offcanvas-body px-4 py-5">
+                            <!-- Search -->
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-4 text-dark">Search Combos</h5>
+                                <form action="{% url 'products:basket_list' %}">
+                                    <div class="input-group input-group-lg">
+                                        <input type="text" name="q" class="form-control" placeholder="Family pack, party, bundle..." style="height: 50px;">
+                                        <button class="btn btn-outline-secondary" type="submit" style="height: 50px;"><i class="fa fa-search fs-5"></i></button>
+                                    </div>
+                                </form>
+                            </div>
 
-                                <!-- Quick Links -->
-                                <div class="mb-4 pb-3 border-bottom">
-                                    <h6 class="fw-bold mb-3">Shop By</h6>
-                                    <ul class="list-unstyled small">
-                                        <li class="mb-2"><a href="{% url 'products:product_list' %}">All Products</a></li>
-                                        <li class="mb-2"><a href="{% url 'products:basket_list' %}" class="fw-bold text-primary">Combo Offers</a></li>
-                                        <li class="mb-2"><a href="{% url 'products:merchandise_list' %}">Merchandise</a></li>
-                                        <li><a href="{% url 'products:recipe_list' %}">Recipes</a></li>
-                                    </ul>
-                                </div>
+                            <hr class="my-5">
 
-                                <!-- CTA -->
-                                <div class="text-center py-3">
-                                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-success btn-sm w-100">
-                                        Browse All Products
+                            <!-- Shop By -->
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-4 text-dark">Shop By</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-3"><a href="{% url 'products:product_list' %}" class="text-decoration-none py-2 d-block fs-6">All Products</a></li>
+                                    <li class="mb-3"><a href="{% url 'products:basket_list' %}" class="text-decoration-none py-2 d-block fs-6 fw-bold text-success">Combo Offers</a></li>
+                                    <li class="mb-3"><a href="{% url 'products:merchandise_list' %}" class="text-decoration-none py-2 d-block fs-6">Merchandise & Gifts</a></li>
+                                    <li class="mb-3"><a href="{% url 'products:recipe_list' %}" class="text-decoration-none py-2 d-block fs-6">Recipes</a></li>
+                                </ul>
+                            </div>
+
+                            <hr class="my-5">
+
+                            <!-- Best Value -->
+                            <div>
+                                <h5 class="fw-bold mb-4 text-dark">Best Value Combos</h5>
+                                {% for b in baskets|slice:":3" %}
+                                <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                                    <a href="{{ b.get_absolute_url }}" class="flex-shrink-0 me-3">
+                                        <img src="{{ b.image.url|default:'/static/assets/images/product/placeholder.jpg' }}" 
+                                             alt="{{ b.name }}" class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;">
                                     </a>
+                                    <div>
+                                        <h6 class="mb-1"><a href="{{ b.get_absolute_url }}" class="text-decoration-none">{{ b.name }}</a></h6>
+                                        <div class="small">
+                                            <strong class="text-success">KSh {{ b.price }}</strong>
+                                            {% if b.discount_percentage > 0 %}
+                                                <span class="ms-2 badge" style="background: var(--sun-yellow); color: #333;">{{ b.discount_percentage }}% off</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
+                                {% empty %}
+                                <p class="text-muted">No combos available yet</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
