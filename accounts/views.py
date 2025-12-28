@@ -161,6 +161,9 @@ def user_logout(request):
 # =================================== PROFILE ===================================
 @login_required
 def profile(request):
+    """
+    User profile view with update form and dashboard statistics
+    """
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -170,7 +173,28 @@ def profile(request):
     else:
         form = ProfileUpdateForm(instance=request.user)
 
-    return render(request, 'accounts/profile.html', {'form': form})
+    # Calculate order statistics for dashboard cards
+    total_orders = request.user.orders.count()
+    paid_orders = request.user.orders.filter(status='paid').count()          # typically "Processing / Pending Delivery"
+    pending_orders = request.user.orders.filter(status='pending').count()    # Awaiting Payment/Confirmation
+
+    # Optional additional stats (uncomment if you want to use them)
+    # processing_orders = request.user.orders.filter(status='processing').count()
+    # delivered_orders = request.user.orders.filter(status='delivered').count()
+    # failed_orders = request.user.orders.filter(status__in=['failed', 'cancelled']).count()
+
+    context = {
+        'form': form,
+        'total_orders': total_orders,
+        'paid_orders': paid_orders,
+        'pending_orders': pending_orders,
+        # Add more if you decide to display them:
+        # 'processing_orders': processing_orders,
+        # 'delivered_orders': delivered_orders,
+        # 'failed_orders': failed_orders,
+    }
+
+    return render(request, 'accounts/profile.html', context)
 
 
 # =============================== PASSWORD RESET (FIXED + WORKING) ===============================

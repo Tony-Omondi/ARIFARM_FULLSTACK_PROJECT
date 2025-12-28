@@ -4,490 +4,529 @@
 
 {% block title %}My Profile - AriFarm Organic Shop{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    :root {
+        --primary-green: #37582D;
+        --primary-hover: #2a4422;
+        --primary-light: #f0f7ef;
+        --success-color: #10b981;
+        --info-color: #3b82f6;
+        --warning-color: #f59e0b;
+        --border-radius: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body { font-family: system-ui, -apple-system, sans-serif; }
+
+    .text-primary { color: var(--primary-green) !important; }
+    .bg-primary { background-color: var(--primary-green) !important; }
+    
+    .btn-primary { background-color: var(--primary-green); border-color: var(--primary-green); }
+    .btn-primary:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
+
+    .btn-outline-primary { color: var(--primary-green); border-color: var(--primary-green); }
+    .btn-outline-primary:hover { background-color: var(--primary-green); color: white; }
+
+    .icon-circle {
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));
+        color: white;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .icon-circle-lg { width: 80px; height: 80px; font-size: 2.2rem; }
+    .icon-circle-sm { width: 38px; height: 38px; font-size: 1.1rem; }
+
+    .section-header {
+        display: flex; align-items: center; gap: 1rem;
+        margin-bottom: 1.5rem; padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-header h5 { margin: 0; font-weight: 700; color: #1e293b; }
+
+    .form-label-with-icon {
+        display: flex; align-items: center; gap: 0.6rem;
+        font-weight: 600; color: #475569; margin-bottom: 0.75rem;
+    }
+
+    .stat-card { 
+        transition: var(--transition); 
+        border-radius: 12px;
+    }
+    .stat-card:hover { 
+        transform: translateY(-6px); 
+        box-shadow: 0 12px 32px rgba(0,0,0,0.1) !important; 
+    }
+
+    /* Sidebar Navigation */
+    .dashboard-nav .nav-link {
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #555;
+        font-weight: 500;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+
+    .dashboard-nav .nav-link:hover { 
+        background: #f8f9fa; 
+        color: var(--primary-green); 
+    }
+    
+    .dashboard-nav .nav-link.active {
+        background: rgba(55,88,45,0.08);
+        color: var(--primary-green);
+        font-weight: 600;
+        border-left: 4px solid var(--primary-green);
+    }
+
+    /* Welcome Card */
+    .welcome-card h2 {
+        font-size: 2.1rem;
+    }
+
+    .welcome-card p {
+        font-size: 1.1rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .dashboard-sidebar { 
+            position: static !important; 
+            margin-bottom: 2rem; 
+        }
+
+        .dashboard-nav {
+            flex-direction: row !important;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0.75rem 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .dashboard-nav .nav-link {
+            border-left: none !important;
+            padding: 0.75rem 1.4rem;
+            border-radius: 12px;
+            margin: 0 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        .welcome-card h2 { font-size: 1.8rem; }
+        .welcome-card p { font-size: 1rem; }
+    }
+
+    @media (max-width: 767px) {
+        .welcome-card {
+            text-align: center;
+        }
+        
+        .welcome-card .btn {
+            width: 100%;
+            max-width: 320px;
+            margin: 1rem auto 0;
+        }
+
+        .card-body.p-5 {
+            padding: 2.5rem !important;
+        }
+
+        h5.mb-0 {
+            font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .icon-circle-lg {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+
+        .form-label-with-icon {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="shop-wrapper bg-light">
-    <div class="breadcrumbs-area position-relative bg-white border-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="breadcrumb-content py-3">
-                        <ul class="d-flex align-items-center m-0 p-0 list-unstyled small">
-                            <li><a href="{% url 'products:product_list' %}" class="text-muted text-decoration-none">Home</a></li>
-                            <li class="mx-2 text-muted">/</li>
-                            <li class="fw-bold text-dark">My Account</li>
-                        </ul>
+<div class="bg-light py-5">
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb bg-white rounded-3 p-3 shadow-sm mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'products:product_list' %}" class="text-muted text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">
+                    <i class="fas fa-user me-1"></i>My Account
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-3">
+                <div class="dashboard-sidebar">
+                    <div class="card border-0 shadow-sm mb-4 d-none d-lg-block">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}"
+                                         class="rounded-circle shadow border border-4 border-white object-fit-cover" width="110" height="110">
+                                {% else %}
+                                    <div class="icon-circle icon-circle-lg mx-auto bg-success-subtle text-success">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <h6 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h6>
+                            <small class="text-muted d-block">{{ user.email }}</small>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="nav flex-column flex-lg-column flex-row nav-pills dashboard-nav" id="v-pills-tab" role="tablist">
+                            <a class="nav-link active" href="#dashboard" data-bs-toggle="pill">
+                                <div class="icon-circle icon-circle-sm"><i class="fas fa-th-large"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="#orders" data-bs-toggle="pill">
+                                <div class="icon-circle icon-circle-sm"><i class="fas fa-shopping-bag"></i></div>
+                                My Orders
+                                <span class="badge bg-light text-dark ms-auto rounded-pill border d-none d-lg-inline">{{ total_orders }}</span>
+                            </a>
+                            <a class="nav-link" href="#account-info" data-bs-toggle="pill">
+                                <div class="icon-circle icon-circle-sm"><i class="fas fa-user-cog"></i></div>
+                                Account Details
+                            </a>
+                            <div class="border-top my-2 d-none d-lg-block"></div>
+                            <a class="nav-link text-danger" href="{% url 'logout' %}">
+                                <div class="icon-circle icon-circle-sm bg-danger-subtle text-danger">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                Logout
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="my-account-wrapper py-5">
-        <div class="container">
-            <div class="row g-4">
-                
-                <div class="col-lg-3">
-                    <div class="dashboard-sidebar sticky-lg-top" style="top: 20px; z-index: 900;">
-                        <div class="card border-0 shadow-sm mb-3 d-none d-lg-block">
-                            <div class="card-body text-center p-4">
-                                <div class="mb-3 position-relative d-inline-block">
-                                    {% if user.profile_picture %}
-                                        <img src="{{ user.profile_picture.url }}" alt="Profile" class="rounded-circle shadow-sm object-fit-cover" width="80" height="80">
-                                    {% else %}
-                                        <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; font-size: 2rem;">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                    {% endif %}
+            <!-- Main Content -->
+            <div class="col-12 col-lg-9">
+                <div class="tab-content" id="v-pills-tabContent">
+
+                    <!-- Dashboard -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="card border-0 shadow-sm mb-4 overflow-hidden text-white welcome-card"
+                             style="background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));">
+                            <div class="card-body p-4 p-md-5 position-relative">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-md-8 text-center text-md-start">
+                                        <h2 class="fw-bold mb-2">Hello, {{ user.first_name|default:user.username }}!</h2>
+                                        <p class="mb-3 mb-md-4 opacity-85">Welcome to your AriFarm account</p>
+                                        <a href="#orders" data-bs-toggle="pill" class="btn btn-light rounded-pill px-4 fw-bold shadow-sm">
+                                            <i class="fas fa-list me-2"></i>View Recent Orders
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-4 text-center mt-4 mt-md-0">
+                                        <i class="fas fa-leaf fa-6x opacity-20"></i>
+                                    </div>
                                 </div>
-                                <h6 class="mb-0 fw-bold">{{ user.get_full_name|default:user.username }}</h6>
-                                <small class="text-muted">{{ user.email|truncatechars:25 }}</small>
                             </div>
                         </div>
 
-                        <div class="nav flex-column nav-pills bg-white shadow-sm rounded overflow-hidden dashboard-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" href="#dashboard" data-bs-toggle="pill">
-                                <i class="fa fa-th-large me-3 width-20"></i> Dashboard
-                            </a>
-                            <a class="nav-link" href="#orders" data-bs-toggle="pill">
-                                <i class="fa fa-shopping-bag me-3 width-20"></i> My Orders
-                                <span class="badge bg-light text-dark ms-auto rounded-pill border">{{ user.orders.count }}</span>
-                            </a>
-                            <a class="nav-link" href="#account-info" data-bs-toggle="pill">
-                                <i class="fa fa-user-cog me-3 width-20"></i> Account Details
-                            </a>
-                            <div class="border-top my-1"></div>
-                            <a class="nav-link text-danger" href="{% url 'logout' %}">
-                                <i class="fa fa-sign-out-alt me-3 width-20"></i> Logout
-                            </a>
+                        <div class="row g-4">
+                            <div class="col-12 col-md-4">
+                                <div class="card border-0 shadow-sm h-100 stat-card">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="icon-circle bg-success-subtle text-success me-3">
+                                            <i class="fas fa-shopping-basket"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="mb-0 fw-bold">{{ total_orders|default:"0" }}</h3>
+                                            <small class="text-muted">Total Orders</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="card border-0 shadow-sm h-100 stat-card">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="icon-circle bg-info-subtle text-info me-3">
+                                            <i class="fas fa-truck"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="mb-0 fw-bold">{{ paid_orders|default:"0" }}</h3>
+                                            <small class="text-muted">Pending Delivery</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="card border-0 shadow-sm h-100 stat-card">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="icon-circle bg-warning-subtle text-warning me-3">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="mb-0 fw-bold">{{ pending_orders|default:"0" }}</h3>
+                                            <small class="text-muted">Awaiting Payment</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-9">
-                    <div class="tab-content" id="v-pills-tabContent">
-
-                        <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
-                            <div class="card border-0 shadow-sm mb-4 bg-primary text-white overflow-hidden position-relative">
-                                <div class="card-body p-4 p-lg-5 position-relative" style="z-index: 1;">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-8">
-                                            <h2 class="fw-bold mb-2">Hello, {{ user.first_name|default:user.username }}!</h2>
-                                            <p class="mb-4 opacity-75">Welcome to your organic dashboard. Track your fresh deliveries and update your preferences here.</p>
-                                            <a href="#orders" data-bs-toggle="pill" class="btn btn-light rounded-pill px-4 fw-bold text-primary shadow-sm">
-                                                View Recent Orders
-                                            </a>
-                                        </div>
-                                        <div class="col-md-4 d-none d-md-block text-center">
-                                            <i class="fa fa-leaf fa-5x opacity-25"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="position-absolute rounded-circle bg-white opacity-10" style="width: 300px; height: 300px; top: -50px; right: -50px;"></div>
+                    <!-- Orders -->
+                    <div class="tab-pane fade" id="orders">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-3">
+                                <h5 class="mb-0 fw-bold">
+                                    <i class="fas fa-receipt me-2 text-primary"></i>Order History
+                                </h5>
+                                <span class="badge bg-primary rounded-pill">{{ total_orders }} Orders</span>
                             </div>
 
-                            <div class="row g-4 mb-4">
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="card border-0 shadow-sm h-100">
-                                        <div class="card-body d-flex align-items-center">
-                                            <div class="icon-box bg-success-subtle text-success rounded-circle p-3 me-3">
-                                                <i class="fa fa-shopping-basket fa-lg"></i>
-                                            </div>
-                                            <div>
-                                                <h3 class="mb-0 fw-bold">{{ user.orders.count }}</h3>
-                                                <small class="text-muted">Total Orders</small>
-                                            </div>
-                                        </div>
+                            <div class="card-body p-0">
+                                {% if total_orders > 0 %}
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th class="ps-4">Order</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                    <th class="text-end">Total</th>
+                                                    <th class="text-end pe-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for order in user.orders.all|dictsortreversed:"created_at" %}
+                                                <tr>
+                                                    <td class="ps-4 fw-bold text-primary">#{{ order.id }}</td>
+                                                    <td class="text-muted">
+                                                        <i class="fas fa-calendar me-1"></i>
+                                                        {{ order.created_at|date:"M d, Y" }}
+                                                    </td>
+                                                    <td>
+                                                        {% if order.status == 'delivered' %}
+                                                            <span class="badge bg-success-subtle text-success border px-3"><i class="fas fa-check me-1"></i>Delivered</span>
+                                                        {% elif order.status == 'paid' %}
+                                                            <span class="badge bg-info-subtle text-info border px-3"><i class="fas fa-box me-1"></i>Processing</span>
+                                                        {% elif order.status == 'pending' %}
+                                                            <span class="badge bg-warning-subtle text-warning border px-3"><i class="fas fa-clock me-1"></i>Pending</span>
+                                                        {% else %}
+                                                            <span class="badge bg-danger-subtle text-danger border px-3"><i class="fas fa-times me-1"></i>{{ order.get_status_display }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-end fw-bold">KES {{ order.total_amount|intcomma }}</td>
+                                                    <td class="text-end pe-4">
+                                                        <a href="{% url 'checkout:order_detail' order.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="card border-0 shadow-sm h-100">
-                                        <div class="card-body d-flex align-items-center">
-                                            <div class="icon-box bg-warning-subtle text-warning rounded-circle p-3 me-3">
-                                                <i class="fa fa-truck fa-lg"></i>
-                                            </div>
-                                            <div>
-                                                <h3 class="mb-0 fw-bold">
-                                                    {% with all_orders=user.orders.all|dictsort:"status" %}
-                                                        {% regroup all_orders by status as status_list %}
-                                                        {% with count=0 %}
-                                                            {% for status in status_list %}
-                                                                {% if status.grouper == 'paid' %}
-                                                                    {{ status.list|length }}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            {# If no paid group found, we can default to 0 using JS or empty check logic, but leaving blank implies 0 visually #}
-                                                            {% if not status_list %}0{% endif %}
-                                                        {% endwith %}
-                                                    {% endwith %}
-                                                </h3> 
-                                                <small class="text-muted">Pending Delivery</small>
-                                            </div>
+                                {% else %}
+                                    <div class="text-center py-5">
+                                        <div class="icon-circle icon-circle-lg mx-auto mb-3 bg-light text-muted">
+                                            <i class="fas fa-shopping-basket"></i>
                                         </div>
+                                        <h5 class="text-muted mb-3">No orders yet</h5>
+                                        <a href="{% url 'products:product_list' %}" class="btn btn-primary rounded-pill px-5">
+                                            <i class="fas fa-arrow-left me-2"></i>Start Shopping
+                                        </a>
                                     </div>
-                                </div>
-
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="card border-0 shadow-sm h-100">
-                                        <div class="card-body d-flex align-items-center">
-                                            <div class="icon-box bg-info-subtle text-info rounded-circle p-3 me-3">
-                                                <i class="fa fa-user-edit fa-lg"></i>
-                                            </div>
-                                            <div>
-                                                <a href="#account-info" data-bs-toggle="pill" class="stretched-link text-decoration-none text-dark fw-bold">Edit Profile</a>
-                                                <br><small class="text-muted">Update Info</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="tab-pane fade" id="orders" role="tabpanel">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 fw-bold"><i class="fa fa-list-alt me-2 text-primary"></i> Order History</h5>
-                                    <span class="badge bg-primary rounded-pill">{{ user.orders.count }} Items</span>
-                                </div>
-                                <div class="card-body p-0">
-                                    {% if user.orders.exists %}
-                                        <div class="table-responsive">
-                                            <table class="table table-hover align-middle mb-0 text-nowrap">
-                                                <thead class="bg-light">
-                                                    <tr>
-                                                        <th class="ps-4">Order ID</th>
-                                                        <th>Date</th>
-                                                        <th>Status</th>
-                                                        <th class="text-end">Total</th>
-                                                        <th class="text-end pe-4">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for order in user.orders.all|dictsortreversed:"created_at" %}
-                                                    <tr>
-                                                        <td class="ps-4 fw-bold text-primary">#{{ order.id }}</td>
-                                                        <td class="text-muted small">
-                                                            <i class="fa fa-calendar-alt me-1"></i>
-                                                            {{ order.created_at|date:"M d, Y" }}
-                                                        </td>
-                                                        <td>
-                                                            {% if order.status == 'delivered' %}
-                                                                <span class="badge bg-success-subtle text-success border border-success px-3 rounded-pill">
-                                                                    <i class="fa fa-check me-1"></i> Delivered
-                                                                </span>
-                                                            {% elif order.status == 'paid' %}
-                                                                <span class="badge bg-info-subtle text-info border border-info px-3 rounded-pill">
-                                                                    <i class="fa fa-box me-1"></i> Processing
-                                                                </span>
-                                                            {% elif order.status == 'pending' %}
-                                                                <span class="badge bg-warning-subtle text-warning border border-warning px-3 rounded-pill">
-                                                                    <i class="fa fa-clock me-1"></i> Pending
-                                                                </span>
-                                                            {% elif order.status == 'cancelled' or order.status == 'failed' %}
-                                                                <span class="badge bg-danger-subtle text-danger border border-danger px-3 rounded-pill">
-                                                                    <i class="fa fa-times me-1"></i> {{ order.get_status_display }}
-                                                                </span>
-                                                            {% else %}
-                                                                <span class="badge bg-secondary rounded-pill px-3">{{ order.get_status_display }}</span>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td class="text-end fw-bold">KES {{ order.total_amount|intcomma }}</td>
-                                                        <td class="text-end pe-4">
-                                                            <a href="{% url 'checkout:order_detail' order.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                                                View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    {% else %}
-                                        <div class="text-center py-5">
-                                            <div class="mb-3">
-                                                <div class="d-inline-block p-4 rounded-circle bg-light">
-                                                    <i class="fa fa-shopping-basket fa-3x text-muted opacity-50"></i>
-                                                </div>
-                                            </div>
-                                            <h5 class="text-muted">No orders placed yet</h5>
-                                            <p class="text-muted mb-4 small">Fresh organic products are just a click away.</p>
-                                            <a href="{% url 'products:product_list' %}" class="btn btn-primary rounded-pill px-5">Start Shopping</a>
-                                        </div>
-                                    {% endif %}
-                                </div>
+                    <!-- Account Info -->
+                    <div class="tab-pane fade" id="account-info">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">
+                                    <i class="fas fa-user-edit me-2 text-primary"></i>Profile Settings
+                                </h5>
                             </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="account-info" role="tabpanel">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-white py-3 border-bottom">
-                                    <h5 class="mb-0 fw-bold"><i class="fa fa-user-cog me-2 text-primary"></i> Profile Settings</h5>
-                                </div>
-                                <div class="card-body p-4">
-                                    
-                                    {% if messages %}
-                                        {% for message in messages %}
-                                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                            {{ message }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>
-                                        {% endfor %}
-                                    {% endif %}
+                            <div class="card-body p-4 p-md-5">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3" role="alert">
+                                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}info-circle{% endif %} me-2"></i>
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
 
-                                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                                        {% csrf_token %}
-                                        
-                                        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded border">
-                                            <div class="me-3 position-relative">
-                                                 {% if user.profile_picture %}
-                                                    <img id="preview-img" src="{{ user.profile_picture.url }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover" width="80" height="80">
+                                <form method="post" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+
+                                    <div class="p-4 bg-light rounded-3 border mb-4">
+                                        <div class="d-flex align-items-center gap-4 flex-column flex-md-row">
+                                            <div class="position-relative">
+                                                {% if user.profile_picture %}
+                                                    <img id="preview-img" src="{{ user.profile_picture.url }}" 
+                                                         class="rounded-circle border border-4 border-white shadow object-fit-cover" 
+                                                         width="100" height="100" alt="Profile">
                                                 {% else %}
-                                                    <div id="preview-placeholder" class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                                        <i class="fa fa-camera fa-lg"></i>
+                                                    <div id="preview-placeholder" class="icon-circle icon-circle-lg bg-success-subtle text-success">
+                                                        <i class="fas fa-user"></i>
                                                     </div>
                                                 {% endif %}
                                             </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-label fw-bold mb-1">Profile Photo</label>
+                                            <div class="flex-grow-1 text-center text-md-start">
+                                                <label class="form-label-with-icon justify-content-center justify-content-md-start">
+                                                    <i class="fas fa-camera"></i> Profile Photo
+                                                </label>
                                                 {{ form.profile_picture }}
-                                                <div class="form-text text-muted small">Allowed: JPG, PNG. Max size 5MB.</div>
+                                                <div class="form-text text-muted small mt-2 text-center text-md-start">
+                                                    <i class="fas fa-info-circle me-1"></i>JPG or PNG • Max 5MB
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <h6 class="text-muted text-uppercase small fw-bold mb-3 mt-4"><i class="fa fa-id-card me-1"></i> Personal Information</h6>
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label">First Name</label>
-                                                {{ form.first_name }}
-                                                <div class="text-danger small">{{ form.first_name.errors }}</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Last Name</label>
-                                                {{ form.last_name }}
-                                                <div class="text-danger small">{{ form.last_name.errors }}</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Email Address <i class="fa fa-lock text-muted ms-1" title="Cannot be changed"></i></label>
-                                                <input type="email" class="form-control bg-light" value="{{ user.email }}" disabled>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Phone Number</label>
-                                                {{ form.phone_number }}
-                                                <div class="text-danger small">{{ form.phone_number.errors }}</div>
-                                            </div>
-                                        </div>
+                                    <h6 class="text-uppercase small fw-bold mb-4 mt-5 text-muted">
+                                        <i class="fas fa-id-card me-2 text-primary"></i>Personal Information
+                                    </h6>
 
-                                        <h6 class="text-muted text-uppercase small fw-bold mb-3 mt-4"><i class="fa fa-truck me-1"></i> Shipping Information</h6>
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label">County</label>
-                                                {{ form.county }}
-                                                <div class="text-danger small">{{ form.county.errors }}</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Delivery Zone</label>
-                                                {{ form.zone }}
-                                                <div class="text-danger small">{{ form.zone.errors }}</div>
-                                            </div>
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-user"></i> First Name
+                                            </label>
+                                            {{ form.first_name }}
+                                            <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
                                         </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-user"></i> Last Name
+                                            </label>
+                                            {{ form.last_name }}
+                                            <div class="text-danger small mt-1">{{ form.last_name.errors }}</div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-envelope"></i> Email Address
+                                            </label>
+                                            <input type="email" class="form-control bg-light" value="{{ user.email }}" disabled>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-phone"></i> Phone Number
+                                            </label>
+                                            {{ form.phone_number }}
+                                            <div class="text-danger small mt-1">{{ form.phone_number.errors }}</div>
+                                        </div>
+                                    </div>
 
-                                        <div class="border-top mt-4 pt-4 d-flex justify-content-end gap-2">
-                                            <button type="button" class="btn btn-light px-4 border" onclick="window.location.reload()">Cancel</button>
-                                            <button type="submit" class="btn btn-primary px-4 shadow-sm">Save Changes</button>
+                                    <h6 class="text-uppercase small fw-bold mb-4 mt-5 text-muted">
+                                        <i class="fas fa-truck me-2 text-primary"></i>Shipping Information
+                                    </h6>
+
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-map-marker-alt"></i> County
+                                            </label>
+                                            {{ form.county }}
+                                            <div class="text-danger small mt-1">{{ form.county.errors }}</div>
                                         </div>
-                                    </form>
-                                </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label-with-icon">
+                                                <i class="fas fa-location-arrow"></i> Delivery Zone
+                                            </label>
+                                            {{ form.zone }}
+                                            <div class="text-danger small mt-1">{{ form.zone.errors }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center justify-content-md-end gap-3 mt-5 pt-4 border-top flex-column flex-md-row">
+                                        <button type="button" class="btn btn-light px-4 border w-100 w-md-auto" onclick="window.location.reload()">Cancel</button>
+                                        <button type="submit" class="btn btn-primary px-5 shadow-sm w-100 w-md-auto">
+                                            <i class="fas fa-save me-2"></i>Save Changes
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="bg-white py-4 border-top">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">Need help with your account? <a href="{% url 'contact' %}" class="fw-bold text-primary text-decoration-none">Contact Support</a></p>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    /* * Dashboard Responsive Variables 
-     */
-    :root {
-        --primary-green: #37582D; 
-        --primary-hover: #2a4422;
-    }
-
-    /* Bootstrap Overrides */
-    .text-primary { color: var(--primary-green) !important; }
-    .bg-primary { background-color: var(--primary-green) !important; }
-    
-    .btn-primary { 
-        background-color: var(--primary-green); 
-        border-color: var(--primary-green); 
-    }
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-    }
-    
-    .btn-outline-primary {
-        color: var(--primary-green);
-        border-color: var(--primary-green);
-    }
-    .btn-outline-primary:hover {
-        background-color: var(--primary-green);
-        color: white;
-    }
-
-    /* Sidebar Navigation Styling */
-    .dashboard-nav .nav-link {
-        color: #666;
-        font-weight: 500;
-        padding: 1rem 1.25rem;
-        border-radius: 0;
-        border-left: 4px solid transparent;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-    }
-    
-    .dashboard-nav .nav-link:hover {
-        background-color: #f8f9fa;
-        color: var(--primary-green);
-    }
-    
-    .dashboard-nav .nav-link.active {
-        background-color: #f0f7ef; /* Light green tint */
-        color: var(--primary-green);
-        border-left-color: var(--primary-green);
-        font-weight: 600;
-    }
-    
-    .dashboard-nav .width-20 {
-        width: 20px;
-        text-align: center;
-    }
-
-    /* Mobile Navigation (Turns sidebar into top slider) */
-    @media (max-width: 991px) {
-        .dashboard-sidebar {
-            position: static !important;
-            margin-bottom: 1.5rem;
-        }
-        
-        .dashboard-nav {
-            flex-direction: row !important;
-            overflow-x: auto;
-            white-space: nowrap;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-        }
-        
-        .dashboard-nav .nav-link {
-            border-left: none;
-            border-bottom: 3px solid transparent;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            margin-right: 0.5rem;
-        }
-        
-        .dashboard-nav .nav-link.active {
-            border-left: none;
-            background-color: var(--primary-green);
-            color: white;
-        }
-        
-        /* Hide badge on mobile to save space */
-        .dashboard-nav .badge {
-            display: none;
-        }
-    }
-    
-    /* Table Fixes */
-    .table td {
-        vertical-align: middle;
-    }
-</style>
-{% endblock %}
-
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Image Preview Logic
+document.addEventListener('DOMContentLoaded', () => {
+    // Profile picture preview
     const profileInput = document.getElementById('id_profile_picture');
     if (profileInput) {
-        profileInput.classList.add('form-control'); 
-        profileInput.addEventListener('change', function(e) {
+        profileInput.addEventListener('change', e => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validation
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File is too large! Maximum size is 5MB.');
-                this.value = '';
-                return;
-            }
-            if (!file.type.match('image.*')) {
-                alert('Please upload a valid image file (JPG or PNG).');
-                this.value = '';
-                return;
-            }
-
-            // Preview
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const sidebarImg = document.querySelector('.dashboard-sidebar img');
-                if(sidebarImg) sidebarImg.src = e.target.result;
-                
-                const previewImg = document.getElementById('preview-img');
+            reader.onload = ev => {
+                const preview = document.getElementById('preview-img');
                 const placeholder = document.getElementById('preview-placeholder');
                 
-                if (previewImg) {
-                    previewImg.src = e.target.result;
-                } else if (placeholder) {
-                    const newImg = document.createElement('img');
-                    newImg.src = e.target.result;
-                    newImg.id = 'preview-img';
-                    newImg.className = 'rounded-circle border border-3 border-white shadow-sm object-fit-cover';
-                    newImg.width = 80;
-                    newImg.height = 80;
-                    placeholder.parentNode.replaceChild(newImg, placeholder);
+                if (preview) preview.src = ev.target.result;
+                if (placeholder) {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.id = 'preview-img';
+                    img.className = 'rounded-circle border border-4 border-white shadow object-fit-cover';
+                    img.width = 100;
+                    img.height = 100;
+                    placeholder.replaceWith(img);
                 }
-            }
+            };
             reader.readAsDataURL(file);
         });
     }
 
-    // 2. Add Bootstrap classes to form fields automatically
-    const formFields = document.querySelectorAll('input:not(.btn):not([type="checkbox"]), select, textarea');
-    formFields.forEach(field => {
-        field.classList.add('form-control');
-        if(field.type === 'file') field.classList.add('mt-2');
-    });
-
-    // 3. Tab State Persistence
-    let hash = window.location.hash;
-    if (hash) {
-        const triggerEl = document.querySelector(`.nav-link[href="${hash}"]`);
-        if (triggerEl) {
-            const tab = new bootstrap.Tab(triggerEl);
-            tab.show();
-        }
-    }
-    
-    const tabLinks = document.querySelectorAll('a[data-bs-toggle="pill"]');
-    tabLinks.forEach(link => {
-        link.addEventListener('shown.bs.tab', function (event) {
-            history.pushState(null, null, event.target.getAttribute('href'));
+    // Auto add form-control class
+    document.querySelectorAll('input:not([type="file"]):not([type="hidden"]), select')
+        .forEach(el => {
+            if (!el.classList.contains('form-control')) {
+                el.classList.add('form-control');
+            }
         });
-    });
+
+    // Tab persistence
+    const hash = window.location.hash;
+    if (hash) {
+        const tab = document.querySelector(`.nav-link[href="${hash}"]`);
+        if (tab) new bootstrap.Tab(tab).show();
+    }
 });
 </script>
 {% endblock %}
