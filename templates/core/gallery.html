@@ -1,3 +1,4 @@
+{# templates/products/gallery.html #}
 {% extends 'base.html' %}
 {% load static %}
 
@@ -20,6 +21,7 @@
         </div>
     </div>
 </div>
+
 <div class="product-area mt-no-text mb-no-text">
     <div class="container container-default-2 custom-area">
         
@@ -106,7 +108,7 @@
                 </div>
 
                 <div class="modal fade" id="modal-{{ item.id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered {% if item.media_type == 'tiktok' or item.media_type == 'instagram' %}vertical-media-modal{% else %}modal-xl{% endif %}">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
                         <div class="modal-content">
                             <div class="modal-header border-0 pb-0">
                                 <h5 class="modal-title ps-2">{{ item.title }}</h5>
@@ -120,13 +122,18 @@
                                     <img src="{{ item.image.url }}" class="img-fluid rounded" alt="{{ item.title }}">
 
                                 {% elif item.media_type == 'youtube' and item.get_youtube_embed_url %}
-                                    <div class="ratio ratio-16x9">
+                                    <div class="ratio ratio-16x9 mx-auto" style="max-width: 900px;">
                                         <iframe src="{{ item.get_youtube_embed_url }}" title="YouTube video" frameborder="0" allowfullscreen></iframe>
                                     </div>
 
                                 {% elif item.media_type == 'instagram' and item.get_instagram_embed_url %}
                                     <div class="d-flex justify-content-center">
-                                        <iframe src="{{ item.get_instagram_embed_url }}" class="instagram-frame" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                                        <iframe src="{{ item.get_instagram_embed_url }}" 
+                                                class="instagram-frame border-0" 
+                                                frameborder="0" 
+                                                scrolling="yes" 
+                                                allowtransparency="true"
+                                                style="width: 100%; max-width: 540px; min-width: 320px; min-height: 750px; height: 100%;"></iframe>
                                     </div>
 
                                 {% elif item.media_type == 'tiktok' and item.get_tiktok_embed_code %}
@@ -144,7 +151,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
             {% empty %}
             <div class="col-12 text-center py-5">
                 <i class="far fa-images fa-4x text-muted mb-4"></i>
@@ -154,38 +161,70 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
 <style>
-    /* --- Badges --- */
-    .content-type-badge { position:absolute; top:15px; right:15px; padding:6px 14px; border-radius:30px; font-size:12px; font-weight:600; color:white; z-index:2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .content-type-badge.image { background:#5a9d3e; } /* Theme Green */
+    :root {
+        --primary-green: #77DD77;
+        --sun-yellow: #FFDF22;
+        --sun-yellow-dark: #E8C000;
+    }
+
+    /* Badges */
+    .content-type-badge { 
+        position:absolute; top:15px; right:15px; padding:6px 14px; border-radius:30px; font-size:12px; font-weight:600; color:white; z-index:2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    }
+    .content-type-badge.image { background: var(--primary-green); }
     .content-type-badge.youtube { background:#FF0000; }
     .content-type-badge.instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
     .content-type-badge.tiktok { background:#000000; }
 
-    /* --- Social Placeholders --- */
-    .social-placeholder { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: bold; border-radius: 5px; background-color: #eee; }
+    /* Category badge under title */
+    .product-rating .badge {
+        background: var(--primary-green);
+        color: white;
+        border: none;
+    }
+
+    /* Social Placeholders */
+    .social-placeholder { 
+        width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: bold; border-radius: 5px; background-color: #eee; 
+    }
     .social-placeholder.tiktok { background-color: #000; }
     .social-placeholder.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
     .social-placeholder.youtube { background-color: #000; }
     .social-placeholder.image { background-color: #f0f0f0; color: #999; }
 
-    /* --- Filter Buttons Override --- */
-    .gallery-filter-nav .active {
-        background-color: #333 !important;
+    /* Filter Buttons */
+    .gallery-filter-nav .btn {
+        background: white;
+        border: 2px solid #ddd;
+        color: #555;
+    }
+    .gallery-filter-nav .btn:hover {
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+    }
+    .gallery-filter-nav .btn.active {
+        background-color: var(--primary-green) !important;
         color: #fff !important;
-        border-color: #333 !important;
+        border-color: var(--primary-green) !important;
     }
 
-    /* --- Hover Effect --- */
+    /* Hover Effects */
     .box-img:hover .add-action { opacity: 1 !important; }
+    .add-action a { color: white; }
 
-    /* --- Modal Tweaks --- */
-    @media (min-width: 992px) {
-        .vertical-media-modal { max-width: 400px; }
-        .instagram-frame { height: 600px; width: 100%; }
+    .gallery-card:hover {
+        box-shadow: 0 10px 25px rgba(119, 221, 119, 0.25) !important;
+    }
+
+    /* TikTok embeds centered */
+    .tiktok-container {
+        max-width: 540px;
+        margin: 0 auto;
     }
 </style>
 
@@ -197,31 +236,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active class from all
             buttons.forEach(b => b.classList.remove('active'));
-            // Add to clicked
             btn.classList.add('active');
 
             const filter = btn.getAttribute('data-filter');
             
             items.forEach(item => {
                 if (filter === '*' || item.classList.contains(filter.substring(1))) {
-                    item.style.display = 'block'; // Show
+                    item.style.display = 'block';
                 } else {
-                    item.style.display = 'none'; // Hide
+                    item.style.display = 'none';
                 }
             });
         });
     });
 
-    // Modal Trigger Logic
+    // Modal Trigger
     document.querySelectorAll('.gallery-card .box-img').forEach(trigger => {
         trigger.addEventListener('click', function() {
-            // Find parent item to locate the correct modal
             const cardItem = this.closest('.gallery-item');
             const modalEl = cardItem.querySelector('.modal');
             
-            // Stop Video Audio on Close
             modalEl.addEventListener('hidden.bs.modal', function () {
                 const iframe = modalEl.querySelector('iframe');
                 if (iframe) {
@@ -230,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Open Modal using Bootstrap 5
             const modal = new bootstrap.Modal(modalEl);
             modal.show();
         });

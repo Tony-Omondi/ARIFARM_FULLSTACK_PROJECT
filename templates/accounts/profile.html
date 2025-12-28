@@ -9,9 +9,11 @@
 
 <style>
     :root {
-        --primary-green: #37582D;
-        --primary-hover: #2a4422;
-        --primary-light: #f0f7ef;
+        --primary-green: #77DD77;           /* Pastel Green - Main brand color */
+        --primary-hover: #66CC66;           /* Slightly darker on hover */
+        --primary-light: #f0fdf4;           /* Very light green background */
+        --sun-yellow: #FFDF22;              /* Sunny Yellow - Highlights & accents */
+        --sun-yellow-dark: #E8C000;
         --success-color: #10b981;
         --info-color: #3b82f6;
         --warning-color: #f59e0b;
@@ -24,11 +26,25 @@
     .text-primary { color: var(--primary-green) !important; }
     .bg-primary { background-color: var(--primary-green) !important; }
     
-    .btn-primary { background-color: var(--primary-green); border-color: var(--primary-green); }
-    .btn-primary:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn-primary { 
+        background-color: var(--primary-green); 
+        border-color: var(--primary-green); 
+        box-shadow: 0 4px 12px rgba(119,221,119,0.3);
+    }
+    .btn-primary:hover { 
+        background-color: var(--primary-hover); 
+        border-color: var(--primary-hover); 
+        transform: translateY(-2px);
+    }
 
-    .btn-outline-primary { color: var(--primary-green); border-color: var(--primary-green); }
-    .btn-outline-primary:hover { background-color: var(--primary-green); color: white; }
+    .btn-outline-primary { 
+        color: var(--primary-green); 
+        border-color: var(--primary-green); 
+    }
+    .btn-outline-primary:hover { 
+        background-color: var(--primary-green); 
+        color: white; 
+    }
 
     .icon-circle {
         width: 48px; height: 48px;
@@ -38,6 +54,7 @@
         display: flex; align-items: center; justify-content: center;
         font-size: 1.25rem;
         flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(119,221,119,0.3);
     }
 
     .icon-circle-lg { width: 80px; height: 80px; font-size: 2.2rem; }
@@ -46,7 +63,7 @@
     .section-header {
         display: flex; align-items: center; gap: 1rem;
         margin-bottom: 1.5rem; padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f5f9;
+        border-bottom: 2px solid var(--primary-light);
     }
 
     .section-header h5 { margin: 0; font-weight: 700; color: #1e293b; }
@@ -59,13 +76,15 @@
     .stat-card { 
         transition: var(--transition); 
         border-radius: 12px;
+        background: white;
+        border: 1px solid #eee;
     }
     .stat-card:hover { 
         transform: translateY(-6px); 
-        box-shadow: 0 12px 32px rgba(0,0,0,0.1) !important; 
+        box-shadow: 0 12px 32px rgba(119,221,119,0.2) !important; 
     }
 
-    /* Sidebar Navigation */
+    /* Sidebar Navigation - Updated with new theme */
     .dashboard-nav .nav-link {
         padding: 1rem 1.25rem;
         display: flex;
@@ -75,27 +94,49 @@
         font-weight: 500;
         transition: all 0.25s ease;
         white-space: nowrap;
+        border-radius: 12px;
+        margin: 0.25rem 0.5rem;
     }
 
     .dashboard-nav .nav-link:hover { 
-        background: #f8f9fa; 
+        background: var(--primary-light); 
         color: var(--primary-green); 
     }
     
     .dashboard-nav .nav-link.active {
-        background: rgba(55,88,45,0.08);
-        color: var(--primary-green);
+        background: linear-gradient(90deg, var(--primary-green), var(--primary-hover));
+        color: white !important;
         font-weight: 600;
-        border-left: 4px solid var(--primary-green);
+        box-shadow: 0 4px 12px rgba(119,221,119,0.4);
     }
 
-    /* Welcome Card */
+    .dashboard-nav .nav-link.active .icon-circle-sm {
+        background: white;
+        color: var(--primary-green);
+    }
+
+    /* Welcome Card - Sunny & Fresh */
+    .welcome-card {
+        background: linear-gradient(135deg, var(--primary-green), #88EE88);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
     .welcome-card h2 {
         font-size: 2.1rem;
+        color: white;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
     .welcome-card p {
         font-size: 1.1rem;
+        color: rgba(255,255,255,0.95);
+    }
+
+    /* Badges */
+    .badge-yellow {
+        background-color: var(--sun-yellow) !important;
+        color: #333 !important;
     }
 
     /* Responsive Adjustments */
@@ -116,9 +157,6 @@
         }
 
         .dashboard-nav .nav-link {
-            border-left: none !important;
-            padding: 0.75rem 1.4rem;
-            border-radius: 12px;
             margin: 0 0.4rem;
             font-size: 0.95rem;
         }
@@ -189,7 +227,7 @@
                                     <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}"
                                          class="rounded-circle shadow border border-4 border-white object-fit-cover" width="110" height="110">
                                 {% else %}
-                                    <div class="icon-circle icon-circle-lg mx-auto bg-success-subtle text-success">
+                                    <div class="icon-circle icon-circle-lg mx-auto">
                                         <i class="fas fa-user"></i>
                                     </div>
                                 {% endif %}
@@ -232,19 +270,18 @@
 
                     <!-- Dashboard -->
                     <div class="tab-pane fade show active" id="dashboard">
-                        <div class="card border-0 shadow-sm mb-4 overflow-hidden text-white welcome-card"
-                             style="background: linear-gradient(135deg, var(--primary-green), var(--primary-hover));">
+                        <div class="card border-0 shadow-sm mb-4 overflow-hidden text-white welcome-card">
                             <div class="card-body p-4 p-md-5 position-relative">
                                 <div class="row align-items-center">
                                     <div class="col-12 col-md-8 text-center text-md-start">
                                         <h2 class="fw-bold mb-2">Hello, {{ user.first_name|default:user.username }}!</h2>
-                                        <p class="mb-3 mb-md-4 opacity-85">Welcome to your AriFarm account</p>
-                                        <a href="#orders" data-bs-toggle="pill" class="btn btn-light rounded-pill px-4 fw-bold shadow-sm">
+                                        <p class="mb-3 mb-md-4 opacity-90">Welcome back to your AriFarm account</p>
+                                        <a href="#orders" data-bs-toggle="pill" class="btn btn-white border-white rounded-pill px-4 fw-bold shadow-sm">
                                             <i class="fas fa-list me-2"></i>View Recent Orders
                                         </a>
                                     </div>
                                     <div class="col-12 col-md-4 text-center mt-4 mt-md-0">
-                                        <i class="fas fa-leaf fa-6x opacity-20"></i>
+                                        <i class="fas fa-sun fa-6x opacity-20" style="color: var(--sun-yellow);"></i>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +295,7 @@
                                             <i class="fas fa-shopping-basket"></i>
                                         </div>
                                         <div>
-                                            <h3 class="mb-0 fw-bold">{{ total_orders|default:"0" }}</h3>
+                                            <h3 class="mb-0 fw-bold text-success">{{ total_orders|default:"0" }}</h3>
                                             <small class="text-muted">Total Orders</small>
                                         </div>
                                     </div>
@@ -272,7 +309,7 @@
                                             <i class="fas fa-truck"></i>
                                         </div>
                                         <div>
-                                            <h3 class="mb-0 fw-bold">{{ paid_orders|default:"0" }}</h3>
+                                            <h3 class="mb-0 fw-bold text-info">{{ paid_orders|default:"0" }}</h3>
                                             <small class="text-muted">Pending Delivery</small>
                                         </div>
                                     </div>
@@ -282,11 +319,11 @@
                             <div class="col-12 col-md-4">
                                 <div class="card border-0 shadow-sm h-100 stat-card">
                                     <div class="card-body d-flex align-items-center">
-                                        <div class="icon-circle bg-warning-subtle text-warning me-3">
+                                        <div class="icon-circle badge-yellow text-dark me-3">
                                             <i class="fas fa-clock"></i>
                                         </div>
                                         <div>
-                                            <h3 class="mb-0 fw-bold">{{ pending_orders|default:"0" }}</h3>
+                                            <h3 class="mb-0 fw-bold" style="color: var(--sun-yellow-dark);">{{ pending_orders|default:"0" }}</h3>
                                             <small class="text-muted">Awaiting Payment</small>
                                         </div>
                                     </div>
@@ -295,7 +332,7 @@
                         </div>
                     </div>
 
-                    <!-- Orders -->
+                    <!-- Orders Tab -->
                     <div class="tab-pane fade" id="orders">
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-3">
@@ -332,7 +369,7 @@
                                                         {% elif order.status == 'paid' %}
                                                             <span class="badge bg-info-subtle text-info border px-3"><i class="fas fa-box me-1"></i>Processing</span>
                                                         {% elif order.status == 'pending' %}
-                                                            <span class="badge bg-warning-subtle text-warning border px-3"><i class="fas fa-clock me-1"></i>Pending</span>
+                                                            <span class="badge badge-yellow text-dark border px-3"><i class="fas fa-clock me-1"></i>Pending</span>
                                                         {% else %}
                                                             <span class="badge bg-danger-subtle text-danger border px-3"><i class="fas fa-times me-1"></i>{{ order.get_status_display }}</span>
                                                         {% endif %}
@@ -386,7 +423,7 @@
                                 <form method="post" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
 
-                                    <div class="p-4 bg-light rounded-3 border mb-4">
+                                    <div class="p-4 bg-primary-light rounded-3 border mb-4 text-center text-md-start">
                                         <div class="d-flex align-items-center gap-4 flex-column flex-md-row">
                                             <div class="position-relative">
                                                 {% if user.profile_picture %}
@@ -394,17 +431,17 @@
                                                          class="rounded-circle border border-4 border-white shadow object-fit-cover" 
                                                          width="100" height="100" alt="Profile">
                                                 {% else %}
-                                                    <div id="preview-placeholder" class="icon-circle icon-circle-lg bg-success-subtle text-success">
+                                                    <div id="preview-placeholder" class="icon-circle icon-circle-lg">
                                                         <i class="fas fa-user"></i>
                                                     </div>
                                                 {% endif %}
                                             </div>
-                                            <div class="flex-grow-1 text-center text-md-start">
+                                            <div class="flex-grow-1">
                                                 <label class="form-label-with-icon justify-content-center justify-content-md-start">
                                                     <i class="fas fa-camera"></i> Profile Photo
                                                 </label>
                                                 {{ form.profile_picture }}
-                                                <div class="form-text text-muted small mt-2 text-center text-md-start">
+                                                <div class="form-text text-muted small mt-2">
                                                     <i class="fas fa-info-circle me-1"></i>JPG or PNG • Max 5MB
                                                 </div>
                                             </div>
